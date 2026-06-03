@@ -456,6 +456,23 @@
     }
   }
 
+
+  @media (min-width: 981px) {
+    .leaflet-tooltip.hover-tooltip {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 0.96 !important;
+      pointer-events: none !important;
+    }
+  }
+
+
+  @media (min-width: 981px) {
+    .mobile-only {
+      display: none !important;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -463,7 +480,7 @@
   <header>
     <div>
       <h1>Homeless Resources on Oahu</h1>
-      <div class="subtitle">Hover over a facility for key info. Click on it for more details.</div>
+      <div class="subtitle">Hover or tap a facility for key info. Select “More details” for full details.</div>
     </div>
     <div class="header-actions">
       <span class="small-chip">$ = fee</span>
@@ -1883,7 +1900,7 @@ function basicPopupHtml(f) {
     ${address ? `<div class="basic-card-row"><span class="basic-card-label">Address:</span> ${address}</div>` : ""}
     ${phone ? `<div class="basic-card-row"><span class="basic-card-label">Phone:</span> ${phone}</div>` : ""}
     ${services ? `<div class="basic-card-row"><span class="basic-card-label">Services for:</span> ${services}</div>` : ""}
-    <button class="basic-card-more" type="button" data-row="${f.row}">More details</button>
+    <button class="basic-card-more mobile-only" type="button" data-row="${f.row}">More details</button>
   `;
 }
 
@@ -1907,19 +1924,22 @@ function renderFacilities() {
   markers.clear();
 
   filtered.forEach((f, idx) => {
-    const marker = L.marker([f.lat, f.lng], { icon: markerIcon(f) })
-      .bindPopup(popupContentForDevice(f), {
-        className: isMobileView() ? "basic-mobile-popup" : ""
-      });
+    const marker = L.marker([f.lat, f.lng], { icon: markerIcon(f) });
 
-    if (!isMobileView()) {
-      marker.bindTooltip(tooltipHtml(f), {
-        direction: "top",
-        offset: [0, -12],
-        className: "hover-tooltip",
-        opacity: 0.96
-      });
-    }
+    marker.bindPopup(popupContentForDevice(f), {
+      className: isMobileView() ? "basic-mobile-popup" : ""
+    });
+
+    marker.bindTooltip(tooltipHtml(f), {
+      direction: "top",
+      offset: [0, -12],
+      className: "hover-tooltip",
+      opacity: 0.96
+    });
+
+    marker.on("click", () => {
+      marker.setPopupContent(popupContentForDevice(f));
+    });
 
     marker.on("popupopen", () => {
       marker.setPopupContent(popupContentForDevice(f));
