@@ -292,7 +292,6 @@
       <div class="subtitle">Hover over a facility for key info. Click on it for more details.</div>
     </div>
     <div class="header-actions">
-      <span class="small-chip">Council districts shown in popups</span>
       <span class="small-chip">$ = fee</span>
       <span class="small-chip">🐕 = support/service animals</span>
     </div>
@@ -387,8 +386,8 @@ const facilities = [
     "Services for": "Adults",
     "row": 8,
     "hidden": false,
-    "lat": 21.316840397063242,
-    "lng": -157.86679318159952,
+    "lat": 21.316850529417657,
+    "lng": -157.86680424213267,
     "hasFee": false,
     "hasAnimal": false
   },
@@ -439,13 +438,13 @@ const facilities = [
     "Agency": "Catholic Charities",
     "Facility Type": "Emergency Shelter",
     "Specialty": "",
-    "Address": "2241 Kapiolani Blvd Honolulu HI 96826",
+    "Address": "2241 Kapiolani Blvd, Honolulu, HI 96826",
     "Phone": "808-897-5479",
     "Services for": "Families",
     "row": 12,
     "hidden": false,
-    "lat": 21.29400903680962,
-    "lng": -157.82503734626175,
+    "lat": 21.29172,
+    "lng": -157.82482,
     "hasFee": false,
     "hasAnimal": true
   },
@@ -458,13 +457,13 @@ const facilities = [
     "Agency": "Catholic Charities",
     "Facility Type": "Transitional Housing",
     "Specialty": "",
-    "Address": "2241 Kapiolani Blvd Honolulu HI 96826",
+    "Address": "2241 Kapiolani Blvd, Honolulu, HI 96826",
     "Phone": "808-897-5479",
     "Services for": "Families",
     "row": 13,
     "hidden": false,
-    "lat": 21.294076585839047,
-    "lng": -157.82511108314955,
+    "lat": 21.291760529417658,
+    "lng": -157.82486424213266,
     "hasFee": true,
     "hasAnimal": true
   },
@@ -482,8 +481,8 @@ const facilities = [
     "Services for": "Adults, Couples",
     "row": 16,
     "hidden": false,
-    "lat": 21.310808,
-    "lng": -157.887123,
+    "lat": 21.31195,
+    "lng": -157.8878,
     "hasFee": true,
     "hasAnimal": true
   },
@@ -862,8 +861,8 @@ const facilities = [
     "Services for": "Adults, Medical Respite",
     "row": 36,
     "hidden": false,
-    "lat": 21.31598,
-    "lng": -157.8631,
+    "lat": 21.31599519853162,
+    "lng": -157.86311659079976,
     "hasFee": false,
     "hasAnimal": false
   },
@@ -881,8 +880,8 @@ const facilities = [
     "Services for": "Adults",
     "row": 37,
     "hidden": false,
-    "lat": 21.31601039706324,
-    "lng": -157.86313318159952,
+    "lat": 21.31606274756105,
+    "lng": -157.86319032768756,
     "hasFee": false,
     "hasAnimal": false
   },
@@ -919,8 +918,8 @@ const facilities = [
     "Services for": "Youth",
     "row": 39,
     "hidden": false,
-    "lat": 21.37422688725736,
-    "lng": -157.75190843422195,
+    "lat": 21.374226,
+    "lng": -157.751908,
     "hasFee": false,
     "hasAnimal": false
   },
@@ -1166,8 +1165,8 @@ const facilities = [
     "Services for": "Young Adults (18-24)",
     "row": 53,
     "hidden": false,
-    "lat": 21.37429039706324,
-    "lng": -157.75199818159953,
+    "lat": 21.374300529417656,
+    "lng": -157.7520092421327,
     "hasFee": false,
     "hasAnimal": false
   },
@@ -1516,6 +1515,8 @@ const facilities = [
 ];
 // Coordinates reviewed and corrected for known public-coordinate sources; same-building/campus facilities are tightly clustered.
 // Kaaahi/Kuwili shared-building clusters manually tightened: H4+Punawai; Kumu Ola Hou Phase I+II.
+// Hale Mauliola visually nudged inland/on-site so it does not render in harbor water on OSM.
+// Final address/location correction pass applied: Hale Imi Ola moved onto Kapiolani; Kaaahi/Kuwili and Sand Island clusters reviewed.
 const categoryColors = {
   "Emergency Shelter": "#dc2626",
   "Transitional Housing": "#2563eb",
