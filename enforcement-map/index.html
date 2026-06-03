@@ -1,0 +1,2489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Oʻahu Enforcement Map — Street-Level Weekly Timeline</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root {
+    --bg: #f6f8fc;
+    --panel: #ffffff;
+    --ink: #1e293b;
+    --muted: #64748b;
+    --line: #dbe3ef;
+  }
+  html, body { height:100%; margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif; background:var(--bg); color:var(--ink); }
+  .app {
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 420px;
+    grid-template-rows:auto minmax(680px,1fr) auto;
+  }
+  header {
+    grid-column:1/-1;
+    padding:18px 22px;
+    background:linear-gradient(90deg,#0f172a,#1e3a8a);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+  }
+  h1 { margin:0; font-size:clamp(20px,2.7vw,34px); letter-spacing:-.03em; }
+  .subtitle { margin-top:4px; color:rgba(255,255,255,.82); font-size:14px; }
+  .chip { border:1px solid rgba(255,255,255,.28); background:rgba(255,255,255,.12); padding:8px 12px; border-radius:999px; font-size:13px; }
+  #map { width:100%; height:100%; min-height:680px; background:#dbeafe; }
+  aside { background:var(--panel); border-left:1px solid var(--line); padding:18px; overflow:auto; }
+  aside h2 { margin:0 0 10px; font-size:19px; }
+  .note { color:var(--muted); font-size:13px; line-height:1.45; margin-bottom:12px; }
+  .week-card {
+    border:1px solid var(--line);
+    border-left:8px solid #cbd5e1;
+    border-radius:14px;
+    padding:12px;
+    margin-bottom:10px;
+    cursor:pointer;
+    background:#fff;
+  }
+  .week-card.active { box-shadow:0 10px 24px rgba(15,23,42,.08); transform:translateY(-1px); }
+  .week-title { font-weight:800; font-size:15px; display:flex; justify-content:space-between; gap:8px; }
+  .week-summary { font-size:13px; color:var(--muted); line-height:1.4; margin-top:6px; }
+  .count { font-size:12px; border-radius:999px; padding:2px 8px; white-space:nowrap; }
+  .legend {
+    display:grid;
+    gap:8px;
+    margin:0 0 14px;
+    padding:12px;
+    background:#f8fafc;
+    border:1px solid var(--line);
+    border-radius:14px;
+  }
+  .legend-row { display:flex; align-items:center; gap:10px; font-size:13px; }
+  .swatch { width:14px; height:14px; border-radius:50%; border:2px solid white; box-shadow:0 0 0 1px rgba(15,23,42,.1); }
+  footer {
+    grid-column:1/-1;
+    background:#fff;
+    border-top:1px solid var(--line);
+    padding:14px 18px 18px;
+    box-shadow:0 -10px 28px rgba(15,23,42,.05);
+  }
+  .controls {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    max-width:1240px;
+    margin:0 auto;
+    flex-wrap:wrap;
+  }
+  .btn {
+    border:1px solid var(--line);
+    background:#fff;
+    color:var(--ink);
+    border-radius:999px;
+    width:38px; height:38px;
+    font-size:16px; cursor:pointer;
+  }
+  .slider-wrap { flex:1; min-width:220px; }
+  input[type=range] { width:100%; cursor:pointer; }
+  .ticks {
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:6px;
+    margin-top:6px;
+    font-size:12px;
+    color:var(--muted);
+    text-align:center;
+  }
+  .ticks span { padding-top:4px; border-top:4px solid transparent; }
+  .ticks span.active { font-weight:800; }
+  .bottom-note { font-size:12px; color:var(--muted); }
+  .leaflet-popup-content { font-size:13px; line-height:1.35; }
+  .popup-title { font-weight:800; font-size:14px; margin-bottom:5px; }
+  .popup-meta { color:var(--muted); margin-bottom:6px; }
+  .leaflet-tooltip {
+    background:#0f172a;
+    color:#fff;
+    border:0;
+    border-radius:8px;
+    padding:6px 8px;
+    box-shadow:0 8px 20px rgba(15,23,42,.25);
+  }
+  @media (max-width: 980px) {
+    .app { grid-template-columns:1fr; grid-template-rows:auto 680px auto auto; }
+    aside { border-left:0; border-top:1px solid var(--line); max-height:520px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div>
+      <h1>Oʻahu Enforcement Map — Street-Level Weekly Timeline</h1>
+      <div class="subtitle">Actual street segments are drawn where the schedule names streets; parks, beach parks, and facilities remain point markers.</div>
+    </div>
+    <div class="chip">Week color = street color</div>
+  </header>
+
+  <main id="map"></main>
+
+  <aside>
+    <h2>Weeks</h2>
+    <div class="note">
+    </div>
+    <div class="legend" id="legend"></div>
+    <div id="weekCards"></div>
+  </aside>
+
+  <footer>
+    <div class="controls">
+      <button class="btn" id="prevBtn" title="Previous week">‹</button>
+      <button class="btn" id="playBtn" title="Play timeline">▶</button>
+      <button class="btn" id="nextBtn" title="Next week">›</button>
+      <div class="slider-wrap">
+        <input id="weekSlider" type="range" min="0" max="4" step="1" value="4">
+        <div class="ticks" id="ticks"></div>
+      </div>
+      <div class="bottom-note">Selected week is boldest. Other weeks remain visible in their assigned colors for comparison.</div>
+    </div>
+  </footer>
+</div>
+
+<script>
+const weeks = [
+  {
+    "label": "May 4–8",
+    "dateRange": "May 4–8, 2026",
+    "color": "#2563eb",
+    "streets": [
+      {
+        "name": "S King St. (Richards to Punahou)",
+        "coords": [
+          [
+            21.3078,
+            -157.8629
+          ],
+          [
+            21.3037,
+            -157.8552
+          ],
+          [
+            21.3007,
+            -157.8438
+          ],
+          [
+            21.2999,
+            -157.8317
+          ]
+        ]
+      },
+      {
+        "name": "Young St. (Victoria to Punahou)",
+        "coords": [
+          [
+            21.3008,
+            -157.8387
+          ],
+          [
+            21.2999,
+            -157.8317
+          ]
+        ]
+      },
+      {
+        "name": "Kapiolani Blvd. (Ward to Kalakaua)",
+        "coords": [
+          [
+            21.2967,
+            -157.8575
+          ],
+          [
+            21.291,
+            -157.845
+          ],
+          [
+            21.2858,
+            -157.8338
+          ]
+        ]
+      },
+      {
+        "name": "Ward Ave. (S Beretania to Ala Moana)",
+        "coords": [
+          [
+            21.3044,
+            -157.8509
+          ],
+          [
+            21.2967,
+            -157.8505
+          ]
+        ]
+      },
+      {
+        "name": "Ala Wai Promenade (Makai)",
+        "coords": [
+          [
+            21.2878,
+            -157.8408
+          ],
+          [
+            21.2869,
+            -157.8336
+          ],
+          [
+            21.2858,
+            -157.8275
+          ]
+        ]
+      },
+      {
+        "name": "Diamond Head Beach Rd.",
+        "coords": [
+          [
+            21.2556,
+            -157.8055
+          ],
+          [
+            21.2584,
+            -157.802
+          ],
+          [
+            21.2633,
+            -157.7985
+          ]
+        ]
+      },
+      {
+        "name": "S Beretania St. (University to McCully)",
+        "coords": [
+          [
+            21.2985,
+            -157.8175
+          ],
+          [
+            21.2994,
+            -157.8102
+          ],
+          [
+            21.3001,
+            -157.8045
+          ]
+        ]
+      },
+      {
+        "name": "S King St. (Punahou to Kapiolani)",
+        "coords": [
+          [
+            21.2999,
+            -157.8317
+          ],
+          [
+            21.2957,
+            -157.8223
+          ],
+          [
+            21.2917,
+            -157.8135
+          ]
+        ]
+      }
+    ],
+    "points": [
+      {
+        "name": "Alapai Transit",
+        "lat": 21.3057,
+        "lng": -157.852,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Bishop / Adams",
+        "lat": 21.3098,
+        "lng": -157.8604,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Hotel / River",
+        "lat": 21.311,
+        "lng": -157.86,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Maunakea / Kukui",
+        "lat": 21.3158,
+        "lng": -157.8598,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Iwilei / Kuwili / Pine / Sumner / Pacific",
+        "lat": 21.3218,
+        "lng": -157.8765,
+        "details": "Day Crew area"
+      },
+      {
+        "name": "N King / Akepo Ln.",
+        "lat": 21.3181,
+        "lng": -157.8796,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Kanoa St.",
+        "lat": 21.3205,
+        "lng": -157.8736,
+        "details": "Day Crew"
+      },
+      {
+        "name": "1752 Kealia Dr.",
+        "lat": 21.3192,
+        "lng": -157.8698,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Pokai Bay Beach Park",
+        "lat": 21.4358,
+        "lng": -158.1862,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Bayview / Guard St. unimproved",
+        "lat": 21.4367,
+        "lng": -158.1878,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Atkinson St. / Kapiolani",
+        "lat": 21.2902,
+        "lng": -157.841,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Koali Rd.",
+        "lat": 21.2795,
+        "lng": -157.8007,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Mauumae Park",
+        "lat": 21.2864,
+        "lng": -157.8047,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Ainakea Way",
+        "lat": 21.2796,
+        "lng": -157.7928,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Kaiaka Beach Park",
+        "lat": 21.592,
+        "lng": -158.1033,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Alii Beach Park",
+        "lat": 21.5956,
+        "lng": -158.1049,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Haleiwa Beach Park",
+        "lat": 21.5945,
+        "lng": -158.102,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Puaena Point",
+        "lat": 21.5995,
+        "lng": -158.1038,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Waimea Bay Beach Park",
+        "lat": 21.6403,
+        "lng": -158.0657,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Pupukea Beach Park",
+        "lat": 21.6528,
+        "lng": -158.0572,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Log Cabins",
+        "lat": 21.6682,
+        "lng": -158.0475,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Sunset Beach",
+        "lat": 21.6787,
+        "lng": -158.0405,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Moiliili Field",
+        "lat": 21.2927,
+        "lng": -157.8177,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Makahiki Way",
+        "lat": 21.2918,
+        "lng": -157.8148,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Algaroba St.",
+        "lat": 21.291,
+        "lng": -157.813,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Waiola St.",
+        "lat": 21.2925,
+        "lng": -157.8162,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Ala Wai CP",
+        "lat": 21.2861,
+        "lng": -157.8244,
+        "details": "Day Crew"
+      },
+      {
+        "name": "University Ave.",
+        "lat": 21.2962,
+        "lng": -157.8192,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Kamanele Park",
+        "lat": 21.2911,
+        "lng": -157.8159,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Kaala St.",
+        "lat": 21.291,
+        "lng": -157.8208,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Isenberg St.",
+        "lat": 21.291,
+        "lng": -157.811,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Waianae District Park",
+        "lat": 21.4465,
+        "lng": -158.1893,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Aala Park",
+        "lat": 21.3166,
+        "lng": -157.8587,
+        "details": "Night Crew"
+      },
+      {
+        "name": "College Walk",
+        "lat": 21.3135,
+        "lng": -157.8583,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Smith / Beretania",
+        "lat": 21.313,
+        "lng": -157.858,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Dole Park",
+        "lat": 21.3021,
+        "lng": -157.8396,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Pawaa Park",
+        "lat": 21.2953,
+        "lng": -157.8392,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Cartwright Field",
+        "lat": 21.2825,
+        "lng": -157.8218,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Auiki St.",
+        "lat": 21.3079,
+        "lng": -157.8786,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Salt Lake Blvd.",
+        "lat": 21.3516,
+        "lng": -157.925,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Kapiolani Blvd. BS999",
+        "lat": 21.2903,
+        "lng": -157.8472,
+        "details": "Day Crew"
+      },
+      {
+        "name": "610 Ala Moana Blvd.",
+        "lat": 21.2999,
+        "lng": -157.8628,
+        "details": "Day Crew"
+      }
+    ]
+  },
+  {
+    "label": "May 11–15",
+    "dateRange": "May 11–15, 2026",
+    "color": "#ef4444",
+    "streets": [
+      {
+        "name": "S King St. (Richards to Punahou)",
+        "coords": [
+          [
+            21.3078,
+            -157.8629
+          ],
+          [
+            21.3037,
+            -157.8552
+          ],
+          [
+            21.3007,
+            -157.8438
+          ],
+          [
+            21.2999,
+            -157.8317
+          ]
+        ]
+      },
+      {
+        "name": "Young St. (Victoria to Punahou)",
+        "coords": [
+          [
+            21.3008,
+            -157.8387
+          ],
+          [
+            21.2999,
+            -157.8317
+          ]
+        ]
+      },
+      {
+        "name": "Kapiolani Blvd. (Ward to Kalakaua)",
+        "coords": [
+          [
+            21.2967,
+            -157.8575
+          ],
+          [
+            21.291,
+            -157.845
+          ],
+          [
+            21.2858,
+            -157.8338
+          ]
+        ]
+      },
+      {
+        "name": "Ward Ave. (S Beretania to Ala Moana)",
+        "coords": [
+          [
+            21.3044,
+            -157.8509
+          ],
+          [
+            21.2967,
+            -157.8505
+          ]
+        ]
+      },
+      {
+        "name": "Ala Wai Promenade (Makai)",
+        "coords": [
+          [
+            21.2878,
+            -157.8408
+          ],
+          [
+            21.2869,
+            -157.8336
+          ],
+          [
+            21.2858,
+            -157.8275
+          ]
+        ]
+      },
+      {
+        "name": "Kapahulu Bike Path",
+        "coords": [
+          [
+            21.2794,
+            -157.8185
+          ],
+          [
+            21.2785,
+            -157.8137
+          ],
+          [
+            21.2778,
+            -157.8095
+          ]
+        ]
+      },
+      {
+        "name": "Ala Wai Golf Course Rd.",
+        "coords": [
+          [
+            21.2822,
+            -157.8118
+          ],
+          [
+            21.2789,
+            -157.806
+          ]
+        ]
+      },
+      {
+        "name": "Kalakaua Ave. (central corridor)",
+        "coords": [
+          [
+            21.3,
+            -157.836
+          ],
+          [
+            21.2897,
+            -157.8375
+          ],
+          [
+            21.2803,
+            -157.8294
+          ]
+        ]
+      }
+    ],
+    "points": [
+      {
+        "name": "Alapai Transit",
+        "lat": 21.3057,
+        "lng": -157.852,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Iwilei / Mapunapuna",
+        "lat": 21.338,
+        "lng": -157.8945,
+        "details": "Day Crew area"
+      },
+      {
+        "name": "766 Mapunapuna",
+        "lat": 21.3366,
+        "lng": -157.8948,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Kam Hwy / Laumaka",
+        "lat": 21.3336,
+        "lng": -157.8956,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Old Stadium",
+        "lat": 21.2869,
+        "lng": -157.8198,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Moiliili",
+        "lat": 21.2914,
+        "lng": -157.815,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Kalo",
+        "lat": 21.2889,
+        "lng": -157.8182,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Frank C. Judd Mini Park",
+        "lat": 21.2857,
+        "lng": -157.8207,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Wailupe Beach Park",
+        "lat": 21.278,
+        "lng": -157.7708,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Kawaikui Beach Park",
+        "lat": 21.2774,
+        "lng": -157.76,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Kuliouou Beach Park",
+        "lat": 21.2782,
+        "lng": -157.7485,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Maunalua Bay Beach Park",
+        "lat": 21.2785,
+        "lng": -157.7252,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Joe Lukela / Hawaii Kai area",
+        "lat": 21.281,
+        "lng": -157.7075,
+        "details": "Night Crew"
+      },
+      {
+        "name": "527 Judd St.",
+        "lat": 21.3147,
+        "lng": -157.8509,
+        "details": "Day Crew"
+      },
+      {
+        "name": "1670 Kalakaua Ave.",
+        "lat": 21.2936,
+        "lng": -157.8385,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Coral / Auahi",
+        "lat": 21.2959,
+        "lng": -157.8582,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Ala Moana Beach Park",
+        "lat": 21.2894,
+        "lng": -157.8477,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Kewalo Basin",
+        "lat": 21.2894,
+        "lng": -157.8546,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Ala Moana / Forrest",
+        "lat": 21.292,
+        "lng": -157.8524,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Pohukaina",
+        "lat": 21.2972,
+        "lng": -157.8573,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Keawe St.",
+        "lat": 21.299,
+        "lng": -157.857,
+        "details": "Day Crew"
+      },
+      {
+        "name": "South St.",
+        "lat": 21.302,
+        "lng": -157.8578,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Ewa Beach Community Park",
+        "lat": 21.3151,
+        "lng": -158.0072,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Puuloa Beach Park",
+        "lat": 21.3097,
+        "lng": -158.0167,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Kapolei Regional Park",
+        "lat": 21.334,
+        "lng": -158.0765,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Halawa District Park",
+        "lat": 21.3831,
+        "lng": -157.941,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Aiea Stream Bridge",
+        "lat": 21.383,
+        "lng": -157.9425,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Pearlridge Park",
+        "lat": 21.3937,
+        "lng": -157.945,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Manana Community Park",
+        "lat": 21.3997,
+        "lng": -157.9681,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Crestview Park",
+        "lat": 21.4026,
+        "lng": -157.9699,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Ala Moana",
+        "lat": 21.2898,
+        "lng": -157.847,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Thomas Square",
+        "lat": 21.3004,
+        "lng": -157.8414,
+        "details": "Night Crew"
+      },
+      {
+        "name": "98-281 Aiea Kai Pl.",
+        "lat": 21.3917,
+        "lng": -157.9347,
+        "details": "Day Crew"
+      },
+      {
+        "name": "98-077 Kamehameha Hwy",
+        "lat": 21.3888,
+        "lng": -157.9383,
+        "details": "Day Crew"
+      },
+      {
+        "name": "98-147 Kamehameha Hwy",
+        "lat": 21.39,
+        "lng": -157.9372,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Paiwa St. Bridge",
+        "lat": 21.3962,
+        "lng": -157.9808,
+        "details": "Day Crew"
+      },
+      {
+        "name": "1395 Farrington Hwy",
+        "lat": 21.3857,
+        "lng": -158.0045,
+        "details": "Day Crew"
+      },
+      {
+        "name": "94-322 Pupuole St.",
+        "lat": 21.3846,
+        "lng": -158.0012,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Kapolei Pkwy / Alohikea / Wakea / Kealakapu / Kamaaha / Haumea",
+        "lat": 21.3348,
+        "lng": -158.0792,
+        "details": "Day Crew area"
+      },
+      {
+        "name": "Waikiki",
+        "lat": 21.2793,
+        "lng": -157.8293,
+        "details": "Night Crew"
+      }
+    ]
+  },
+  {
+    "label": "May 18–22",
+    "dateRange": "May 18–22, 2026",
+    "color": "#10b981",
+    "streets": [
+      {
+        "name": "S King St. (Richards to Punahou)",
+        "coords": [
+          [
+            21.3078,
+            -157.8629
+          ],
+          [
+            21.3037,
+            -157.8552
+          ],
+          [
+            21.3007,
+            -157.8438
+          ],
+          [
+            21.2999,
+            -157.8317
+          ]
+        ]
+      },
+      {
+        "name": "Young St. (Victoria to Punahou)",
+        "coords": [
+          [
+            21.3008,
+            -157.8387
+          ],
+          [
+            21.2999,
+            -157.8317
+          ]
+        ]
+      },
+      {
+        "name": "Kapiolani Blvd. (Ward to Kalakaua)",
+        "coords": [
+          [
+            21.2967,
+            -157.8575
+          ],
+          [
+            21.291,
+            -157.845
+          ],
+          [
+            21.2858,
+            -157.8338
+          ]
+        ]
+      },
+      {
+        "name": "Ward Ave. (S Beretania to Ala Moana)",
+        "coords": [
+          [
+            21.3044,
+            -157.8509
+          ],
+          [
+            21.2967,
+            -157.8505
+          ]
+        ]
+      },
+      {
+        "name": "Pensacola St.",
+        "coords": [
+          [
+            21.3032,
+            -157.841
+          ],
+          [
+            21.298,
+            -157.841
+          ]
+        ]
+      },
+      {
+        "name": "Cedar St.",
+        "coords": [
+          [
+            21.3014,
+            -157.839
+          ],
+          [
+            21.2969,
+            -157.839
+          ]
+        ]
+      },
+      {
+        "name": "Kalihi St. (Hoe to Auiki)",
+        "coords": [
+          [
+            21.3215,
+            -157.8845
+          ],
+          [
+            21.3158,
+            -157.8825
+          ],
+          [
+            21.3095,
+            -157.8795
+          ]
+        ]
+      },
+      {
+        "name": "Pahounui St.",
+        "coords": [
+          [
+            21.3175,
+            -157.9025
+          ],
+          [
+            21.3128,
+            -157.896
+          ]
+        ]
+      },
+      {
+        "name": "South / Keawe / Kalakaua / Kinau / Makiki corridor",
+        "coords": [
+          [
+            21.3018,
+            -157.8578
+          ],
+          [
+            21.2988,
+            -157.857
+          ],
+          [
+            21.2965,
+            -157.8525
+          ],
+          [
+            21.299,
+            -157.8415
+          ],
+          [
+            21.296,
+            -157.838
+          ],
+          [
+            21.2923,
+            -157.8375
+          ]
+        ]
+      },
+      {
+        "name": "S Beretania St.",
+        "coords": [
+          [
+            21.305,
+            -157.8578
+          ],
+          [
+            21.3024,
+            -157.846
+          ],
+          [
+            21.2996,
+            -157.8363
+          ],
+          [
+            21.2978,
+            -157.823
+          ]
+        ]
+      },
+      {
+        "name": "Harding Ave.",
+        "coords": [
+          [
+            21.2796,
+            -157.7955
+          ],
+          [
+            21.2794,
+            -157.804
+          ],
+          [
+            21.2798,
+            -157.8118
+          ]
+        ]
+      },
+      {
+        "name": "S King St. (Punahou to Kapahulu)",
+        "coords": [
+          [
+            21.2999,
+            -157.8317
+          ],
+          [
+            21.2957,
+            -157.8223
+          ],
+          [
+            21.2905,
+            -157.8115
+          ]
+        ]
+      }
+    ],
+    "points": [
+      {
+        "name": "1505 Young St.",
+        "lat": 21.2988,
+        "lng": -157.8375,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Iwilei / Kuwili / Pine / Sumner / Pacific",
+        "lat": 21.3218,
+        "lng": -157.8765,
+        "details": "Day Crew area"
+      },
+      {
+        "name": "1519 Kaumualii St.",
+        "lat": 21.3157,
+        "lng": -157.8895,
+        "details": "Day Crew"
+      },
+      {
+        "name": "1489 Mokauea St.",
+        "lat": 21.3264,
+        "lng": -157.8922,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Middle St. Bridge",
+        "lat": 21.3212,
+        "lng": -157.89,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Waianae District Park",
+        "lat": 21.4465,
+        "lng": -158.1893,
+        "details": "Day Crew"
+      },
+      {
+        "name": "1148 2nd Ave.",
+        "lat": 21.3204,
+        "lng": -157.799,
+        "details": "Day Crew"
+      },
+      {
+        "name": "99-257 Ohialomi Pl.",
+        "lat": 21.3982,
+        "lng": -157.949,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Captain Cook Ave.",
+        "lat": 21.3936,
+        "lng": -157.9465,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Kamalii Park",
+        "lat": 21.3758,
+        "lng": -157.742,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Coral / Auahi",
+        "lat": 21.2959,
+        "lng": -157.8582,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Ala Moana Regional Park",
+        "lat": 21.2875,
+        "lng": -157.8478,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Kewalo Basin",
+        "lat": 21.2894,
+        "lng": -157.8546,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Wagon Round Up",
+        "lat": 21.3075,
+        "lng": -157.8625,
+        "details": "Night Crew staging area (approx.)"
+      },
+      {
+        "name": "Waimanalo Bay Beach Park",
+        "lat": 21.3389,
+        "lng": -157.7001,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Sherwoods",
+        "lat": 21.3444,
+        "lng": -157.6869,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Kaiona Beach Park",
+        "lat": 21.3463,
+        "lng": -157.6799,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Kaupo Beach",
+        "lat": 21.3467,
+        "lng": -157.6719,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Makapuʻu",
+        "lat": 21.3091,
+        "lng": -157.657,
+        "details": "Night Crew"
+      },
+      {
+        "name": "3566 Harding Ave.",
+        "lat": 21.2791,
+        "lng": -157.7966,
+        "details": "Day Crew"
+      },
+      {
+        "name": "3912 Harding Ave.",
+        "lat": 21.2791,
+        "lng": -157.804,
+        "details": "Day Crew"
+      },
+      {
+        "name": "540 Kapahulu Ave.",
+        "lat": 21.2793,
+        "lng": -157.8143,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Harding Ave. Bridge",
+        "lat": 21.279,
+        "lng": -157.8008,
+        "details": "Day Crew"
+      },
+      {
+        "name": "357 Makaloa St.",
+        "lat": 21.2977,
+        "lng": -157.8383,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Kalakaua Ave. BS37",
+        "lat": 21.2924,
+        "lng": -157.8378,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Old Stadium",
+        "lat": 21.2869,
+        "lng": -157.8198,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Moiliili",
+        "lat": 21.2914,
+        "lng": -157.815,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Kalo",
+        "lat": 21.2889,
+        "lng": -157.8182,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Varsity Pl.",
+        "lat": 21.288,
+        "lng": -157.811,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Isenberg St.",
+        "lat": 21.291,
+        "lng": -157.811,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Makahiki Way",
+        "lat": 21.2918,
+        "lng": -157.8148,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Poha Ln.",
+        "lat": 21.292,
+        "lng": -157.82,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Liholiho St. Bridge",
+        "lat": 21.2957,
+        "lng": -157.8342,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Anapuni St. Bridge",
+        "lat": 21.2968,
+        "lng": -157.8356,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Keeaumoku St. Bridge",
+        "lat": 21.2987,
+        "lng": -157.8398,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Nehoa St. Bridge",
+        "lat": 21.3,
+        "lng": -157.8415,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Waikiki",
+        "lat": 21.2793,
+        "lng": -157.8293,
+        "details": "Night Crew"
+      }
+    ]
+  },
+  {
+    "label": "May 25–29",
+    "dateRange": "May 25–29, 2026",
+    "color": "#f59e0b",
+    "streets": [
+      {
+        "name": "Ala Wai Promenade",
+        "coords": [
+          [
+            21.2878,
+            -157.8408
+          ],
+          [
+            21.2869,
+            -157.8336
+          ],
+          [
+            21.2858,
+            -157.8275
+          ]
+        ]
+      },
+      {
+        "name": "Kapahulu Bike Path",
+        "coords": [
+          [
+            21.2794,
+            -157.8185
+          ],
+          [
+            21.2785,
+            -157.8137
+          ],
+          [
+            21.2778,
+            -157.8095
+          ]
+        ]
+      },
+      {
+        "name": "Ala Wai Golf Course Rd.",
+        "coords": [
+          [
+            21.2822,
+            -157.8118
+          ],
+          [
+            21.2789,
+            -157.806
+          ]
+        ]
+      },
+      {
+        "name": "Iwilei Rd.",
+        "coords": [
+          [
+            21.3183,
+            -157.8787
+          ],
+          [
+            21.3217,
+            -157.8755
+          ],
+          [
+            21.3255,
+            -157.8734
+          ]
+        ]
+      },
+      {
+        "name": "Kokea St. / Kapālama Canal",
+        "coords": [
+          [
+            21.323,
+            -157.889
+          ],
+          [
+            21.3198,
+            -157.8858
+          ]
+        ]
+      },
+      {
+        "name": "Lower Kokea St.",
+        "coords": [
+          [
+            21.32,
+            -157.8846
+          ],
+          [
+            21.3175,
+            -157.8825
+          ]
+        ]
+      },
+      {
+        "name": "Dillingham / Kaʻaahi St.",
+        "coords": [
+          [
+            21.3188,
+            -157.885
+          ],
+          [
+            21.317,
+            -157.8782
+          ]
+        ]
+      },
+      {
+        "name": "Koali St.",
+        "coords": [
+          [
+            21.2812,
+            -157.8011
+          ],
+          [
+            21.2795,
+            -157.8007
+          ]
+        ]
+      },
+      {
+        "name": "Hotel / Richards",
+        "coords": [
+          [
+            21.3073,
+            -157.8619
+          ],
+          [
+            21.3078,
+            -157.8629
+          ]
+        ]
+      },
+      {
+        "name": "N King / Kohou St.",
+        "coords": [
+          [
+            21.3199,
+            -157.8858
+          ],
+          [
+            21.3193,
+            -157.8883
+          ]
+        ]
+      },
+      {
+        "name": "S King St. (Richards to Punahou)",
+        "coords": [
+          [
+            21.3078,
+            -157.8629
+          ],
+          [
+            21.3037,
+            -157.8552
+          ],
+          [
+            21.3007,
+            -157.8438
+          ],
+          [
+            21.2999,
+            -157.8317
+          ]
+        ]
+      },
+      {
+        "name": "Young St. (Victoria to Punahou)",
+        "coords": [
+          [
+            21.3008,
+            -157.8387
+          ],
+          [
+            21.2999,
+            -157.8317
+          ]
+        ]
+      },
+      {
+        "name": "Kapiolani Blvd. (Ward to Kalakaua)",
+        "coords": [
+          [
+            21.2967,
+            -157.8575
+          ],
+          [
+            21.291,
+            -157.845
+          ],
+          [
+            21.2858,
+            -157.8338
+          ]
+        ]
+      },
+      {
+        "name": "Ward Ave. (S Beretania to Ala Moana)",
+        "coords": [
+          [
+            21.3044,
+            -157.8509
+          ],
+          [
+            21.2967,
+            -157.8505
+          ]
+        ]
+      }
+    ],
+    "points": [
+      {
+        "name": "Old Stadium",
+        "lat": 21.2869,
+        "lng": -157.8198,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Moiliili",
+        "lat": 21.2914,
+        "lng": -157.815,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Kalo",
+        "lat": 21.2889,
+        "lng": -157.8182,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Kamanele",
+        "lat": 21.2911,
+        "lng": -157.8159,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Kaaha Mini",
+        "lat": 21.2898,
+        "lng": -157.8165,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Frank C. Judd Mini Park",
+        "lat": 21.2857,
+        "lng": -157.8207,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Wailupe Beach Park",
+        "lat": 21.278,
+        "lng": -157.7708,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Kawaikui Beach Park",
+        "lat": 21.2774,
+        "lng": -157.76,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Kuliouou Beach Park",
+        "lat": 21.2782,
+        "lng": -157.7485,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Maunalua Bay Beach Park",
+        "lat": 21.2785,
+        "lng": -157.7252,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Joe Lukela / Hawaii Kai area",
+        "lat": 21.281,
+        "lng": -157.7075,
+        "details": "Night Crew"
+      },
+      {
+        "name": "850 Iwilei Rd.",
+        "lat": 21.321,
+        "lng": -157.8791,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Kuwili / Pine / Sumner / Pacific / Akepo / Pua",
+        "lat": 21.321,
+        "lng": -157.876,
+        "details": "Day Crew area"
+      },
+      {
+        "name": "Lanakila Park",
+        "lat": 21.3213,
+        "lng": -157.8842,
+        "details": "Day Crew"
+      },
+      {
+        "name": "1111 Hala Dr.",
+        "lat": 21.3288,
+        "lng": -157.887,
+        "details": "Day Crew"
+      },
+      {
+        "name": "1121 Middle St.",
+        "lat": 21.3322,
+        "lng": -157.886,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Hoonee Pl.",
+        "lat": 21.3301,
+        "lng": -157.8897,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Kilihau St.",
+        "lat": 21.3275,
+        "lng": -157.8742,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Halawa District Park",
+        "lat": 21.3831,
+        "lng": -157.941,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Manana Community Park",
+        "lat": 21.3997,
+        "lng": -157.9681,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Pacheco Park",
+        "lat": 21.3877,
+        "lng": -157.9997,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Hans L'Orange Park",
+        "lat": 21.3836,
+        "lng": -158.007,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Waipahu District Park",
+        "lat": 21.3864,
+        "lng": -158.0088,
+        "details": "Night Crew"
+      },
+      {
+        "name": "925 Cedar St.",
+        "lat": 21.2992,
+        "lng": -157.839,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Keawe St.",
+        "lat": 21.299,
+        "lng": -157.857,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Punchbowl St.",
+        "lat": 21.304,
+        "lng": -157.8525,
+        "details": "Day Crew"
+      },
+      {
+        "name": "718 & 929 Pumehana St.",
+        "lat": 21.2978,
+        "lng": -157.8365,
+        "details": "Day Crew"
+      },
+      {
+        "name": "915 McCully St.",
+        "lat": 21.2931,
+        "lng": -157.823,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Kewalo Basin",
+        "lat": 21.2894,
+        "lng": -157.8546,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Point Panic",
+        "lat": 21.2853,
+        "lng": -157.8493,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Kakaako Waterfront",
+        "lat": 21.2878,
+        "lng": -157.8608,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Gateways (Mauka & Makai)",
+        "lat": 21.2924,
+        "lng": -157.8568,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Mother Waldron Park",
+        "lat": 21.2928,
+        "lng": -157.8589,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Kawaiahao Mini Park",
+        "lat": 21.303,
+        "lng": -157.8583,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Hawaii Plantation Village",
+        "lat": 21.3851,
+        "lng": -158.0106,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Waikiki",
+        "lat": 21.2793,
+        "lng": -157.8293,
+        "details": "Night Crew"
+      }
+    ]
+  },
+  {
+    "label": "June 1–5",
+    "dateRange": "June 1–5, 2026",
+    "color": "#8b5cf6",
+    "streets": [
+      {
+        "name": "Iwilei Rd.",
+        "coords": [
+          [
+            21.3183,
+            -157.8787
+          ],
+          [
+            21.3217,
+            -157.8755
+          ],
+          [
+            21.3255,
+            -157.8734
+          ]
+        ]
+      },
+      {
+        "name": "Dillingham / Kaʻaahi St.",
+        "coords": [
+          [
+            21.3188,
+            -157.885
+          ],
+          [
+            21.317,
+            -157.8782
+          ]
+        ]
+      },
+      {
+        "name": "N King / Kohou St.",
+        "coords": [
+          [
+            21.3199,
+            -157.8858
+          ],
+          [
+            21.3193,
+            -157.8883
+          ]
+        ]
+      },
+      {
+        "name": "Pahounui / Sand Island Access Rd.",
+        "coords": [
+          [
+            21.3168,
+            -157.9043
+          ],
+          [
+            21.311,
+            -157.8985
+          ],
+          [
+            21.3057,
+            -157.8939
+          ]
+        ]
+      },
+      {
+        "name": "Ala Wai Promenade",
+        "coords": [
+          [
+            21.2878,
+            -157.8408
+          ],
+          [
+            21.2869,
+            -157.8336
+          ],
+          [
+            21.2858,
+            -157.8275
+          ]
+        ]
+      },
+      {
+        "name": "Ilalo / Auahi / Pohukaina / Halekuwila / Queen / South / Keawe / Coral / Cooke / Ohe / Koula corridor",
+        "coords": [
+          [
+            21.2948,
+            -157.8618
+          ],
+          [
+            21.2956,
+            -157.8582
+          ],
+          [
+            21.2972,
+            -157.8573
+          ],
+          [
+            21.2991,
+            -157.8572
+          ],
+          [
+            21.3016,
+            -157.858
+          ],
+          [
+            21.302,
+            -157.8578
+          ],
+          [
+            21.299,
+            -157.857
+          ],
+          [
+            21.2959,
+            -157.8582
+          ],
+          [
+            21.2962,
+            -157.8615
+          ],
+          [
+            21.297,
+            -157.8635
+          ],
+          [
+            21.2966,
+            -157.8652
+          ]
+        ]
+      },
+      {
+        "name": "S Beretania / S King / Young / Makiki / Kinau / Kalakaua corridor",
+        "coords": [
+          [
+            21.3005,
+            -157.845
+          ],
+          [
+            21.2995,
+            -157.8385
+          ],
+          [
+            21.2978,
+            -157.823
+          ],
+          [
+            21.297,
+            -157.8375
+          ],
+          [
+            21.2965,
+            -157.8415
+          ],
+          [
+            21.296,
+            -157.838
+          ],
+          [
+            21.2924,
+            -157.8375
+          ]
+        ]
+      },
+      {
+        "name": "Kapahulu Bike Path",
+        "coords": [
+          [
+            21.2794,
+            -157.8185
+          ],
+          [
+            21.2785,
+            -157.8137
+          ],
+          [
+            21.2778,
+            -157.8095
+          ]
+        ]
+      },
+      {
+        "name": "Ala Wai Golf Course Rd.",
+        "coords": [
+          [
+            21.2822,
+            -157.8118
+          ],
+          [
+            21.2789,
+            -157.806
+          ]
+        ]
+      },
+      {
+        "name": "Makahiki Way / Koali St.",
+        "coords": [
+          [
+            21.2918,
+            -157.8148
+          ],
+          [
+            21.2862,
+            -157.8065
+          ],
+          [
+            21.2812,
+            -157.8011
+          ]
+        ]
+      },
+      {
+        "name": "Hunakai Drainage Canal",
+        "coords": [
+          [
+            21.2735,
+            -157.7825
+          ],
+          [
+            21.276,
+            -157.7895
+          ],
+          [
+            21.2788,
+            -157.796
+          ]
+        ]
+      },
+      {
+        "name": "S King St. (Punahou to Kapiolani)",
+        "coords": [
+          [
+            21.2999,
+            -157.8317
+          ],
+          [
+            21.2957,
+            -157.8223
+          ],
+          [
+            21.2905,
+            -157.8115
+          ]
+        ]
+      },
+      {
+        "name": "S Beretania St. (S King to McCully)",
+        "coords": [
+          [
+            21.2978,
+            -157.823
+          ],
+          [
+            21.2992,
+            -157.8155
+          ],
+          [
+            21.3002,
+            -157.8045
+          ]
+        ]
+      }
+    ],
+    "points": [
+      {
+        "name": "Waikiki",
+        "lat": 21.2793,
+        "lng": -157.8293,
+        "details": "Night Crew"
+      },
+      {
+        "name": "850 Iwilei Rd.",
+        "lat": 21.321,
+        "lng": -157.8791,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Kuwili / Pine / Sumner / Pacific / Akepo / Pua",
+        "lat": 21.321,
+        "lng": -157.876,
+        "details": "Day Crew area"
+      },
+      {
+        "name": "Kokea St.",
+        "lat": 21.32,
+        "lng": -157.8846,
+        "details": "Day Crew"
+      },
+      {
+        "name": "142 Mokauea St.",
+        "lat": 21.3267,
+        "lng": -157.8891,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Kilihau St.",
+        "lat": 21.3275,
+        "lng": -157.8742,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Ala Moana Park",
+        "lat": 21.2867,
+        "lng": -157.8472,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Thomas Square",
+        "lat": 21.3004,
+        "lng": -157.8414,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Mother Waldron Park",
+        "lat": 21.2928,
+        "lng": -157.8589,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Kakaako Waterfront",
+        "lat": 21.2878,
+        "lng": -157.8608,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Point Panic",
+        "lat": 21.2853,
+        "lng": -157.8493,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Kawaiahao St.",
+        "lat": 21.3045,
+        "lng": -157.8584,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Alder St.",
+        "lat": 21.298,
+        "lng": -157.8405,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Elm St.",
+        "lat": 21.2968,
+        "lng": -157.8399,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Waiau Pl.",
+        "lat": 21.2958,
+        "lng": -157.8387,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Kaiaka Beach Park",
+        "lat": 21.592,
+        "lng": -158.1033,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Alii Beach Park",
+        "lat": 21.5956,
+        "lng": -158.1049,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Haleiwa Beach Park",
+        "lat": 21.5945,
+        "lng": -158.102,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Puaena Point",
+        "lat": 21.5995,
+        "lng": -158.1038,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Waimea Bay Beach Park",
+        "lat": 21.6403,
+        "lng": -158.0657,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Three Tables",
+        "lat": 21.6537,
+        "lng": -158.0594,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Pupukea Beach Park",
+        "lat": 21.6528,
+        "lng": -158.0572,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Log Cabins",
+        "lat": 21.6682,
+        "lng": -158.0475,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Sunset Beach",
+        "lat": 21.6787,
+        "lng": -158.0405,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Nanikai Beach Park",
+        "lat": 21.2762,
+        "lng": -157.746,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Guard Rails (Hawaii Kai coast)",
+        "lat": 21.2798,
+        "lng": -157.739,
+        "details": "Day Crew"
+      },
+      {
+        "name": "2103 Kanealii St.",
+        "lat": 21.2792,
+        "lng": -157.7955,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Alapai St.",
+        "lat": 21.3055,
+        "lng": -157.8512,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Aala",
+        "lat": 21.3166,
+        "lng": -157.8587,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Smith / Beretania",
+        "lat": 21.313,
+        "lng": -157.858,
+        "details": "Night Crew"
+      },
+      {
+        "name": "College Walk",
+        "lat": 21.3135,
+        "lng": -157.8583,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Kamamalu",
+        "lat": 21.3151,
+        "lng": -157.8571,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Dole",
+        "lat": 21.3021,
+        "lng": -157.8396,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Sheridan",
+        "lat": 21.2969,
+        "lng": -157.8382,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Pawaa",
+        "lat": 21.2953,
+        "lng": -157.8392,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Cartwright",
+        "lat": 21.2825,
+        "lng": -157.8218,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Sand Island",
+        "lat": 21.307,
+        "lng": -157.8925,
+        "details": "Day Crew"
+      },
+      {
+        "name": "Old Stadium",
+        "lat": 21.2869,
+        "lng": -157.8198,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Moiliili",
+        "lat": 21.2914,
+        "lng": -157.815,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Algaroba St.",
+        "lat": 21.291,
+        "lng": -157.813,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Isenberg St.",
+        "lat": 21.291,
+        "lng": -157.811,
+        "details": "Night Crew"
+      },
+      {
+        "name": "Varsity Pl.",
+        "lat": 21.288,
+        "lng": -157.811,
+        "details": "Night Crew"
+      }
+    ]
+  }
+];
+let map;
+let activeIndex = 4;
+let weekLayers = [];
+let playTimer = null;
+
+function hexToRgba(hex, alpha) {
+  const clean = hex.replace('#','');
+  const bigint = parseInt(clean, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function initMap() {
+  map = L.map('map', { center:[21.42,-157.97], zoom:10, scrollWheelZoom:true });
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  weeks.forEach((week, idx) => {
+    const group = L.layerGroup();
+
+    week.streets.forEach(feature => {
+      const line = L.polyline(feature.coords, {
+        color: week.color,
+        weight: idx === activeIndex ? 7 : 4,
+        opacity: idx === activeIndex ? 1 : 0.45,
+        lineCap: 'round',
+        lineJoin: 'round'
+      })
+      .bindPopup(`
+        <div class="popup-title">${feature.name}</div>
+        <div class="popup-meta"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${week.color};margin-right:6px;"></span>${week.dateRange} · Street segment</div>
+        <div>Approximate street geometry drawn to match the schedule description.</div>
+      `)
+      .bindTooltip(feature.name, {sticky:true});
+      group.addLayer(line);
+    });
+
+    week.points.forEach(point => {
+      const marker = L.circleMarker([point.lat, point.lng], {
+        radius: idx === activeIndex ? 6.5 : 5,
+        color: '#ffffff',
+        weight: 1.5,
+        fillColor: week.color,
+        fillOpacity: idx === activeIndex ? 0.95 : 0.62,
+        opacity: idx === activeIndex ? 1 : 0.75
+      })
+      .bindPopup(`
+        <div class="popup-title">${point.name}</div>
+        <div class="popup-meta"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${week.color};margin-right:6px;"></span>${week.dateRange} · Location marker</div>
+        <div>${point.details}</div>
+      `);
+      group.addLayer(marker);
+    });
+
+    group.addTo(map);
+    weekLayers.push(group);
+  });
+
+  renderLegend();
+  renderCards();
+  renderTicks();
+  refreshStyles();
+
+  map.fitBounds([[21.24,-158.25],[21.70,-157.64]], {padding:[24,24]});
+  setTimeout(() => map.invalidateSize(), 200);
+}
+
+function refreshStyles() {
+  weekLayers.forEach((group, idx) => {
+    group.eachLayer(layer => {
+      if (layer instanceof L.Polyline && !(layer instanceof L.CircleMarker)) {
+        layer.setStyle({
+          weight: idx === activeIndex ? 7 : 4,
+          opacity: idx === activeIndex ? 1 : 0.45
+        });
+        if (idx === activeIndex) layer.bringToFront();
+      } else if (layer instanceof L.CircleMarker) {
+        layer.setStyle({
+          radius: idx === activeIndex ? 6.5 : 5,
+          fillOpacity: idx === activeIndex ? 0.95 : 0.62,
+          opacity: idx === activeIndex ? 1 : 0.75
+        });
+        if (idx === activeIndex) layer.bringToFront();
+      }
+    });
+  });
+
+  renderCards();
+  renderTicks();
+
+  const bounds = L.latLngBounds([]);
+  weekLayers[activeIndex].eachLayer(layer => {
+    if (layer.getLatLng) bounds.extend(layer.getLatLng());
+    else if (layer.getBounds) bounds.extend(layer.getBounds());
+  });
+  if (bounds.isValid()) {
+    map.fitBounds(bounds, {padding:[50,50], maxZoom:12});
+  }
+}
+
+function setWeek(idx) {
+  activeIndex = Math.max(0, Math.min(weeks.length - 1, idx));
+  document.getElementById('weekSlider').value = activeIndex;
+  refreshStyles();
+}
+
+function renderLegend() {
+  const legend = document.getElementById('legend');
+  legend.innerHTML = weeks.map((week, idx) => `
+    <div class="legend-row">
+      <span class="swatch" style="background:${week.color};"></span>
+      <span>${week.label}</span>
+    </div>
+  `).join('');
+}
+
+function renderCards() {
+  const wrap = document.getElementById('weekCards');
+  wrap.innerHTML = '';
+  weeks.forEach((week, idx) => {
+    const div = document.createElement('div');
+    div.className = 'week-card' + (idx === activeIndex ? ' active' : '');
+    div.style.borderLeftColor = week.color;
+    div.style.background = idx === activeIndex ? hexToRgba(week.color, 0.08) : '#fff';
+    div.style.borderColor = idx === activeIndex ? hexToRgba(week.color, 0.45) : '#dbe3ef';
+    div.innerHTML = `
+      <div class="week-title">
+        <span style="color:${idx === activeIndex ? week.color : '#1e293b'};">${week.label}</span>
+        <span class="count" style="background:${hexToRgba(week.color,0.12)}; color:${week.color};">
+          ${week.streets.length} streets · ${week.points.length} points
+        </span>
+      </div>
+      <div class="week-summary">${week.dateRange}</div>
+    `;
+    div.onclick = () => setWeek(idx);
+    wrap.appendChild(div);
+  });
+}
+
+function renderTicks() {
+  const ticks = document.getElementById('ticks');
+  ticks.innerHTML = '';
+  weeks.forEach((week, idx) => {
+    const span = document.createElement('span');
+    span.textContent = week.label;
+    span.style.borderTopColor = week.color;
+    if (idx === activeIndex) {
+      span.className = 'active';
+      span.style.color = week.color;
+    }
+    ticks.appendChild(span);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('weekSlider').addEventListener('input', e => setWeek(Number(e.target.value)));
+  document.getElementById('prevBtn').onclick = () => setWeek(activeIndex - 1);
+  document.getElementById('nextBtn').onclick = () => setWeek(activeIndex + 1);
+  document.getElementById('playBtn').onclick = () => {
+    const btn = document.getElementById('playBtn');
+    if (playTimer) {
+      clearInterval(playTimer);
+      playTimer = null;
+      btn.textContent = '▶';
+    } else {
+      btn.textContent = '❚❚';
+      playTimer = setInterval(() => {
+        setWeek((activeIndex + 1) % weeks.length);
+      }, 1400);
+    }
+  };
+  initMap();
+});
+</script>
+</body>
+</html>
