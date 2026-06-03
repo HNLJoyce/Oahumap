@@ -1,1070 +1,1738 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Homeless Resources on Oahu</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <style>
-    :root {
-      --bg: #f4f7fb;
-      --panel: rgba(255,255,255,0.97);
-      --border: #d5deea;
-      --text: #183247;
-      --muted: #5d7286;
-      --accent: #0b5cab;
-      --shadow: 0 10px 28px rgba(21, 52, 83, 0.15);
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
-    .page { max-width: 1400px; margin: 0 auto; padding: 18px; }
-    .header {
-      background: linear-gradient(135deg, #ffffff, #eef4fb);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 20px 22px 16px;
-      box-shadow: var(--shadow);
-      margin-bottom: 16px;
-    }
-    h1 { margin: 0 0 8px; font-size: 2rem; }
-    .subhead { margin: 0; color: var(--muted); font-size: 1rem; }
-    .top-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; color: var(--muted); font-size: 0.93rem; }
-    .pill { background: #fff; border: 1px solid var(--border); padding: 8px 12px; border-radius: 999px; }
-    .layout { display: grid; grid-template-columns: 320px 1fr; gap: 16px; align-items: start; }
-    .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 18px; padding: 16px; box-shadow: var(--shadow); backdrop-filter: blur(5px); }
-    .panel h2 { margin: 0 0 10px; font-size: 1.08rem; }
-    .legend-list, .check-list { display: grid; gap: 10px; }
-    .check-item, .legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.95rem; }
-    .swatch { width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.18); flex: 0 0 16px; }
-    .dog-side { width: 34px; height: 24px; display: inline-flex; vertical-align: middle; }
-    .dog-side svg { width: 34px; height: 24px; }
-    label { cursor: pointer; }
-    .small { font-size: 0.87rem; color: var(--muted); line-height: 1.45; }
-    #map-card { background: var(--panel); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; box-shadow: var(--shadow); }
-    #statusBar { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 0.92rem; color: var(--muted); background: #fff; }
-    #map { height: 76vh; min-height: 700px; width: 100%; }
-    .leaflet-tooltip.facility-tooltip { background: rgba(255,255,255,0.96); border: 1px solid #cfd9e3; border-radius: 10px; box-shadow: 0 8px 24px rgba(28, 54, 82, 0.14); color: #17324a; padding: 6px 10px; }
-    .popup-wrap { max-width: 330px; }
-    .popup-title { margin: 0 0 6px; font-size: 1.1rem; color: #0c3f72; }
-    .popup-sub { margin: 0 0 10px; font-size: 0.92rem; color: #5d7286; }
-    .popup-grid { display: grid; gap: 6px; font-size: 0.92rem; }
-    .popup-grid div { line-height: 1.35; }
-    .popup-grid strong { color: #244865; }
-    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; }
-    .tag { background: #eef5ff; color: #16426d; border: 1px solid #cfe0f5; padding: 4px 8px; border-radius: 999px; font-size: 0.82rem; }
-    .animal-yes { color: #8b5a2b; font-weight: 700; }
-    .stats-list { display: grid; gap: 8px; margin-top: 8px; }
-    .stats-list div { display: flex; justify-content: space-between; gap: 10px; font-size: 0.92rem; }
-    .stats-list span:last-child { font-weight: 700; }
-    .animal-marker {
-      background: white;
-      border: 1px solid rgba(0,0,0,0.16);
-      border-radius: 999px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.22);
-      color: #8b5a2b;
-      padding: 1px 3px;
-    }
-    .animal-marker svg { width: 24px; height: 17px; display: block; }
-    @media (max-width: 1000px) { .layout { grid-template-columns: 1fr; } #map { min-height: 580px; height: 68vh; } }
+<meta charset="utf-8" />
+<title>Homeless Resources on Oahu</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root {
+    --bg: #f7f9fc;
+    --panel: #ffffff;
+    --ink: #172033;
+    --muted: #5f6b7a;
+    --line: #dbe3ef;
+    --blue: #1e40af;
+  }
+  html, body {
+    height: 100%;
+    margin: 0;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+  }
+  .app {
+    height: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 380px;
+    grid-template-rows: auto 1fr;
+  }
+  header {
+    grid-column: 1 / -1;
+    padding: 18px 22px;
+    background: linear-gradient(90deg, #0f172a, #1e3a8a);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: center;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(22px, 3vw, 36px);
+    letter-spacing: -0.03em;
+  }
+  .subtitle {
+    color: rgba(255,255,255,.82);
+    font-size: 14px;
+    margin-top: 4px;
+  }
+  .header-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .small-chip {
+    border: 1px solid rgba(255,255,255,.28);
+    background: rgba(255,255,255,.12);
+    border-radius: 999px;
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+  #map {
+    min-height: 720px;
+    height: 100%;
+    width: 100%;
+    background: #dbeafe;
+  }
+  aside {
+    background: var(--panel);
+    border-left: 1px solid var(--line);
+    overflow: auto;
+    padding: 16px;
+  }
+  .panel-title {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+  }
+  .search {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .filters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  select, button {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: white;
+    padding: 9px 10px;
+    font-size: 13px;
+  }
+  button {
+    cursor: pointer;
+    font-weight: 700;
+  }
+  .legend {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 12px;
+    background: #f8fafc;
+    margin-bottom: 12px;
+  }
+  .legend-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 13px;
+    margin: 7px 0;
+  }
+  .swatch {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 0 1px rgba(15,23,42,.14);
+  }
+  .facility-list {
+    display: grid;
+    gap: 9px;
+  }
+  .facility-card {
+    border: 1px solid var(--line);
+    border-left: 7px solid #64748b;
+    border-radius: 14px;
+    padding: 10px 11px;
+    background: white;
+    cursor: pointer;
+    transition: .15s ease;
+  }
+  .facility-card:hover {
+    box-shadow: 0 8px 18px rgba(15,23,42,.09);
+    transform: translateY(-1px);
+  }
+  .facility-name {
+    font-weight: 800;
+    font-size: 14px;
+    line-height: 1.25;
+  }
+  .facility-meta {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.35;
+    margin-top: 4px;
+  }
+  .badges {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  .badge {
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #334155;
+    padding: 2px 7px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .marker-dot {
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 0 0 5px rgba(15,23,42,.08), 0 8px 18px rgba(15,23,42,.22);
+    position: relative;
+  }
+  .marker-fee {
+    position: absolute;
+    right: -9px;
+    top: -9px;
+    width: 15px;
+    height: 15px;
+    border-radius: 999px;
+    background: #111827;
+    color: #fff;
+    font-size: 10px;
+    line-height: 15px;
+    text-align: center;
+    border: 1px solid white;
+    font-weight: 900;
+  }
+  .marker-animal {
+    position: absolute;
+    left: -10px;
+    bottom: -10px;
+    width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    background: #fff;
+    color: #111827;
+    font-size: 11px;
+    line-height: 16px;
+    text-align: center;
+    border: 1px solid #cbd5e1;
+  }
 
-    .fee-marker {
-      background: #ffffff;
-      border: 2px solid #1f2937;
-      color: #1f2937;
-      border-radius: 50%;
-      width: 22px;
-      height: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 14px;
-      line-height: 1;
-      box-shadow: 0 2px 7px rgba(0,0,0,0.25);
-      pointer-events: none;
+  .hover-tooltip {
+    width: 440px;
+    max-width: 440px;
+    min-width: 360px;
+    white-space: normal;
+    background: #0f172a;
+    color: #fff;
+    border: 0;
+    border-radius: 13px;
+    padding: 12px 14px;
+    box-shadow: 0 12px 30px rgba(15,23,42,.30);
+    line-height: 1.35;
+  }
+  .hover-tooltip .hover-title {
+    font-weight: 900;
+    font-size: 15px;
+    margin-bottom: 7px;
+    letter-spacing: -0.01em;
+  }
+  .hover-tooltip .hover-grid {
+    display: grid;
+    grid-template-columns: 86px minmax(0, 1fr);
+    column-gap: 8px;
+    row-gap: 4px;
+    align-items: start;
+  }
+  .hover-tooltip .hover-label {
+    color: #cbd5e1;
+    font-weight: 800;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .hover-tooltip .hover-value {
+    color: #ffffff;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+  }
+  @media (max-width: 640px) {
+    .hover-tooltip {
+      width: 320px;
+      min-width: 280px;
+      max-width: 320px;
     }
+    .hover-tooltip .hover-grid {
+      grid-template-columns: 76px minmax(0, 1fr);
+    }
+  }
 
-  </style>
+  .leaflet-popup-content {
+    font-size: 13px;
+    line-height: 1.4;
+    min-width: 240px;
+  }
+  .popup-title {
+    font-weight: 900;
+    font-size: 15px;
+    margin-bottom: 5px;
+  }
+  .popup-row {
+    margin: 3px 0;
+  }
+  .popup-label {
+    color: var(--muted);
+    font-weight: 700;
+  }
+  @media (max-width: 980px) {
+    .app {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 620px auto;
+    }
+    aside {
+      border-left: 0;
+      border-top: 1px solid var(--line);
+      max-height: 520px;
+    }
+    #map { min-height: 620px; }
+    header { align-items: flex-start; flex-direction: column; }
+  }
+</style>
 </head>
 <body>
-  <div class="page">
-    <div class="header">
+<div class="app">
+  <header>
+    <div>
       <h1>Homeless Resources on Oahu</h1>
-      <p class="subhead">Hover over a facility for key info. Click on it for more details.</p>
-      <div class="top-meta">
-        <div class="pill"><strong>62</strong> visible facilities loaded</div>
-        <div class="pill"><strong>7</strong> hidden workbook rows excluded</div>
-        <div class="pill">Categories included: <strong>Permanent Supportive Housing</strong> and <strong>Hospitals</strong></div>
-      </div>
+      <div class="subtitle">Hover over a facility for key info. Click on it for more details.</div>
     </div>
-    <div class="layout">
-      <aside class="panel">
-        <h2>Filter by facility type</h2>
-        <div class="check-list" id="typeFilters"></div>
-        <h2 style="margin-top:18px;">Legend</h2>
-        <div class="legend-list" id="legendList"></div>
-        <h2 style="margin-top:18px;">At a glance</h2>
-        <div class="stats-list" id="statsList"></div>
-        <h2 style="margin-top:18px;">Support / service animals</h2>
-        <div class="check-item small"><span class="dog-side"><svg class="beagle-icon" viewBox="0 0 64 44" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M13 34 C7 27 7 16 15 8 C23 0 38 2 44 10 C49 12 57 15 61 22 C58 31 50 35 43 34 C38 41 25 43 13 34 Z" fill="#fff7e6"/><path d="M16 8 C25 0 39 3 44 11 C40 16 35 18 30 20 C24 23 23 31 19 35 C13 32 10 25 11 18 C12 13 14 10 16 8 Z" fill="#d8943d"/><path d="M18 9 C8 14 5 27 15 37 C23 43 31 37 31 29 C31 21 26 15 25 10 C24 7 21 7 18 9 Z" fill="#c98335" opacity="0.95"/><path d="M43 18 C50 18 57 21 60 25 C58 31 51 34 44 33 C39 32 36 29 37 25 C38 21 40 19 43 18 Z" fill="#fffaf0"/><circle cx="42" cy="17" r="3.2" fill="#2b1a12"/><circle cx="43.1" cy="15.8" r="1" fill="#ffffff"/><path d="M57 22 C61 23 63 26 61 30 C60 34 57 36 54 34 C56 30 55 26 57 22 Z" fill="#3a2518"/><path d="M44 31 C49 34 55 32 58 28" fill="none" stroke="#c8ad8d" stroke-width="2.2" stroke-linecap="round"/><circle cx="49" cy="26" r="0.9" fill="#d8c2a4"/><circle cx="52" cy="26.8" r="0.9" fill="#d8c2a4"/><circle cx="51" cy="24" r="0.9" fill="#d8c2a4"/></svg></span><span></span></div>
-        <p class="small" style="margin-top:16px;"></p>
-      </aside>
-      <section id="map-card">
-        <div id="statusBar">Preparing facility map…</div>
-        <div id="map"></div>
-      </section>
+    <div class="header-actions">
+      <span class="small-chip">Council districts shown in popups</span>
+      <span class="small-chip">$ = fee</span>
+      <span class="small-chip">🐕 = support/service animals</span>
     </div>
-  </div>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script>
-    const facilities = [
+  </header>
+
+  <main id="map"></main>
+
+  <aside>
+    <h2 class="panel-title">Find a facility</h2>
+    <input class="search" id="searchBox" placeholder="Search by name, agency, address, type..." />
+    <div class="filters">
+      <select id="typeFilter"><option value="">All types</option></select>
+      <select id="districtFilter"><option value="">All districts</option></select>
+      <button id="resetBtn">Reset</button>
+      <button id="fitBtn">Fit map</button>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div class="facility-list" id="facilityList"></div>
+  </aside>
+</div>
+
+<script>
+const facilities = [
   {
-    "name": "Leahi Respite",
-    "capacity": 24,
-    "animals": "no",
-    "fee": "none",
-    "district": 4,
-    "agency": "North Shore Mental Health",
-    "facilityType": "Behaviorial/Medical Respite",
-    "specialty": "behavioral or medical health",
-    "address": "3650 Maunalei Ave., Honolulu, HI 96816",
-    "phone": "808-562-5630",
-    "servicesFor": "Adults"
+    "Name": "Adventist Health Castle",
+    "Capacity": "160 beds",
+    "Support/Service Animals": "",
+    "Fee": "varies",
+    "City Council District": "3",
+    "Agency": "Adventist Health",
+    "Facility Type": "Hospital",
+    "Specialty": "Level III trauma",
+    "Address": "640 Ulukahiki St, Kailua, HI 96734",
+    "Phone": "(808) 263-5500",
+    "Services for": "everyone",
+    "row": 2,
+    "hidden": false,
+    "lat": 21.3855,
+    "lng": -157.7587,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "Punawai Rest Stop",
-    "capacity": "",
-    "animals": "",
-    "fee": "none",
-    "district": 6,
-    "agency": "Mental Health Kokua",
-    "facilityType": "Drop-in Center",
-    "specialty": "",
-    "address": "431 Kuwili St., Honolulu, HI 96817",
-    "phone": "808-599-9750",
-    "servicesFor": "Houseless individuals"
+    "Name": "Alana Ola Pono",
+    "Capacity": "50",
+    "Support/Service Animals": "2 per <30lbs",
+    "Fee": "max of $450/mo",
+    "City Council District": "6",
+    "Agency": "IHS",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "",
+    "Address": "357 N King St Honolulu HI 96817",
+    "Phone": "808-589-7950",
+    "Services for": "Adults, Couples",
+    "row": 4,
+    "hidden": false,
+    "lat": 21.3152,
+    "lng": -157.862,
+    "hasFee": true,
+    "hasAnimal": true
   },
   {
-    "name": "RYSE",
-    "capacity": "n/a",
-    "animals": "n/a",
-    "fee": "none",
-    "district": 3,
-    "agency": "RYSE",
-    "facilityType": "Drop-in Center",
-    "specialty": "",
-    "address": "42-470 Kalanianaʻole Highway #6 Kailua, HI 96734",
-    "phone": "808-498-5180",
-    "servicesFor": "Young Adults (18-24)"
+    "Name": "Behaviorial Health Crisis Center (BHCC)",
+    "Capacity": "16 chairs",
+    "Support/Service Animals": "no",
+    "Fee": "none",
+    "City Council District": "6",
+    "Agency": "CARE Hawaii",
+    "Facility Type": "Treatment Center",
+    "Specialty": "Stabilization",
+    "Address": "806 Iwilei Road, Honolulu, HI 96817",
+    "Phone": "808-699-8412",
+    "Services for": "Adults",
+    "row": 5,
+    "hidden": false,
+    "lat": 21.320485759830923,
+    "lng": -157.87670277644145,
+    "hasFee": false,
+    "hasAnimal": false
   },
   {
-    "name": "Alana Ola Pono",
-    "capacity": 50,
-    "animals": "2 per <30lbs",
-    "fee": "max of $450/mo",
-    "district": 6,
-    "agency": "IHS",
-    "facilityType": "Emergency Shelter",
-    "specialty": "",
-    "address": "357 N King St Honolulu HI 96817",
-    "phone": "808-589-7950",
-    "servicesFor": "Adults, Couples"
+    "Name": "Behaviorial Health Crisis Center (BHCC)",
+    "Capacity": "9 beds",
+    "Support/Service Animals": "no",
+    "Fee": "none",
+    "City Council District": "6",
+    "Agency": "CARE Hawaii",
+    "Facility Type": "Treatment Center",
+    "Specialty": "Stabilization",
+    "Address": "806 Iwilei Road, Honolulu, HI 96817",
+    "Phone": "808-699-8412",
+    "Services for": "Adults",
+    "row": 8,
+    "hidden": false,
+    "lat": 21.32060734808389,
+    "lng": -157.8768355028395,
+    "hasFee": false,
+    "hasAnimal": false
   },
   {
-    "name": "Family Assessment Center Waianae",
-    "capacity": 50,
-    "animals": "1 per HH",
-    "fee": "none",
-    "district": 1,
-    "agency": "Catholic Charities",
-    "facilityType": "Emergency Shelter",
-    "specialty": "",
-    "address": "87-191 Maliona Street, Waianae, HI 96792",
-    "phone": "808-202-9133",
-    "servicesFor": "Families"
+    "Name": "Family Assessment Center Waianae",
+    "Capacity": "50",
+    "Support/Service Animals": "1 per HH",
+    "Fee": "none",
+    "City Council District": "1",
+    "Agency": "Catholic Charities",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "",
+    "Address": "87-191 Maliona Street, Waianae, HI 96792",
+    "Phone": "808-202-9133",
+    "Services for": "Families",
+    "row": 10,
+    "hidden": false,
+    "lat": 21.3985,
+    "lng": -158.1555,
+    "hasFee": false,
+    "hasAnimal": true
   },
   {
-    "name": "HONU",
-    "capacity": "~86",
-    "animals": "2 per HH",
-    "fee": "none",
-    "district": 1,
-    "agency": "CCH",
-    "facilityType": "Emergency Shelter",
-    "specialty": "",
-    "address": "471 Kamaaha Ave., Kapolei, HI 96707",
-    "phone": "808-768-4668",
-    "servicesFor": "Adults, Couples, Families"
+    "Name": "H4",
+    "Capacity": "30",
+    "Support/Service Animals": "no",
+    "Fee": "none",
+    "City Council District": "6",
+    "Agency": "Premier Medical Group Hawaii",
+    "Facility Type": "Medical Respite",
+    "Specialty": "",
+    "Address": "431 Kuwili St., Honolulu, HI 96817",
+    "Phone": "808-312-3913",
+    "Services for": "Adults",
+    "row": 11,
+    "hidden": false,
+    "lat": 21.319185759830923,
+    "lng": -157.8754027764415,
+    "hasFee": false,
+    "hasAnimal": false
   },
   {
-    "name": "Hale Imi Ola",
-    "capacity": 40,
-    "animals": "1 per HH",
-    "fee": "none",
-    "district": 5,
-    "agency": "Catholic Charities",
-    "facilityType": "Emergency Shelter",
-    "specialty": "",
-    "address": "2241 Kapiolani Blvd Honolulu HI 96826",
-    "phone": "808-897-5479",
-    "servicesFor": "Families"
+    "Name": "Hale Imi Ola",
+    "Capacity": "40",
+    "Support/Service Animals": "1 per HH",
+    "Fee": "none",
+    "City Council District": "5",
+    "Agency": "Catholic Charities",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "",
+    "Address": "2241 Kapiolani Blvd Honolulu HI 96826",
+    "Phone": "808-897-5479",
+    "Services for": "Families",
+    "row": 12,
+    "hidden": false,
+    "lat": 21.29388575983092,
+    "lng": -157.8249027764415,
+    "hasFee": false,
+    "hasAnimal": true
   },
   {
-    "name": "Hale Mauli'ola",
-    "capacity": 65,
-    "animals": "1 per HH <30lbs",
-    "fee": "max of $150 for singles, $200 for couples",
-    "district": 7,
-    "agency": "IHS",
-    "facilityType": "Emergency Shelter",
-    "specialty": "",
-    "address": "10 Sand Island Access Rd Honolulu HI 96819",
-    "phone": "808-319-5598",
-    "servicesFor": "Adults, Couples"
+    "Name": "Hale Imi Ola",
+    "Capacity": "120",
+    "Support/Service Animals": "1 per HH",
+    "Fee": "$500/mo max",
+    "City Council District": "5",
+    "Agency": "Catholic Charities",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "",
+    "Address": "2241 Kapiolani Blvd Honolulu HI 96826",
+    "Phone": "808-897-5479",
+    "Services for": "Families",
+    "row": 13,
+    "hidden": false,
+    "lat": 21.294007348083888,
+    "lng": -157.82503550283954,
+    "hasFee": true,
+    "hasAnimal": true
   },
   {
-    "name": "Hauula Family Assessment Center",
-    "capacity": "",
-    "animals": "no",
-    "fee": "none",
-    "district": 2,
-    "agency": "Corazon",
-    "facilityType": "Emergency Shelter",
-    "specialty": "",
-    "address": "8453A Hauula Homestead Rd Hauula HI 96717",
-    "phone": "808-293-0939",
-    "servicesFor": "Families"
+    "Name": "Hale Mauli'ola",
+    "Capacity": "65",
+    "Support/Service Animals": "1 per HH <30lbs",
+    "Fee": "max of $150 for singles, $200 for couples",
+    "City Council District": "7",
+    "Agency": "IHS",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "",
+    "Address": "10 Sand Island Access Rd Honolulu HI 96819",
+    "Phone": "808-319-5598",
+    "Services for": "Adults, Couples",
+    "row": 16,
+    "hidden": false,
+    "lat": 21.309,
+    "lng": -157.8895,
+    "hasFee": true,
+    "hasAnimal": true
   },
   {
-    "name": "KWO: Onelau'ena",
-    "capacity": "",
-    "animals": "",
-    "fee": "",
-    "district": 1,
-    "agency": "Kealahou West Oahu",
-    "facilityType": "Emergency Shelter",
-    "specialty": "",
-    "address": "50 Belleau Woods St. Kapolei, HI 96707",
-    "phone": "808-782-4342",
-    "servicesFor": "Families"
+    "Name": "Hauula Family Assessment Center",
+    "Capacity": "26",
+    "Support/Service Animals": "no",
+    "Fee": "none",
+    "City Council District": "2",
+    "Agency": "Corazon",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "",
+    "Address": "8453A Hauula Homestead Rd Hauula HI 96717",
+    "Phone": "808-293-0939",
+    "Services for": "Families",
+    "row": 17,
+    "hidden": false,
+    "lat": 21.6102,
+    "lng": -157.9121,
+    "hasFee": false,
+    "hasAnimal": false
   },
   {
-    "name": "Ka'aahi Women's & Family Shelter",
-    "capacity": "~180",
-    "animals": "5 max/dorm",
-    "fee": "max of $150 for singles, $200 for families",
-    "district": 6,
-    "agency": "IHS",
-    "facilityType": "Emergency Shelter",
-    "specialty": "",
-    "address": "546 Kaaahi St Honolulu HI 96817",
-    "phone": "808-447-2800",
-    "servicesFor": "Adult Women & Families"
+    "Name": "Hawaii Cedar Church",
+    "Capacity": "",
+    "Support/Service Animals": "",
+    "Fee": "sliding scale",
+    "City Council District": "6",
+    "Agency": "Hawaii Cedar Church",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "",
+    "Address": "1545 Kamehameha IV Rd, Honolulu, HI 96819",
+    "Phone": "(808)255-1234",
+    "Services for": "Adults",
+    "row": 18,
+    "hidden": false,
+    "lat": 21.3445,
+    "lng": -157.8768,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "Kauhale @ Iwilei Center",
-    "capacity": 50,
-    "animals": "no",
-    "fee": "none",
-    "district": 6,
-    "agency": "Mental Health Kokua",
-    "facilityType": "Emergency Shelter",
-    "specialty": "behavioral health",
-    "address": "505 Kaaahi St., Honolulu, HI 96817",
-    "phone": "808-807-2345",
-    "servicesFor": "Adults"
+    "Name": "Hawaii Health & Harm Reduction Center",
+    "Capacity": "",
+    "Support/Service Animals": "",
+    "Fee": "none",
+    "City Council District": "6",
+    "Agency": "H3RC",
+    "Facility Type": "Treatment Center",
+    "Specialty": "Harm reduction",
+    "Address": "677 Ala Moana Blvd #226, Honolulu, HI 96813",
+    "Phone": "(808) 521-2437",
+    "Services for": "Adults",
+    "row": 19,
+    "hidden": false,
+    "lat": 21.2998,
+    "lng": -157.8643,
+    "hasFee": false,
+    "hasAnimal": false
   },
   {
-    "name": "Keauhou",
-    "capacity": 66,
-    "animals": "1 per HH",
-    "fee": "$250/mo max",
-    "district": 5,
-    "agency": "Waikiki Health",
-    "facilityType": "Emergency Shelter",
-    "specialty": "",
-    "address": "1020 Isenberg St Honolulu HI 96826",
-    "phone": "808-537-8330",
-    "servicesFor": "Adults, Couples"
+    "Name": "Hawaii State Hospital",
+    "Capacity": "417 beds",
+    "Support/Service Animals": "",
+    "Fee": "varies",
+    "City Council District": "3",
+    "Agency": "State of Hawaii DOH, Adult Mental Health Division",
+    "Facility Type": "Hospital",
+    "Specialty": "Psychiatric services",
+    "Address": "45-710 Keaahala Rd, Kāneʻohe, HI 96744",
+    "Phone": "(808) 247-2191",
+    "Services for": "Adults",
+    "row": 20,
+    "hidden": false,
+    "lat": 21.4038,
+    "lng": -157.803,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "Kumu Ola Hou Phase I",
-    "capacity": 15,
-    "animals": "no",
-    "fee": "$350 max",
-    "district": 6,
-    "agency": "IHS",
-    "facilityType": "Emergency Shelter",
-    "specialty": "behavioral health",
-    "address": "414 Kuwili St Honolulu HI 96817",
-    "phone": "808-447-2871",
-    "servicesFor": "Adults, Couples"
+    "Name": "Holomua Na Ohana (Weinberg Village)",
+    "Capacity": "",
+    "Support/Service Animals": "",
+    "Fee": "varies",
+    "City Council District": "3",
+    "Agency": "Holomua Na Ohana",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "",
+    "Address": "41-490 Saddle City Rd, Waimanalo, HI 96795",
+    "Phone": "(808) 204-0982",
+    "Services for": "Adults, Families",
+    "row": 21,
+    "hidden": false,
+    "lat": 21.341,
+    "lng": -157.7335,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "Kumu Ola Hou Phase II",
-    "capacity": 37,
-    "animals": "no",
-    "fee": "$ 300 flat",
-    "district": 6,
-    "agency": "IHS",
-    "facilityType": "Emergency Shelter",
-    "specialty": "employed",
-    "address": "414 Kuwili St Honolulu HI 96817",
-    "phone": "808-447-2871",
-    "servicesFor": "Adults, Couples"
+    "Name": "Homes of Redemption: Halina",
+    "Capacity": "13",
+    "Support/Service Animals": "no",
+    "Fee": "$700/mo",
+    "City Council District": "6",
+    "Agency": "IHS",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "Justice-involved",
+    "Address": "2108 Halina St Honolulu HI 96819",
+    "Phone": "808-744-0060",
+    "Services for": "Adult men",
+    "row": 22,
+    "hidden": false,
+    "lat": 21.34,
+    "lng": -157.8795,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "Ohana Navigation Center Mo'ili'ili",
-    "capacity": 20,
-    "animals": "1 per HH",
-    "fee": "none",
-    "district": 5,
-    "agency": "Family Promise of Hawaii",
-    "facilityType": "Emergency Shelter",
-    "specialty": "",
-    "address": "2106 Young St Honolulu HI 96826",
-    "phone": "808-300-0560",
-    "servicesFor": "Adults, Couples"
+    "Name": "Homes of Redemption: Pearl City",
+    "Capacity": "18",
+    "Support/Service Animals": "no",
+    "Fee": "$650/mo",
+    "City Council District": "8",
+    "Agency": "IHS",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "Justice-involved",
+    "Address": "98-218 Kaluamoi Pl Aiea HI 96782",
+    "Phone": "808-492-1868",
+    "Services for": "Adult men",
+    "row": 23,
+    "hidden": false,
+    "lat": 21.3904,
+    "lng": -157.9415,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "Ohana Navigation Center Wahiawa",
-    "capacity": 68,
-    "animals": "1 per HH",
-    "fee": "none",
-    "district": 2,
-    "agency": "Family Promise of Hawaii",
-    "facilityType": "Emergency Shelter",
-    "specialty": "",
-    "address": "360 California Ave Wahiawa HI 96786",
-    "phone": "808-300-0560",
-    "servicesFor": "Families"
+    "Name": "HONU",
+    "Capacity": "~86",
+    "Support/Service Animals": "2 per HH",
+    "Fee": "none",
+    "City Council District": "1",
+    "Agency": "CCH",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "",
+    "Address": "471 Kamaaha Ave., Kapolei, HI 96707",
+    "Phone": "808-768-4668",
+    "Services for": "Adults, Couples, Families",
+    "row": 24,
+    "hidden": false,
+    "lat": 21.3371,
+    "lng": -158.0791,
+    "hasFee": false,
+    "hasAnimal": true
   },
   {
-    "name": "RYSE",
-    "capacity": 20,
-    "animals": "accepts",
-    "fee": "none",
-    "district": 3,
-    "agency": "RYSE",
-    "facilityType": "Emergency Shelter",
-    "specialty": "",
-    "address": "42-470 Kalanianaʻole Highway #6 Kailua, HI 96734",
-    "phone": "808-498-5180",
-    "servicesFor": "Young Adults (18-24)"
+    "Name": "Ho'okahi Leo Kauhale",
+    "Capacity": "22",
+    "Support/Service Animals": "yes",
+    "Fee": "varies",
+    "City Council District": "6",
+    "Agency": "H3RC",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "",
+    "Address": "850 N King St, Honolulu, HI 96817",
+    "Phone": "(808) 724-4972",
+    "Services for": "Adults, Couples",
+    "row": 25,
+    "hidden": false,
+    "lat": 21.3201,
+    "lng": -157.865,
+    "hasFee": true,
+    "hasAnimal": true
   },
   {
-    "name": "Sumner Men's Shelter",
-    "capacity": 148,
-    "animals": "1 max pp",
-    "fee": "max of $150/mo, proration avail",
-    "district": 6,
-    "agency": "IHS",
-    "facilityType": "Emergency Shelter",
-    "specialty": "",
-    "address": "350 Sumner St Honolulu HI 96817",
-    "phone": "808-447-2900",
-    "servicesFor": "Adult men"
+    "Name": "Hui Mahi'ai Aina (Aunty Blanche)",
+    "Capacity": "",
+    "Support/Service Animals": "",
+    "Fee": "$125 to $250/mo",
+    "City Council District": "3",
+    "Agency": "Hui Mahi'ai Aina",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "",
+    "Address": "41-902 Oluolu St, Waimanalo, HI 96795",
+    "Phone": "(808) 482-5883",
+    "Services for": "Adults, Families",
+    "row": 26,
+    "hidden": false,
+    "lat": 21.3375,
+    "lng": -157.7275,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "The Shelter",
-    "capacity": 30,
-    "animals": "1 per HH",
-    "fee": "$200 to $300",
-    "district": 3,
-    "agency": "First Assembly of God",
-    "facilityType": "Emergency Shelter",
-    "specialty": "Single mothers",
-    "address": "47-323 Ahuimanu Rd, Kaneohe, HI 96744",
-    "phone": "808-468-1810",
-    "servicesFor": "Families"
+    "Name": "Imi Ola Piha",
+    "Capacity": "8",
+    "Support/Service Animals": "no",
+    "Fee": "varies",
+    "City Council District": "6",
+    "Agency": "IHS",
+    "Facility Type": "Treatment Center",
+    "Specialty": "Detox",
+    "Address": "551 Dillingham Blvd Honolulu HI 96817",
+    "Phone": "808-782-8231",
+    "Services for": "Adults",
+    "row": 27,
+    "hidden": false,
+    "lat": 21.3187,
+    "lng": -157.873,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "US VETS Barber's Point",
-    "capacity": "",
-    "animals": "",
-    "fee": "",
-    "district": 1,
-    "agency": "US VETS Barber's Point",
-    "facilityType": "Emergency Shelter",
-    "specialty": "Veterans",
-    "address": "91-1039 Shangrila St, Kapolei, HI 96707",
-    "phone": "808-953-5477",
-    "servicesFor": "Adults"
+    "Name": "Ka Malu Ko'olau",
+    "Capacity": "34 households",
+    "Support/Service Animals": "",
+    "Fee": "0-6mo: no fee\n6-9 mo: $150\n9-12 mo: $300\n12+mo: $450",
+    "City Council District": "",
+    "Agency": "Project Vision",
+    "Facility Type": "Permanent Supportive Housing",
+    "Specialty": "",
+    "Address": "45-889 Pookela St, Kaneohe, HI 96744",
+    "Phone": "(808) 724-4972",
+    "Services for": "Adults, Families",
+    "row": 28,
+    "hidden": false,
+    "lat": 21.4155,
+    "lng": -157.8055,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "Waianae Civic Center: Kulia",
-    "capacity": 19,
-    "animals": "2 per HH",
-    "fee": "max of $250/mo",
-    "district": 1,
-    "agency": "U.S. Vets Waianae",
-    "facilityType": "Emergency Shelter",
-    "specialty": "",
-    "address": "85-296 Ala Hema St. Waianae, HI 96792",
-    "phone": "808-462-0280",
-    "servicesFor": "Adults"
+    "Name": "Ka'aahi Women's & Family Shelter",
+    "Capacity": "~180",
+    "Support/Service Animals": "5 max/dorm",
+    "Fee": "max of $150 for singles, $200 for families",
+    "City Council District": "6",
+    "Agency": "IHS",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "",
+    "Address": "546 Kaaahi St Honolulu HI 96817",
+    "Phone": "808-447-2800",
+    "Services for": "Adult Women & Families",
+    "row": 29,
+    "hidden": false,
+    "lat": 21.3181,
+    "lng": -157.8742,
+    "hasFee": true,
+    "hasAnimal": true
   },
   {
-    "name": "Waianae Civic Center: Pai’olu Kaiaulu",
-    "capacity": 102,
-    "animals": "2 per HH",
-    "fee": "max of $250/mo",
-    "district": 1,
-    "agency": "U.S. Vets Waianae",
-    "facilityType": "Emergency Shelter",
-    "specialty": "",
-    "address": "85-638 Farrington Hwy Waianae HI 96792 (B Wing)",
-    "phone": "808-462-0280",
-    "servicesFor": "Adults, Couples, Families"
+    "Name": "Kahauiki Village",
+    "Capacity": "140 households",
+    "Support/Service Animals": "",
+    "Fee": "varies",
+    "City Council District": "7",
+    "Agency": "IHS",
+    "Facility Type": "Permanent Supportive Housing",
+    "Specialty": "community living",
+    "Address": "2475 N Nimitz Hwy, Honolulu, HI 96819",
+    "Phone": "808-238-7389",
+    "Services for": "Adults & Families",
+    "row": 30,
+    "hidden": false,
+    "lat": 21.3416,
+    "lng": -157.9128,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "Adventist Health Castle",
-    "capacity": "160 beds",
-    "animals": "",
-    "fee": "varies",
-    "district": 3,
-    "agency": "Adventist Health",
-    "facilityType": "Hospital",
-    "specialty": "Level III trauma",
-    "address": "640 Ulukahiki St, Kailua, HI 96734",
-    "phone": "(808) 263-5500",
-    "servicesFor": "everyone"
+    "Name": "Kahi Mohala",
+    "Capacity": "88 beds",
+    "Support/Service Animals": "",
+    "Fee": "varies",
+    "City Council District": "1",
+    "Agency": "The Queen's Health Systems",
+    "Facility Type": "Hospital",
+    "Specialty": "Psychiatric services",
+    "Address": "91-2301 Old Fort Weaver Rd, ʻEwa Beach, HI 96706",
+    "Phone": "(808) 671-8511",
+    "Services for": "Youth, Adults",
+    "row": 31,
+    "hidden": false,
+    "lat": 21.3322,
+    "lng": -158.0305,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "Hawaii State Hospital",
-    "capacity": "417 beds",
-    "animals": "",
-    "fee": "varies",
-    "district": 3,
-    "agency": "State of Hawaii DOH, Adult Mental Health Division",
-    "facilityType": "Hospital",
-    "specialty": "Psychiatric services",
-    "address": "45-710 Keaahala Rd, Kāneʻohe, HI 96744",
-    "phone": "(808) 247-2191",
-    "servicesFor": "Adults"
+    "Name": "Kahuku Medical Center",
+    "Capacity": "21 beds",
+    "Support/Service Animals": "",
+    "Fee": "varies",
+    "City Council District": "2",
+    "Agency": "Kahuku Medical Center",
+    "Facility Type": "Hospital",
+    "Specialty": "",
+    "Address": "56-117 Pualalea St, Kahuku, HI 96731",
+    "Phone": "(808) 293-9221",
+    "Services for": "everyone",
+    "row": 32,
+    "hidden": false,
+    "lat": 21.6743,
+    "lng": -157.9527,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "Kahi Mohala",
-    "capacity": "88 beds",
-    "animals": "",
-    "fee": "varies",
-    "district": 1,
-    "agency": "The Queen's Health Systems",
-    "facilityType": "Hospital",
-    "specialty": "Psychiatric services",
-    "address": "91-2301 Old Fort Weaver Rd, ʻEwa Beach, HI 96706",
-    "phone": "(808) 671-8511",
-    "servicesFor": "Youth, Adults"
+    "Name": "Kaiser Permanente: Moanalua Medical Center",
+    "Capacity": "286 beds",
+    "Support/Service Animals": "",
+    "Fee": "varies",
+    "City Council District": "7",
+    "Agency": "Kaiser Permanente Hawaii",
+    "Facility Type": "Hospital",
+    "Specialty": "24 hour emergency",
+    "Address": "3288 Moanalua Rd, Honolulu, HI 96819",
+    "Phone": "(808) 432-0000",
+    "Services for": "",
+    "row": 33,
+    "hidden": false,
+    "lat": 21.3628,
+    "lng": -157.9012,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "Kahuku Medical Center",
-    "capacity": "21 beds",
-    "animals": "",
-    "fee": "varies",
-    "district": 2,
-    "agency": "Kahuku Medical Center",
-    "facilityType": "Hospital",
-    "specialty": "",
-    "address": "56-117 Pualalea St, Kahuku, HI 96731",
-    "phone": "(808) 293-9221",
-    "servicesFor": "everyone"
+    "Name": "Kapiolani Medical Center for Women & Children",
+    "Capacity": "243",
+    "Support/Service Animals": "",
+    "Fee": "varies",
+    "City Council District": "5",
+    "Agency": "Hawaii Pacific Health",
+    "Facility Type": "Hospital",
+    "Specialty": "maternity, newborn, pediatric",
+    "Address": "1319 Punahou St. Honolulu, HI 96826",
+    "Phone": "808-983-6000",
+    "Services for": "Women & Children",
+    "row": 34,
+    "hidden": false,
+    "lat": 21.3002,
+    "lng": -157.834,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "Kaiser Permanente: Moanalua Medical Center",
-    "capacity": "286 beds",
-    "animals": "",
-    "fee": "varies",
-    "district": 7,
-    "agency": "Kaiser Permanente Hawaii",
-    "facilityType": "Hospital",
-    "specialty": "24 hour emergency",
-    "address": "3288 Moanalua Rd, Honolulu, HI 96819",
-    "phone": "(808) 432-0000",
-    "servicesFor": ""
+    "Name": "Kauhale @ Iwilei Center",
+    "Capacity": "50",
+    "Support/Service Animals": "no",
+    "Fee": "none",
+    "City Council District": "6",
+    "Agency": "Mental Health Kokua",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "behavioral health",
+    "Address": "505 Kaaahi St., Honolulu, HI 96817",
+    "Phone": "808-807-2345",
+    "Services for": "Adults",
+    "row": 35,
+    "hidden": false,
+    "lat": 21.3177,
+    "lng": -157.8734,
+    "hasFee": false,
+    "hasAnimal": false
   },
   {
-    "name": "Kapiolani Medical Center for Women & Children",
-    "capacity": 243,
-    "animals": "",
-    "fee": "varies",
-    "district": 5,
-    "agency": "Hawaii Pacific Health",
-    "facilityType": "Hospital",
-    "specialty": "maternity, newborn, pediatric",
-    "address": "1319 Punahou St. Honolulu, HI 96826",
-    "phone": "808-983-6000",
-    "servicesFor": "Women & Children"
+    "Name": "Kauhale Health",
+    "Capacity": "31",
+    "Support/Service Animals": "no",
+    "Fee": "none",
+    "City Council District": "6",
+    "Agency": "Windward Urgent Care Services",
+    "Facility Type": "Medical Respite",
+    "Specialty": "",
+    "Address": "445 N King St Honolulu HI 96817",
+    "Phone": "808-620-1991",
+    "Services for": "Adults, Medical Respite",
+    "row": 36,
+    "hidden": false,
+    "lat": 21.31588575983092,
+    "lng": -157.86300277644148,
+    "hasFee": false,
+    "hasAnimal": false
   },
   {
-    "name": "Kuakini Medical Center",
-    "capacity": "212 beds",
-    "animals": "",
-    "fee": "varies",
-    "district": 6,
-    "agency": "Kuakini Health System",
-    "facilityType": "Hospital",
-    "specialty": "",
-    "address": "347 N. Kuakini St, Honolulu, HI 96817",
-    "phone": "(808) 536-2236",
-    "servicesFor": "everyone"
+    "Name": "Kauhale Health",
+    "Capacity": "30",
+    "Support/Service Animals": "no",
+    "Fee": "none",
+    "City Council District": "6",
+    "Agency": "Windward Urgent Care Services",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "",
+    "Address": "445 N King St Honolulu HI 96817",
+    "Phone": "808-620-1991",
+    "Services for": "Adults",
+    "row": 37,
+    "hidden": false,
+    "lat": 21.316007348083886,
+    "lng": -157.86313550283953,
+    "hasFee": false,
+    "hasAnimal": false
   },
   {
-    "name": "Pali Momi Medical Center",
-    "capacity": "118 beds",
-    "animals": "",
-    "fee": "varies",
-    "district": 7,
-    "agency": "Hawaii Pacific Health",
-    "facilityType": "Hospital",
-    "specialty": "cancer, bariatric",
-    "address": "98-1079 Moanalua Rd, ʻAiea, HI 96701",
-    "phone": "(808) 486-6000",
-    "servicesFor": "everyone"
+    "Name": "Keauhou",
+    "Capacity": "66",
+    "Support/Service Animals": "1 per HH",
+    "Fee": "$250/mo max",
+    "City Council District": "5",
+    "Agency": "Waikiki Health",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "",
+    "Address": "1020 Isenberg St Honolulu HI 96826",
+    "Phone": "808-537-8330",
+    "Services for": "Adults, Couples",
+    "row": 38,
+    "hidden": false,
+    "lat": 21.2928,
+    "lng": -157.8157,
+    "hasFee": true,
+    "hasAnimal": true
   },
   {
-    "name": "Straub Benioff Medical Center",
-    "capacity": "159 beds",
-    "animals": "",
-    "fee": "varies",
-    "district": 6,
-    "agency": "Hawaii Pacific Health",
-    "facilityType": "Hospital",
-    "specialty": "multi-specialty",
-    "address": "888 S. King St, Honolulu, HI 96813",
-    "phone": "(808) 522-4000",
-    "servicesFor": "everyone"
+    "Name": "Kinai Eha",
+    "Capacity": "",
+    "Support/Service Animals": "",
+    "Fee": "",
+    "City Council District": "3",
+    "Agency": "Kinai Eha",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "",
+    "Address": "42-470 Kalanianaole Hwy, Kailua (Bldg 8)",
+    "Phone": "808-489-4003",
+    "Services for": "Youth",
+    "row": 39,
+    "hidden": false,
+    "lat": 21.391,
+    "lng": -157.7435,
+    "hasFee": false,
+    "hasAnimal": false
   },
   {
-    "name": "The Queen's Medical Center: Hale Pulama Mau",
-    "capacity": "40 beds",
-    "animals": "",
-    "fee": "varies",
-    "district": 6,
-    "agency": "The Queen's Health Systems & Kuakini Medical Center",
-    "facilityType": "Hospital",
-    "specialty": "acute care",
-    "address": "347 N. Kuakini St, 7th Floor, Honolulu, HI 96817",
-    "phone": "(808) 691-8731",
-    "servicesFor": "everyone"
+    "Name": "Kuakini Medical Center",
+    "Capacity": "212 beds",
+    "Support/Service Animals": "",
+    "Fee": "varies",
+    "City Council District": "6",
+    "Agency": "Kuakini Health System",
+    "Facility Type": "Hospital",
+    "Specialty": "",
+    "Address": "347 N. Kuakini St, Honolulu, HI 96817",
+    "Phone": "(808) 536-2236",
+    "Services for": "everyone",
+    "row": 40,
+    "hidden": false,
+    "lat": 21.3226,
+    "lng": -157.8565,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "The Queen's Medical Center: Punchbowl",
-    "capacity": "535 beds",
-    "animals": "",
-    "fee": "varies",
-    "district": 6,
-    "agency": "The Queen's Health Systems",
-    "facilityType": "Hospital",
-    "specialty": "Level I trauma",
-    "address": "1301 Punchbowl St, Honolulu, HI 96813",
-    "phone": "808-691-1000",
-    "servicesFor": "everyone"
+    "Name": "Kumu Ola Hou Phase I",
+    "Capacity": "15",
+    "Support/Service Animals": "no",
+    "Fee": "$350 max",
+    "City Council District": "6",
+    "Agency": "IHS",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "behavioral health",
+    "Address": "414 Kuwili St Honolulu HI 96817",
+    "Phone": "808-447-2871",
+    "Services for": "Adults, Couples",
+    "row": 41,
+    "hidden": false,
+    "lat": 21.319685759830925,
+    "lng": -157.87520277644148,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "The Queen's Medical Center: Wahiawa",
-    "capacity": "42 beds",
-    "animals": "",
-    "fee": "varies",
-    "district": 2,
-    "agency": "The Queen's Health Systems",
-    "facilityType": "Hospital",
-    "specialty": "",
-    "address": "128 Lehua St, Wahiawā, HI 96786",
-    "phone": "(808) 691-6800",
-    "servicesFor": "everyone"
+    "Name": "Kumu Ola Hou Phase II",
+    "Capacity": "37",
+    "Support/Service Animals": "no",
+    "Fee": "$ 300 flat",
+    "City Council District": "6",
+    "Agency": "IHS",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "employed",
+    "Address": "414 Kuwili St Honolulu HI 96817",
+    "Phone": "808-447-2871",
+    "Services for": "Adults, Couples",
+    "row": 42,
+    "hidden": false,
+    "lat": 21.31980734808389,
+    "lng": -157.87533550283953,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "The Queen's Medical Center: West Oahu",
-    "capacity": "104 beds",
-    "animals": "",
-    "fee": "varies",
-    "district": 1,
-    "agency": "The Queen's Health Systems",
-    "facilityType": "Hospital",
-    "specialty": "",
-    "address": "91-2141 Fort Weaver Rd, ʻEwa Beach, HI 96706",
-    "phone": "(808) 691-3000",
-    "servicesFor": "everyone"
+    "Name": "KWO: Onelau'ena",
+    "Capacity": "",
+    "Support/Service Animals": "",
+    "Fee": "",
+    "City Council District": "1",
+    "Agency": "Kealahou West Oahu",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "",
+    "Address": "50 Belleau Woods St. Kapolei, HI 96707",
+    "Phone": "808-782-4342",
+    "Services for": "Families",
+    "row": 43,
+    "hidden": false,
+    "lat": 21.3277,
+    "lng": -158.0857,
+    "hasFee": false,
+    "hasAnimal": false
   },
   {
-    "name": "H4",
-    "capacity": 30,
-    "animals": "no",
-    "fee": "none",
-    "district": 6,
-    "agency": "H4",
-    "facilityType": "Medical Respite",
-    "specialty": "",
-    "address": "431 Kuwili St., Honolulu, HI 96817",
-    "phone": "808-312-3913",
-    "servicesFor": "Adults"
+    "Name": "KWO: Onemalu",
+    "Capacity": "",
+    "Support/Service Animals": "",
+    "Fee": "",
+    "City Council District": "1",
+    "Agency": "Kealahou West Oahu",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "",
+    "Address": "48 Belleau Woods St., Kapolei, HI 96707",
+    "Phone": "808-682-3869",
+    "Services for": "Adults, Families",
+    "row": 44,
+    "hidden": false,
+    "lat": 21.3281,
+    "lng": -158.0848,
+    "hasFee": false,
+    "hasAnimal": false
   },
   {
-    "name": "Kauhale Health",
-    "capacity": 31,
-    "animals": "no",
-    "fee": "none",
-    "district": 6,
-    "agency": "Windward Urgent Care Services",
-    "facilityType": "Medical Respite",
-    "specialty": "",
-    "address": "445 N King St Honolulu HI 96817",
-    "phone": "808-620-1991",
-    "servicesFor": "Adults, Medical Respite"
+    "Name": "Leahi Respite",
+    "Capacity": "24",
+    "Support/Service Animals": "no",
+    "Fee": "none",
+    "City Council District": "4",
+    "Agency": "North Shore Mental Health",
+    "Facility Type": "Behaviorial/Medical Respite",
+    "Specialty": "behavioral or medical health",
+    "Address": "3650 Maunalei Ave., Honolulu, HI 96816",
+    "Phone": "808-562-5630",
+    "Services for": "Adults",
+    "row": 46,
+    "hidden": false,
+    "lat": 21.2777,
+    "lng": -157.8008,
+    "hasFee": false,
+    "hasAnimal": false
   },
   {
-    "name": "Tutu Bert's Medical Respite: Kahai",
-    "capacity": 22,
-    "animals": "no",
-    "fee": "none",
-    "district": 7,
-    "agency": "IHS",
-    "facilityType": "Medical Respite",
-    "specialty": "",
-    "address": "1922 Kahai St. Honolulu, HI 96819",
-    "phone": "808-447-2849",
-    "servicesFor": "Adults, Couples"
+    "Name": "Ohana Navigation Center Mo'ili'ili",
+    "Capacity": "20",
+    "Support/Service Animals": "1 per HH",
+    "Fee": "none",
+    "City Council District": "5",
+    "Agency": "Family Promise of Hawaii",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "",
+    "Address": "2106 Young St Honolulu HI 96826",
+    "Phone": "808-300-0560",
+    "Services for": "Adults, Couples",
+    "row": 47,
+    "hidden": false,
+    "lat": 21.2976,
+    "lng": -157.8265,
+    "hasFee": false,
+    "hasAnimal": true
   },
   {
-    "name": "Tutu Bert's Medical Respite: Kilohana",
-    "capacity": 20,
-    "animals": "no",
-    "fee": "none",
-    "district": 6,
-    "agency": "IHS",
-    "facilityType": "Medical Respite",
-    "specialty": "",
-    "address": "1600 Kilohana St Honolulu HI 96819",
-    "phone": "808-845-3850",
-    "servicesFor": "Adult men"
+    "Name": "Ohana Navigation Center Wahiawa",
+    "Capacity": "68",
+    "Support/Service Animals": "1 per HH",
+    "Fee": "none",
+    "City Council District": "2",
+    "Agency": "Family Promise of Hawaii",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "",
+    "Address": "360 California Ave Wahiawa HI 96786",
+    "Phone": "808-300-0560",
+    "Services for": "Families",
+    "row": 48,
+    "hidden": false,
+    "lat": 21.5005,
+    "lng": -158.023,
+    "hasFee": false,
+    "hasAnimal": true
   },
   {
-    "name": "Tutu Bert's Medical Respite: Makiki",
-    "capacity": 10,
-    "animals": "no",
-    "fee": "none",
-    "district": 5,
-    "agency": "IHS",
-    "facilityType": "Medical Respite",
-    "specialty": "",
-    "address": "1330 Dominis St Honolulu HI 96822",
-    "phone": "808-845-3850",
-    "servicesFor": "Adults"
+    "Name": "Paepae Hou",
+    "Capacity": "12",
+    "Support/Service Animals": "no",
+    "Fee": "$650/mo",
+    "City Council District": "6",
+    "Agency": "IHS",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "Sobriety home",
+    "Address": "2352 Wilson Street., Honolulu, HI 96819",
+    "Phone": "808-260-1808",
+    "Services for": "Adult men",
+    "row": 49,
+    "hidden": false,
+    "lat": 21.34,
+    "lng": -157.8785,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "Tutu Bert's Medical Respite: VET House Haumana",
-    "capacity": 12,
-    "animals": "no",
-    "fee": "none",
-    "district": 6,
-    "agency": "IHS",
-    "facilityType": "Medical Respite",
-    "specialty": "Veterans",
-    "address": "2360 Haumana Pl Honolulu HI 96819",
-    "phone": "808-260-9615",
-    "servicesFor": "Adults"
+    "Name": "Pali Momi Medical Center",
+    "Capacity": "118 beds",
+    "Support/Service Animals": "",
+    "Fee": "varies",
+    "City Council District": "7",
+    "Agency": "Hawaii Pacific Health",
+    "Facility Type": "Hospital",
+    "Specialty": "cancer, bariatric",
+    "Address": "98-1079 Moanalua Rd, ʻAiea, HI 96701",
+    "Phone": "(808) 486-6000",
+    "Services for": "everyone",
+    "row": 50,
+    "hidden": false,
+    "lat": 21.3848,
+    "lng": -157.9443,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "Ka Malu Ko'olau",
-    "capacity": "34 households",
-    "animals": "",
-    "fee": "0-6mo: no fee 6-9 mo: $150 9-12 mo: $300 12+mo: $450",
-    "district": "",
-    "agency": "Project Vision",
-    "facilityType": "Permanent Supportive Housing",
-    "specialty": "",
-    "address": "45-889 Pookela St, Kaneohe, HI 96744",
-    "phone": "(808) 724-4972",
-    "servicesFor": "Adults, Families"
+    "Name": "Punawai Rest Stop",
+    "Capacity": "",
+    "Support/Service Animals": "",
+    "Fee": "none",
+    "City Council District": "6",
+    "Agency": "Mental Health Kokua",
+    "Facility Type": "Drop-in Center",
+    "Specialty": "",
+    "Address": "431 Kuwili St., Honolulu, HI 96817",
+    "Phone": "808-599-9750",
+    "Services for": "Houseless individuals",
+    "row": 51,
+    "hidden": false,
+    "lat": 21.31930734808389,
+    "lng": -157.87553550283954,
+    "hasFee": false,
+    "hasAnimal": false
   },
   {
-    "name": "Kahauiki Village",
-    "capacity": "140 households",
-    "animals": "",
-    "fee": "varies",
-    "district": 7,
-    "agency": "IHS",
-    "facilityType": "Permanent Supportive Housing",
-    "specialty": "community living",
-    "address": "2475 N Nimitz Hwy, Honolulu, HI 96819",
-    "phone": "",
-    "servicesFor": "Adults & Families"
+    "Name": "RYSE",
+    "Capacity": "20",
+    "Support/Service Animals": "accepts",
+    "Fee": "none",
+    "City Council District": "3",
+    "Agency": "RYSE",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "",
+    "Address": "42-470 Kalanianaʻole Highway #6\nKailua, HI 96734",
+    "Phone": "808-498-5180",
+    "Services for": "Young Adults (18-24)",
+    "row": 52,
+    "hidden": false,
+    "lat": 21.390911812794684,
+    "lng": -157.74367873436717,
+    "hasFee": false,
+    "hasAnimal": true
   },
   {
-    "name": "Hale Imi Ola",
-    "capacity": 120,
-    "animals": "1 per HH",
-    "fee": "$500/mo max",
-    "district": 5,
-    "agency": "Catholic Charities",
-    "facilityType": "Transitional Housing",
-    "specialty": "",
-    "address": "2241 Kapiolani Blvd Honolulu HI 96826",
-    "phone": "808-897-5479",
-    "servicesFor": "Families"
+    "Name": "RYSE",
+    "Capacity": "n/a",
+    "Support/Service Animals": "n/a",
+    "Fee": "none",
+    "City Council District": "3",
+    "Agency": "RYSE",
+    "Facility Type": "Drop-in Center",
+    "Specialty": "",
+    "Address": "42-470 Kalanianaʻole Highway #6\nKailua, HI 96734",
+    "Phone": "808-498-5180",
+    "Services for": "Young Adults (18-24)",
+    "row": 53,
+    "hidden": false,
+    "lat": 21.39103340104765,
+    "lng": -157.74381146076522,
+    "hasFee": false,
+    "hasAnimal": false
   },
   {
-    "name": "Hawaii Cedar Church",
-    "capacity": "",
-    "animals": "",
-    "fee": "sliding scale",
-    "district": 6,
-    "agency": "Hawaii Cedar Church",
-    "facilityType": "Transitional Housing",
-    "specialty": "",
-    "address": "1545 Kamehameha IV Rd, Honolulu, HI 96819",
-    "phone": "(808)255-1234",
-    "servicesFor": "Adults"
+    "Name": "Sand Island Treatment Center (SITC)",
+    "Capacity": "123",
+    "Support/Service Animals": "no",
+    "Fee": "none",
+    "City Council District": "6",
+    "Agency": "Kline Welsh Behavioral Health Foundation",
+    "Facility Type": "Treatment Center",
+    "Specialty": "Substance abuse disorder",
+    "Address": "524 Kaaahi St., Honolulu HI 96817",
+    "Phone": "808-841-2319",
+    "Services for": "Adults",
+    "row": 54,
+    "hidden": false,
+    "lat": 21.318,
+    "lng": -157.8748,
+    "hasFee": false,
+    "hasAnimal": false
   },
   {
-    "name": "Holomua Na Ohana (Weinberg Village)",
-    "capacity": "",
-    "animals": "",
-    "fee": "varies",
-    "district": 3,
-    "agency": "Holomua Na Ohana",
-    "facilityType": "Transitional Housing",
-    "specialty": "",
-    "address": "41-490 Saddle City Rd, Waimanalo, HI 96795",
-    "phone": "(808) 204-0982",
-    "servicesFor": "Adults, Families"
+    "Name": "Steadfast Hale Ulu Pono",
+    "Capacity": "",
+    "Support/Service Animals": "",
+    "Fee": "none",
+    "City Council District": "1",
+    "Agency": "Steadfast Housing Development Corp",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "",
+    "Address": "91-1075 Shangrila St, Kapolei, HI 96707",
+    "Phone": "(808) 682-4466",
+    "Services for": "Adults",
+    "row": 55,
+    "hidden": false,
+    "lat": 21.3269,
+    "lng": -158.0869,
+    "hasFee": false,
+    "hasAnimal": false
   },
   {
-    "name": "Homes of Redemption: Halina",
-    "capacity": 13,
-    "animals": "no",
-    "fee": "$700/mo",
-    "district": 6,
-    "agency": "IHS",
-    "facilityType": "Transitional Housing",
-    "specialty": "Justice-involved",
-    "address": "2108 Halina St Honolulu HI 96819",
-    "phone": "808-744-0060",
-    "servicesFor": "Adult men"
+    "Name": "Straub Benioff Medical Center",
+    "Capacity": "159 beds",
+    "Support/Service Animals": "",
+    "Fee": "varies",
+    "City Council District": "6",
+    "Agency": "Hawaii Pacific Health",
+    "Facility Type": "Hospital",
+    "Specialty": "multi-specialty",
+    "Address": "888 S. King St, Honolulu, HI 96813",
+    "Phone": "(808) 522-4000",
+    "Services for": "everyone",
+    "row": 56,
+    "hidden": false,
+    "lat": 21.3025,
+    "lng": -157.8495,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "Homes of Redemption: Pearl City",
-    "capacity": 18,
-    "animals": "no",
-    "fee": "$650/mo",
-    "district": 8,
-    "agency": "IHS",
-    "facilityType": "Transitional Housing",
-    "specialty": "Justice-involved",
-    "address": "98-218 Kaluamoi Pl Aiea HI 96782",
-    "phone": "808-492-1868",
-    "servicesFor": "Adult men"
+    "Name": "Sumner Men's Shelter",
+    "Capacity": "148",
+    "Support/Service Animals": "1 max pp",
+    "Fee": "max of $150/mo, proration avail",
+    "City Council District": "6",
+    "Agency": "IHS",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "",
+    "Address": "350 Sumner St Honolulu HI 96817",
+    "Phone": "808-447-2900",
+    "Services for": "Adult men",
+    "row": 57,
+    "hidden": false,
+    "lat": 21.3177,
+    "lng": -157.8723,
+    "hasFee": true,
+    "hasAnimal": true
   },
   {
-    "name": "Hui Mahi'ai Aina (Aunty Blanche)",
-    "capacity": "",
-    "animals": "",
-    "fee": "$125 to $250/mo",
-    "district": 3,
-    "agency": "Hui Mahi'ai Aina",
-    "facilityType": "Transitional Housing",
-    "specialty": "",
-    "address": "41-902 Oluolu St, Waimanalo, HI 96795",
-    "phone": "(808) 482-5883",
-    "servicesFor": "Adults, Families"
+    "Name": "The Queen's Medical Center: Hale Pulama Mau",
+    "Capacity": "40 beds",
+    "Support/Service Animals": "",
+    "Fee": "varies",
+    "City Council District": "6",
+    "Agency": "The Queen's Health Systems & Kuakini Medical Center",
+    "Facility Type": "Hospital",
+    "Specialty": "acute care",
+    "Address": "347 N. Kuakini St, 7th Floor, Honolulu, HI 96817",
+    "Phone": "(808) 691-8731",
+    "Services for": "everyone",
+    "row": 58,
+    "hidden": false,
+    "lat": 21.322971519661845,
+    "lng": -157.85690555288295,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "KWO: Onemalu",
-    "capacity": "",
-    "animals": "",
-    "fee": "",
-    "district": 1,
-    "agency": "Kealahou West Oahu",
-    "facilityType": "Transitional Housing",
-    "specialty": "",
-    "address": "48 Belleau Woods St., Kapolei, HI 96707",
-    "phone": "808-682-3869",
-    "servicesFor": "Adults, Families"
+    "Name": "The Queen's Medical Center: Punchbowl",
+    "Capacity": "535 beds",
+    "Support/Service Animals": "",
+    "Fee": "varies",
+    "City Council District": "6",
+    "Agency": "The Queen's Health Systems",
+    "Facility Type": "Hospital",
+    "Specialty": "Level I trauma",
+    "Address": "1301 Punchbowl St, Honolulu, HI 96813",
+    "Phone": "808-691-1000",
+    "Services for": "everyone",
+    "row": 59,
+    "hidden": false,
+    "lat": 21.3089,
+    "lng": -157.8544,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "Kauhale Health",
-    "capacity": 30,
-    "animals": "no",
-    "fee": "none",
-    "district": 6,
-    "agency": "Windward Urgent Care Services",
-    "facilityType": "Transitional Housing",
-    "specialty": "",
-    "address": "445 N King St Honolulu HI 96817",
-    "phone": "808-620-1991",
-    "servicesFor": "Adults"
+    "Name": "The Queen's Medical Center: Wahiawa",
+    "Capacity": "42 beds",
+    "Support/Service Animals": "",
+    "Fee": "varies",
+    "City Council District": "2",
+    "Agency": "The Queen's Health Systems",
+    "Facility Type": "Hospital",
+    "Specialty": "",
+    "Address": "128 Lehua St, Wahiawā, HI 96786",
+    "Phone": "(808) 691-6800",
+    "Services for": "everyone",
+    "row": 60,
+    "hidden": false,
+    "lat": 21.5028,
+    "lng": -158.0238,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "Kinai Eha",
-    "capacity": "",
-    "animals": "",
-    "fee": "",
-    "district": 3,
-    "agency": "Kinai Eha",
-    "facilityType": "Transitional Housing",
-    "specialty": "",
-    "address": "42-470 Kalanianaole Hwy, Kailua (Bldg 8)",
-    "phone": "808-489-4003",
-    "servicesFor": "Youth"
+    "Name": "The Queen's Medical Center: West Oahu",
+    "Capacity": "104 beds",
+    "Support/Service Animals": "",
+    "Fee": "varies",
+    "City Council District": "1",
+    "Agency": "The Queen's Health Systems",
+    "Facility Type": "Hospital",
+    "Specialty": "",
+    "Address": "91-2141 Fort Weaver Rd, ʻEwa Beach, HI 96706",
+    "Phone": "(808) 691-3000",
+    "Services for": "everyone",
+    "row": 61,
+    "hidden": false,
+    "lat": 21.336,
+    "lng": -158.0267,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "Paepae Hou",
-    "capacity": 12,
-    "animals": "no",
-    "fee": "$650/mo",
-    "district": 6,
-    "agency": "IHS",
-    "facilityType": "Transitional Housing",
-    "specialty": "Sobriety home",
-    "address": "2352 Wilson Street., Honolulu, HI 96819",
-    "phone": "808-260-1808",
-    "servicesFor": "Adult men"
+    "Name": "The Shelter",
+    "Capacity": "30",
+    "Support/Service Animals": "1 per HH",
+    "Fee": "$200 to $300",
+    "City Council District": "3",
+    "Agency": "First Assembly of God",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "Single mothers",
+    "Address": "47-323 Ahuimanu Rd, Kaneohe, HI 96744",
+    "Phone": "808-468-1810",
+    "Services for": "Families",
+    "row": 62,
+    "hidden": false,
+    "lat": 21.4356,
+    "lng": -157.8266,
+    "hasFee": true,
+    "hasAnimal": true
   },
   {
-    "name": "Steadfast Hale Ulu Pono",
-    "capacity": "",
-    "animals": "",
-    "fee": "none",
-    "district": 1,
-    "agency": "Steadfast Housing Development Corp",
-    "facilityType": "Transitional Housing",
-    "specialty": "",
-    "address": "91-1075 Shangrila St, Kapolei, HI 96707",
-    "phone": "(808) 682-4466",
-    "servicesFor": "Adults"
+    "Name": "Tutu Bert's Medical Respite: Kahai",
+    "Capacity": "22",
+    "Support/Service Animals": "no",
+    "Fee": "none",
+    "City Council District": "7",
+    "Agency": "IHS",
+    "Facility Type": "Medical Respite",
+    "Specialty": "",
+    "Address": "1922 Kahai St. Honolulu, HI 96819",
+    "Phone": "808-447-2849",
+    "Services for": "Adults, Couples",
+    "row": 63,
+    "hidden": false,
+    "lat": 21.336,
+    "lng": -157.8752,
+    "hasFee": false,
+    "hasAnimal": false
   },
   {
-    "name": "Villages of Redemption",
-    "capacity": 19,
-    "animals": "no",
-    "fee": "$650/mo",
-    "district": 6,
-    "agency": "IHS",
-    "facilityType": "Transitional Housing",
-    "specialty": "Justice-involved",
-    "address": "2007 Kalihi St Honolulu HI 96819",
-    "phone": "808-843-1349",
-    "servicesFor": "Adults"
+    "Name": "Tutu Bert's Medical Respite: Kilohana",
+    "Capacity": "20",
+    "Support/Service Animals": "no",
+    "Fee": "none",
+    "City Council District": "6",
+    "Agency": "IHS",
+    "Facility Type": "Medical Respite",
+    "Specialty": "",
+    "Address": "1600 Kilohana St Honolulu HI 96819",
+    "Phone": "808-845-3850",
+    "Services for": "Adult men",
+    "row": 64,
+    "hidden": false,
+    "lat": 21.3327,
+    "lng": -157.879,
+    "hasFee": false,
+    "hasAnimal": false
   },
   {
-    "name": "Women in Need",
-    "capacity": "",
-    "animals": "",
-    "fee": "sliding scale",
-    "district": 8,
-    "agency": "Women in Need",
-    "facilityType": "Transitional Housing",
-    "specialty": "Women, sober living",
-    "address": "98-1238 Kaahumanu St., Ste. #403 Pearl City, HI 96782",
-    "phone": "(808)486-1996",
-    "servicesFor": "Adults, Families"
+    "Name": "Tutu Bert's Medical Respite: Makiki",
+    "Capacity": "10",
+    "Support/Service Animals": "no",
+    "Fee": "none",
+    "City Council District": "5",
+    "Agency": "IHS",
+    "Facility Type": "Medical Respite",
+    "Specialty": "",
+    "Address": "1330 Dominis St Honolulu HI 96822",
+    "Phone": "808-845-3850",
+    "Services for": "Adults",
+    "row": 65,
+    "hidden": false,
+    "lat": 21.308,
+    "lng": -157.834,
+    "hasFee": false,
+    "hasAnimal": false
   },
   {
-    "name": "Behaviorial Health Crisis Center (BHCC)",
-    "capacity": "16 chairs",
-    "animals": "no",
-    "fee": "none",
-    "district": 6,
-    "agency": "CARE Hawaii",
-    "facilityType": "Treatment Center",
-    "specialty": "Stabilization",
-    "address": "806 Iwilei Road, Honolulu, HI 96817",
-    "phone": "808-699-8412",
-    "servicesFor": "Adults"
+    "Name": "Tutu Bert's Medical Respite: VET House Haumana",
+    "Capacity": "12",
+    "Support/Service Animals": "no",
+    "Fee": "none",
+    "City Council District": "6",
+    "Agency": "IHS",
+    "Facility Type": "Medical Respite",
+    "Specialty": "Veterans",
+    "Address": "2360 Haumana Pl Honolulu HI 96819",
+    "Phone": "808-260-9615",
+    "Services for": "Adults",
+    "row": 66,
+    "hidden": false,
+    "lat": 21.3377,
+    "lng": -157.8789,
+    "hasFee": false,
+    "hasAnimal": false
   },
   {
-    "name": "Behaviorial Health Crisis Center (BHCC)",
-    "capacity": "9 beds",
-    "animals": "no",
-    "fee": "none",
-    "district": 6,
-    "agency": "CARE Hawaii",
-    "facilityType": "Treatment Center",
-    "specialty": "Stabilization",
-    "address": "806 Iwilei Road, Honolulu, HI 96817",
-    "phone": "808-699-8412",
-    "servicesFor": "Adults"
+    "Name": "US VETS Barber's Point",
+    "Capacity": "",
+    "Support/Service Animals": "",
+    "Fee": "",
+    "City Council District": "1",
+    "Agency": "US VETS Barber's Point",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "Veterans",
+    "Address": "91-1039 Shangrila St, Kapolei, HI 96707",
+    "Phone": "808-953-5477",
+    "Services for": "Adults",
+    "row": 67,
+    "hidden": false,
+    "lat": 21.3266,
+    "lng": -158.0877,
+    "hasFee": false,
+    "hasAnimal": false
   },
   {
-    "name": "Hawaii Health & Harm Reduction Center",
-    "capacity": "",
-    "animals": "",
-    "fee": "none",
-    "district": 6,
-    "agency": "H3RC",
-    "facilityType": "Treatment Center",
-    "specialty": "Harm reduction",
-    "address": "677 Ala Moana Blvd #226, Honolulu, HI 96813",
-    "phone": "(808) 521-2437",
-    "servicesFor": "Adults"
+    "Name": "Villages of Redemption",
+    "Capacity": "19",
+    "Support/Service Animals": "no",
+    "Fee": "$650/mo",
+    "City Council District": "6",
+    "Agency": "IHS",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "Justice-involved",
+    "Address": "2007 Kalihi St Honolulu HI 96819",
+    "Phone": "808-843-1349",
+    "Services for": "Adults",
+    "row": 68,
+    "hidden": false,
+    "lat": 21.3427,
+    "lng": -157.88,
+    "hasFee": true,
+    "hasAnimal": false
   },
   {
-    "name": "Imi Ola Piha",
-    "capacity": 8,
-    "animals": "no",
-    "fee": "varies",
-    "district": 6,
-    "agency": "IHS",
-    "facilityType": "Treatment Center",
-    "specialty": "Detox",
-    "address": "551 Dillingham Blvd Honolulu HI 96817",
-    "phone": "808-782-8231",
-    "servicesFor": "Adults"
+    "Name": "Waianae Civic Center: Kulia",
+    "Capacity": "19",
+    "Support/Service Animals": "2 per HH",
+    "Fee": "max of $250/mo",
+    "City Council District": "1",
+    "Agency": "U.S. Vets Waianae",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "",
+    "Address": "85-296 Ala Hema St. Waianae, HI 96792",
+    "Phone": "808-462-0280",
+    "Services for": "Adults",
+    "row": 69,
+    "hidden": false,
+    "lat": 21.4489,
+    "lng": -158.183,
+    "hasFee": true,
+    "hasAnimal": true
   },
   {
-    "name": "Sand Island Treatment Center (SITC)",
-    "capacity": 123,
-    "animals": "no",
-    "fee": "none",
-    "district": 6,
-    "agency": "Kline Welsh Behavioral Health Foundation",
-    "facilityType": "Treatment Center",
-    "specialty": "Substance abuse disorder",
-    "address": "524 Kaaahi St., Honolulu HI 96817",
-    "phone": "808-841-2319",
-    "servicesFor": "Adults"
+    "Name": "Waianae Civic Center: Pai’olu Kaiaulu",
+    "Capacity": "102",
+    "Support/Service Animals": "2 per HH",
+    "Fee": "max of $250/mo",
+    "City Council District": "1",
+    "Agency": "U.S. Vets Waianae",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "",
+    "Address": "85-638 Farrington Hwy Waianae HI 96792 (B Wing)",
+    "Phone": "808-462-0280",
+    "Services for": "Adults, Couples, Families",
+    "row": 70,
+    "hidden": false,
+    "lat": 21.4478,
+    "lng": -158.1887,
+    "hasFee": true,
+    "hasAnimal": true
+  },
+  {
+    "Name": "Women in Need",
+    "Capacity": "",
+    "Support/Service Animals": "",
+    "Fee": "sliding scale",
+    "City Council District": "8",
+    "Agency": "Women in Need",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "Women, sober living",
+    "Address": "98-1238 Kaahumanu St., Ste. #403 Pearl City, HI 96782",
+    "Phone": "(808)486-1996",
+    "Services for": "Adults, Families",
+    "row": 71,
+    "hidden": false,
+    "lat": 21.394,
+    "lng": -157.973,
+    "hasFee": true,
+    "hasAnimal": false
   }
 ];
-    const facilityTypes = ["Behaviorial/Medical Respite", "Drop-in Center", "Emergency Shelter", "Hospital", "Medical Respite", "Permanent Supportive Housing", "Transitional Housing", "Treatment Center"];
-    const dogSvg = `<svg class="beagle-icon" viewBox="0 0 64 44" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M13 34 C7 27 7 16 15 8 C23 0 38 2 44 10 C49 12 57 15 61 22 C58 31 50 35 43 34 C38 41 25 43 13 34 Z" fill="#fff7e6"/><path d="M16 8 C25 0 39 3 44 11 C40 16 35 18 30 20 C24 23 23 31 19 35 C13 32 10 25 11 18 C12 13 14 10 16 8 Z" fill="#d8943d"/><path d="M18 9 C8 14 5 27 15 37 C23 43 31 37 31 29 C31 21 26 15 25 10 C24 7 21 7 18 9 Z" fill="#c98335" opacity="0.95"/><path d="M43 18 C50 18 57 21 60 25 C58 31 51 34 44 33 C39 32 36 29 37 25 C38 21 40 19 43 18 Z" fill="#fffaf0"/><circle cx="42" cy="17" r="3.2" fill="#2b1a12"/><circle cx="43.1" cy="15.8" r="1" fill="#ffffff"/><path d="M57 22 C61 23 63 26 61 30 C60 34 57 36 54 34 C56 30 55 26 57 22 Z" fill="#3a2518"/><path d="M44 31 C49 34 55 32 58 28" fill="none" stroke="#c8ad8d" stroke-width="2.2" stroke-linecap="round"/><circle cx="49" cy="26" r="0.9" fill="#d8c2a4"/><circle cx="52" cy="26.8" r="0.9" fill="#d8c2a4"/><circle cx="51" cy="24" r="0.9" fill="#d8c2a4"/></svg>`;
-    const typeColors = {
-      "Emergency Shelter": "#e74c3c",
-      "Transitional Housing": "#f39c12",
-      "Treatment Center": "#8e44ad",
-      "Medical Respite": "#16a085",
-      "Behaviorial/Medical Respite": "#1abc9c",
-      "Drop-in Center": "#2c7be5",
-      "Permanent Supportive Housing": "#27ae60",
-      "Hospital": "#34495e"
-    };
+const categoryColors = {
+  "Emergency Shelter": "#dc2626",
+  "Transitional Housing": "#2563eb",
+  "Medical Respite": "#16a34a",
+  "Behaviorial/Medical Respite": "#0f766e",
+  "Treatment Center": "#7c3aed",
+  "Hospital": "#0284c7",
+  "Drop-in Center": "#f59e0b",
+  "Permanent Supportive Housing": "#9333ea"
+};
+const defaultColor = "#64748b";
+let map;
+let markerLayer;
+let markers = new Map();
 
-    const map = L.map('map', { zoomControl: true, preferCanvas: true }).setView([21.46, -157.98], 10);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
-    const statusBar = document.getElementById('statusBar');
-    const markersLayer = L.layerGroup().addTo(map);
-    const filterWrap = document.getElementById('typeFilters');
-    const legendWrap = document.getElementById('legendList');
-    const statsWrap = document.getElementById('statsList');
-    const activeTypes = new Set(facilityTypes);
-    const geocodeCacheKey = 'oahuFacilityGeocodeCache_v4';
-    const geocodeCache = JSON.parse(localStorage.getItem(geocodeCacheKey) || '{}');
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+  }[ch]));
+}
 
-    function escapeHtml(value) { return String(value || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;'); }
-    function normalizeAddress(address) { return (address || '').toLowerCase().replace(/\s+/g, ' ').trim(); }
+function colorFor(type) {
+  return categoryColors[type] || defaultColor;
+}
 
-    function hasFee(text) {
-      if (!text) return false;
-      const t = String(text).toLowerCase().trim();
-      return !(t === 'no' || t === 'none' || t === 'n/a' || t === 'na' || t === '0' || t === '$0');
-    }
+function markerIcon(facility) {
+  const color = colorFor(facility["Facility Type"]);
+  const fee = facility.hasFee ? '<span class="marker-fee">$</span>' : '';
+  const animal = facility.hasAnimal ? '<span class="marker-animal">🐕</span>' : '';
+  return L.divIcon({
+    className: "",
+    html: `<div class="marker-dot" style="background:${color};">${fee}${animal}</div>`,
+    iconSize: [26, 26],
+    iconAnchor: [13, 13],
+    popupAnchor: [0, -10]
+  });
+}
 
-    function hasAnimals(text) { if (!text) return false; const t = text.toLowerCase().trim(); return !(t === 'no' || t === 'n/a' || t === 'none'); }
-    function formatField(label, value) { if (!value) return ''; return `<div><strong>${label}:</strong> ${escapeHtml(value)}</div>`; }
-    function makePopup(f) {
-      const animalMarkup = f.animals ? `<div><strong>Support / service animals:</strong> ${escapeHtml(f.animals)}</div>` : '';
-      const chips = [f.facilityType, f.specialty, f.servicesFor, f.district ? `District ${f.district}` : ''].filter(Boolean).map(v => `<span class="tag">${escapeHtml(v)}</span>`).join('');
-      return `<div class="popup-wrap"><h3 class="popup-title">${escapeHtml(f.name)}</h3><p class="popup-sub">${escapeHtml(f.agency || '')}</p><div class="popup-grid">${formatField('Facility type', f.facilityType)}${formatField('Capacity', f.capacity)}${animalMarkup}${formatField('Fee', f.fee)}${formatField('Specialty', f.specialty)}${formatField('Services for', f.servicesFor)}${formatField('Address', f.address)}${formatField('Phone', f.phone)}</div><div class="tag-row">${chips}</div></div>`;
-    }
-    function makeTooltip(f) {
-      return [`<strong>${escapeHtml(f.name)}</strong>`, f.agency ? `Agency: ${escapeHtml(f.agency)}` : '', f.capacity ? `Capacity: ${escapeHtml(f.capacity)}` : '', f.fee ? `Fee: ${escapeHtml(f.fee)}` : '', f.servicesFor ? `For: ${escapeHtml(f.servicesFor)}` : ''].filter(Boolean).join('<br>');
-    }
-    function buildFilters() {
-      filterWrap.innerHTML = '';
-      facilityTypes.forEach(type => {
-        const id = `filter-${type.replace(/[^a-z0-9]+/gi, '-')}`;
-        const row = document.createElement('div'); row.className = 'check-item';
-        row.innerHTML = `<input type="checkbox" id="${id}" checked><span class="swatch" style="background:${typeColors[type] || '#777'}"></span><label for="${id}">${type}</label>`;
-        const checkbox = row.querySelector('input');
-        checkbox.addEventListener('change', () => { checkbox.checked ? activeTypes.add(type) : activeTypes.delete(type); renderMarkers(); updateStats(); });
-        filterWrap.appendChild(row);
-      });
-    }
-    function buildLegend() {
-      legendWrap.innerHTML = '';
-      facilityTypes.forEach(type => { const row = document.createElement('div'); row.className = 'legend-item'; row.innerHTML = `<span class="swatch" style="background:${typeColors[type] || '#777'}"></span><span>${type}</span>`; legendWrap.appendChild(row); });
-    }
-    function updateStats() {
-      const filtered = facilities.filter(f => activeTypes.has(f.facilityType));
-      const counts = {}; filtered.forEach(f => counts[f.facilityType] = (counts[f.facilityType] || 0) + 1);
-      statsWrap.innerHTML = '';
-      const total = document.createElement('div'); total.innerHTML = `<span>Visible facilities</span><span>${filtered.length}</span>`; statsWrap.appendChild(total);
-      facilityTypes.forEach(type => { if (!activeTypes.has(type)) return; const row = document.createElement('div'); row.innerHTML = `<span>${type}</span><span>${counts[type] || 0}</span>`; statsWrap.appendChild(row); });
-    }
-    function offsetLatLng(baseLat, baseLng, index, total) {
-      if (total <= 1) return { lat: baseLat, lng: baseLng };
+function popupHtml(f) {
+  const type = escapeHtml(f["Facility Type"] || "Not listed");
+  const capacity = escapeHtml(f["Capacity"] || "Not listed");
+  const animal = escapeHtml(f["Support/Service Animals"] || "Not listed");
+  const fee = escapeHtml(f["Fee"] || "Not listed");
+  const district = escapeHtml(f["City Council District"] || "Not listed");
+  const rawSpecialty = f["Specialty"] || f["Specialty "] || "";
+  const specialtyRow = rawSpecialty
+    ? `<div class="popup-row"><span class="popup-label">Specialty:</span> ${escapeHtml(rawSpecialty)}</div>`
+    : "";
+  const services = escapeHtml(f["Services for"] || "Not listed");
+  const agency = escapeHtml(f["Agency"] || "Not listed");
+  const phone = escapeHtml(f["Phone"] || "Not listed");
+  const address = escapeHtml(f["Address"] || "Not listed");
 
-      // Keep facilities with the same address immediately next to each other.
-      // A small offset prevents markers from stacking while preserving the shared-location relationship.
-      const ring = Math.floor(index / 8);
-      const slot = index % 8;
-      const slots = Math.min(total, 8);
-      const angle = (2 * Math.PI * slot) / slots;
-      const radiusMeters = 7 + (ring * 4);
+  return `
+    <div class="popup-title">${escapeHtml(f.Name)}</div>
+    <div class="popup-row"><span class="popup-label">Agency:</span> ${agency}</div>
+    <div class="popup-row"><span class="popup-label">Type:</span> ${type}</div>
+    ${specialtyRow}
+    <div class="popup-row"><span class="popup-label">Capacity:</span> ${capacity}</div>
+    <div class="popup-row"><span class="popup-label">Services for:</span> ${services}</div>
+    <div class="popup-row"><span class="popup-label">Council District:</span> ${district}</div>
+    <div class="popup-row"><span class="popup-label">Fee:</span> ${fee}</div>
+    <div class="popup-row"><span class="popup-label">Support/service animals:</span> ${animal}</div>
+    <div class="popup-row"><span class="popup-label">Phone:</span> ${phone}</div>
+    <div class="popup-row"><span class="popup-label">Address:</span> ${address}</div>
+  `;
+}
 
-      const metersPerDegLat = 111320;
-      const metersPerDegLng = 111320 * Math.cos(baseLat * Math.PI / 180);
 
-      return {
-        lat: baseLat + (radiusMeters * Math.sin(angle)) / metersPerDegLat,
-        lng: baseLng + (radiusMeters * Math.cos(angle)) / metersPerDegLng
-      };
-    }
-    function markerStyle(type) { return { radius: type === 'Hospital' ? 9 : 8, fillColor: typeColors[type] || '#666', color: '#fff', weight: 1.5, opacity: 1, fillOpacity: 0.92 }; }
-    function renderMarkers() {
-      markersLayer.clearLayers();
-      const filtered = facilities.filter(f => activeTypes.has(f.facilityType) && f._coords);
-      const groups = new Map();
-      filtered.forEach(f => { const key = normalizeAddress(f.address); if (!groups.has(key)) groups.set(key, []); groups.get(key).push(f); });
-      const bounds = [];
-      for (const items of groups.values()) {
-        items.forEach((f, i) => {
-          const shifted = offsetLatLng(f._coords.lat, f._coords.lng, i, items.length);
-          const marker = L.circleMarker([shifted.lat, shifted.lng], markerStyle(f.facilityType));
-          marker.bindTooltip(makeTooltip(f), { direction: 'top', className: 'facility-tooltip', sticky: true });
-          marker.bindPopup(makePopup(f));
-          marker.addTo(markersLayer);
-          if (hasAnimals(f.animals)) {
-            const animalIcon = L.divIcon({ className: 'animal-marker', html: dogSvg, iconSize: [32, 22], iconAnchor: [-2, 20] });
-            L.marker([shifted.lat, shifted.lng], { icon: animalIcon, interactive: false }).addTo(markersLayer);
-          }
-          if (hasFee(f.fee)) {
-            const feeIcon = L.divIcon({ className: 'fee-marker', html: '$', iconSize: [22, 22], iconAnchor: [24, 4] });
-            L.marker([shifted.lat, shifted.lng], { icon: feeIcon, interactive: false }).addTo(markersLayer);
-          }
-          bounds.push([shifted.lat, shifted.lng]);
-        });
+function tooltipHtml(f) {
+  const name = escapeHtml(f.Name || "");
+  const agency = escapeHtml(f.Agency || "");
+  const type = escapeHtml(f["Facility Type"] || "");
+  const address = escapeHtml(f.Address || "");
+  const phone = escapeHtml(f.Phone || "");
+  const services = escapeHtml(f["Services for"] || "");
+
+  return `
+    <div class="hover-title">${name}</div>
+    <div class="hover-grid">
+      ${agency ? `<div class="hover-label">Agency</div><div class="hover-value">${agency}</div>` : ""}
+      ${type ? `<div class="hover-label">Type</div><div class="hover-value">${type}</div>` : ""}
+      ${address ? `<div class="hover-label">Address</div><div class="hover-value">${address}</div>` : ""}
+      ${phone ? `<div class="hover-label">Phone</div><div class="hover-value">${phone}</div>` : ""}
+      ${services ? `<div class="hover-label">Services</div><div class="hover-value">${services}</div>` : ""}
+    </div>
+  `;
+}
+
+function initMap() {
+  map = L.map("map", {
+    center: [21.4389, -157.9950],
+    zoom: 10,
+    scrollWheelZoom: true
+  });
+
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  markerLayer = L.layerGroup().addTo(map);
+  renderControls();
+  renderLegend();
+  renderFacilities();
+  setTimeout(() => map.invalidateSize(), 250);
+}
+
+function renderControls() {
+  const types = [...new Set(facilities.map(f => f["Facility Type"]).filter(Boolean))].sort();
+  const districts = [...new Set(facilities.map(f => f["City Council District"]).filter(Boolean))].sort((a,b) => Number(a)-Number(b));
+
+  const typeFilter = document.getElementById("typeFilter");
+  types.forEach(type => {
+    const opt = document.createElement("option");
+    opt.value = type;
+    opt.textContent = type;
+    typeFilter.appendChild(opt);
+  });
+
+  const districtFilter = document.getElementById("districtFilter");
+  districts.forEach(d => {
+    const opt = document.createElement("option");
+    opt.value = d;
+    opt.textContent = "District " + d;
+    districtFilter.appendChild(opt);
+  });
+
+  document.getElementById("searchBox").addEventListener("input", renderFacilities);
+  typeFilter.addEventListener("change", renderFacilities);
+  districtFilter.addEventListener("change", renderFacilities);
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    document.getElementById("searchBox").value = "";
+    typeFilter.value = "";
+    districtFilter.value = "";
+    renderFacilities();
+  });
+  document.getElementById("fitBtn").addEventListener("click", () => fitVisible());
+}
+
+function renderLegend() {
+  const legend = document.getElementById("legend");
+  const types = [...new Set(facilities.map(f => f["Facility Type"]).filter(Boolean))].sort();
+  legend.innerHTML = types.map(type => `
+    <div class="legend-row">
+      <span class="swatch" style="background:${colorFor(type)}"></span>
+      <span>${escapeHtml(type)}</span>
+    </div>
+  `).join("");
+}
+
+function currentFiltered() {
+  const q = document.getElementById("searchBox").value.toLowerCase().trim();
+  const type = document.getElementById("typeFilter").value;
+  const district = document.getElementById("districtFilter").value;
+
+  return facilities.filter(f => {
+    const text = [
+      f.Name, f.Agency, f["Facility Type"], f["Specialty"], f["Specialty "], f.Address,
+      f.Phone, f["Services for"], f.Fee, f["Support/Service Animals"]
+    ].join(" ").toLowerCase();
+
+    if (q && !text.includes(q)) return false;
+    if (type && f["Facility Type"] !== type) return false;
+    if (district && f["City Council District"] !== district) return false;
+    return true;
+  });
+}
+
+function renderFacilities() {
+  const filtered = currentFiltered();
+  markerLayer.clearLayers();
+  markers.clear();
+
+  filtered.forEach((f, idx) => {
+    const marker = L.marker([f.lat, f.lng], { icon: markerIcon(f) })
+      .bindPopup(popupHtml(f))
+      .bindTooltip(tooltipHtml(f), { direction: "top", offset: [0, -12], className: "hover-tooltip", opacity: 0.96 });
+    marker.addTo(markerLayer);
+    markers.set(f.row, marker);
+  });
+
+  const list = document.getElementById("facilityList");
+  list.innerHTML = filtered.map(f => `
+    <div class="facility-card" data-row="${f.row}" style="border-left-color:${colorFor(f["Facility Type"])}">
+      <div class="facility-name">${escapeHtml(f.Name)}</div>
+      <div class="facility-meta">${escapeHtml(f["Facility Type"] || "Not listed")} · District ${escapeHtml(f["City Council District"] || "N/A")}</div>
+      <div class="facility-meta">${escapeHtml(f.Address || "")}</div>
+      <div class="badges">
+        ${f.hasFee ? '<span class="badge">$ fee</span>' : ''}
+        ${f.hasAnimal ? '<span class="badge">🐕 support/service animals</span>' : ''}
+        ${f["Services for"] ? `<span class="badge">${escapeHtml(f["Services for"])}</span>` : ''}
+      </div>
+    </div>
+  `).join("");
+
+  list.querySelectorAll(".facility-card").forEach(card => {
+    card.addEventListener("click", () => {
+      const row = Number(card.dataset.row);
+      const marker = markers.get(row);
+      const f = filtered.find(item => item.row === row);
+      if (marker && f) {
+        map.setView([f.lat, f.lng], 15);
+        marker.openPopup();
       }
-      if (bounds.length) map.fitBounds(bounds, { padding: [35, 35] });
-    }
-    async function geocodeAddress(address) {
-      const key = normalizeAddress(address); if (!key) return null; if (geocodeCache[key]) return geocodeCache[key];
-      const url = `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?SingleLine=${encodeURIComponent(address)}&maxLocations=1&outFields=*&f=pjson`;
-      const response = await fetch(url); if (!response.ok) throw new Error('Geocoder request failed');
-      const data = await response.json(); const candidate = data && data.candidates && data.candidates[0]; if (!candidate || !candidate.location) return null;
-      const coords = { lat: candidate.location.y, lng: candidate.location.x }; geocodeCache[key] = coords; localStorage.setItem(geocodeCacheKey, JSON.stringify(geocodeCache)); return coords;
-    }
-    function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
-    async function geocodeFacilities() {
-      let cachedCount = 0;
-      facilities.forEach(f => { const cached = geocodeCache[normalizeAddress(f.address)]; if (cached) { f._coords = cached; cachedCount++; } });
-      statusBar.textContent = cachedCount ? `Loaded ${cachedCount} cached coordinates. Looking up any remaining addresses…` : 'Looking up facility locations… first load may take a moment.';
-      if (cachedCount) renderMarkers();
-      const remaining = facilities.filter(f => !f._coords && f.address);
-      for (let i = 0; i < remaining.length; i++) {
-        const facility = remaining[i]; statusBar.textContent = `Geocoding ${i + 1} of ${remaining.length}: ${facility.name}`;
-        try { facility._coords = await geocodeAddress(facility.address); } catch (err) { console.error('Geocode failed for', facility.name, err); }
-        renderMarkers(); await sleep(180);
-      }
-      const plotted = facilities.filter(f => f._coords).length;
-      statusBar.textContent = `Map ready: ${plotted} of ${facilities.length} visible facilities plotted. Hidden rows remain excluded.`;
-      renderMarkers(); updateStats();
-    }
-    buildFilters(); buildLegend(); updateStats(); geocodeFacilities();
-  </script>
+    });
+  });
+
+  fitVisible();
+}
+
+function fitVisible() {
+  const filtered = currentFiltered();
+  if (!filtered.length) return;
+  const bounds = L.latLngBounds(filtered.map(f => [f.lat, f.lng]));
+  map.fitBounds(bounds, { padding: [40, 40], maxZoom: 12 });
+}
+
+document.addEventListener("DOMContentLoaded", initMap);
+</script>
 </body>
 </html>
