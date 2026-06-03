@@ -430,6 +430,15 @@
     .hover-tooltip .hover-grid {
       grid-template-columns: 74px minmax(0, 1fr);
     }
+
+    .leaflet-tooltip,
+    .hover-tooltip {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
     .leaflet-popup-content {
       min-width: 220px;
       max-width: 280px;
@@ -1878,14 +1887,22 @@ function bindMarkerInteractions(marker, f) {
   let lastTap = 0;
 
   marker.bindPopup(popupHtml(f));
-  marker.bindTooltip(tooltipHtml(f), {
-    direction: "top",
-    offset: [0, -12],
-    className: "hover-tooltip",
-    opacity: 0.96
-  });
+
+  if (!isMobileView()) {
+    marker.bindTooltip(tooltipHtml(f), {
+      direction: "top",
+      offset: [0, -12],
+      className: "hover-tooltip",
+      opacity: 0.96
+    });
+  }
 
   marker.on("click", function(event) {
+    if (isMobileView()) {
+      marker.closeTooltip();
+      map.closeTooltip();
+    }
+
     if (!isMobileView()) {
       marker.setPopupContent(popupHtml(f));
       marker.openPopup();
@@ -2004,7 +2021,14 @@ function initMobilePanel() {
 }
 
 window.addEventListener("resize", () => {
-  if (map) setTimeout(() => map.invalidateSize(), 150);
+  if (map) {
+    setTimeout(() => {
+      map.invalidateSize();
+      if (isMobileView()) {
+        map.closeTooltip();
+      }
+    }, 150);
+  }
 });
 window.addEventListener("orientationchange", () => {
   if (map) setTimeout(() => map.invalidateSize(), 350);
