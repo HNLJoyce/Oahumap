@@ -267,19 +267,6 @@
   }
 
 
-
-  .basic-card-more {
-    margin-top: 9px;
-    width: 100%;
-    border: 1px solid #cbd5e1;
-    background: #0f172a;
-    color: #ffffff;
-    border-radius: 10px;
-    padding: 8px 10px;
-    font-size: 13px;
-    font-weight: 800;
-  }
-
   .basic-mobile-popup .leaflet-popup-content-wrapper {
     border-radius: 14px;
   }
@@ -298,11 +285,16 @@
     font-weight: 800;
     color: #5f6b7a;
   }
-  .basic-card-hint {
-    margin-top: 7px;
-    font-size: 12px;
-    color: #64748b;
-    font-style: italic;
+  .basic-card-more {
+    margin-top: 9px;
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    background: #0f172a;
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-weight: 800;
   }
 
   .leaflet-popup-content {
@@ -1894,37 +1886,20 @@ function basicPopupHtml(f) {
     <button class="basic-card-more" type="button" data-row="${f.row}">More details</button>
   `;
 }
-function openFacilityPopup(marker, f, mode) {
-  const content = mode === "basic" ? basicPopupHtml(f) : popupHtml(f);
-  marker.bindPopup(content, {
-    className: mode === "basic" ? "basic-mobile-popup" : ""
-  });
-  marker.setPopupContent(content);
-  marker.openPopup();
+
+function popupContentForDevice(f) {
+  return isMobileView() ? basicPopupHtml(f) : popupHtml(f);
 }
 
-function bindMarkerInteractions(marker, f) {
-  if (!isMobileView()) {
-    marker.bindTooltip(tooltipHtml(f), {
-      direction: "top",
-      offset: [0, -12],
-      className: "hover-tooltip",
-      opacity: 0.96
-    });
+function openFullFacilityPopup(row) {
+  const facility = facilities.find(f => Number(f.row) === Number(row));
+  const marker = markers.get(Number(row));
+  if (facility && marker) {
+    marker.setPopupContent(popupHtml(facility));
+    marker.openPopup();
   }
-
-  marker.on("click", function(event) {
-    if (isMobileView()) {
-      marker.closeTooltip();
-      if (map) map.closeTooltip();
-      openFacilityPopup(marker, f, "basic");
-    } else {
-      openFacilityPopup(marker, f, "full");
-    }
-  });
-
-  return marker;
 }
+
 
 function renderFacilities() {
   const filtered = currentFiltered();
@@ -1932,10 +1907,23 @@ function renderFacilities() {
   markers.clear();
 
   filtered.forEach((f, idx) => {
-    const marker = bindMarkerInteractions(
-      L.marker([f.lat, f.lng], { icon: markerIcon(f) }),
-      f
-    );
+    const marker = L.marker([f.lat, f.lng], { icon: markerIcon(f) })
+      .bindPopup(popupContentForDevice(f), {
+        className: isMobileView() ? "basic-mobile-popup" : ""
+      });
+
+    if (!isMobileView()) {
+      marker.bindTooltip(tooltipHtml(f), {
+        direction: "top",
+        offset: [0, -12],
+        className: "hover-tooltip",
+        opacity: 0.96
+      });
+    }
+
+    marker.on("popupopen", () => {
+      marker.setPopupContent(popupContentForDevice(f));
+    });
     marker.addTo(markerLayer);
     markers.set(f.row, marker);
   });
@@ -1961,7 +1949,8 @@ function renderFacilities() {
       const f = filtered.find(item => item.row === row);
       if (marker && f) {
         map.setView([f.lat, f.lng], 15);
-        openFacilityPopup(marker, f, "full");
+        marker.setPopupContent(popupHtml(f));
+        marker.openPopup();
       }
     });
   });
@@ -2014,14 +2003,7 @@ function initMobilePanel() {
 }
 
 window.addEventListener("resize", () => {
-  if (map) {
-    setTimeout(() => {
-      map.invalidateSize();
-      if (isMobileView()) {
-        map.closeTooltip();
-      }
-    }, 150);
-  }
+  if (map) setTimeout(() => map.invalidateSize(), 150);
 });
 window.addEventListener("orientationchange", () => {
   if (map) setTimeout(() => map.invalidateSize(), 350);
@@ -2032,14 +2014,9 @@ window.addEventListener("orientationchange", () => {
 document.addEventListener("click", event => {
   const moreBtn = event.target.closest(".basic-card-more");
   if (!moreBtn) return;
-
-  const row = Number(moreBtn.dataset.row);
-  const facility = facilities.find(f => Number(f.row) === row);
-  const marker = markers.get(row);
-
-  if (facility && marker) {
-    openFacilityPopup(marker, facility, "full");
-  }
+  event.preventDefault();
+  event.stopPropagation();
+  openFullFacilityPopup(moreBtn.dataset.row);
 });
 
 
