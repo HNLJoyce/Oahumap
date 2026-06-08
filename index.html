@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Homeless Resources on Oahu</title>
+<title>Homeless Resources on Oʻahu</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -21,6 +21,12 @@
     font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     color: var(--ink);
     background: var(--bg);
+  }
+
+
+  /* Slightly richer basemap rendering to match the older, clearer visual feel. */
+  .leaflet-tile {
+    filter: saturate(1.22) contrast(1.06) brightness(1.02);
   }
 
   .mobile-panel-btn {
@@ -80,7 +86,7 @@
     min-height: 720px;
     height: 100%;
     width: 100%;
-    background: #dbeafe;
+    background: #b7ddf2;
   }
   aside {
     background: var(--panel);
@@ -102,7 +108,7 @@
   }
   .filters {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 8px;
     margin-bottom: 12px;
   }
@@ -118,6 +124,8 @@
     font-weight: 700;
   }
   .legend {
+    display: grid;
+    grid-template-columns: 1fr;
     border: 1px solid var(--line);
     border-radius: 14px;
     padding: 12px;
@@ -349,7 +357,13 @@
       font-size: 11px;
       padding: 6px 8px;
     }
-    .mobile-panel-btn {
+  
+  /* Slightly richer basemap rendering to match the older, clearer visual feel. */
+  .leaflet-tile {
+    filter: saturate(1.22) contrast(1.06) brightness(1.02);
+  }
+
+  .mobile-panel-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -479,7 +493,7 @@
 <div class="app">
   <header>
     <div>
-      <h1>Homeless Resources on Oahu</h1>
+      <h1>Homeless Resources on Oʻahu</h1>
       <div class="subtitle">Hover or tap a facility for key info.</div>
     </div>
     <div class="header-actions">
@@ -511,26 +525,27 @@
 const facilities = [
   {
     "Name": "Adventist Health Castle",
-    "Capacity": "160 beds",
+    "Capacity": "29",
     "Support/Service Animals": "",
     "Fee": "varies",
     "City Council District": "3",
     "Agency": "Adventist Health",
     "Facility Type": "Hospital",
-    "Specialty": "Level III trauma",
+    "Specialty": "Psychiatric services",
     "Address": "640 Ulukahiki St, Kailua, HI 96734",
     "Phone": "(808) 263-5500",
     "Services for": "everyone",
-    "row": 2,
+    "row": 1,
     "hidden": false,
-    "lat": 21.380979,
-    "lng": -157.7578,
+    "lat": 21.3819,
+    "lng": -157.7565,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "640 ulukahiki st kailua hi 96734"
   },
   {
     "Name": "Alana Ola Pono",
-    "Capacity": "50",
+    "Capacity": "50 beds",
     "Support/Service Animals": "2 per <30lbs",
     "Fee": "max of $450/mo",
     "City Council District": "6",
@@ -540,12 +555,13 @@ const facilities = [
     "Address": "357 N King St Honolulu HI 96817",
     "Phone": "808-589-7950",
     "Services for": "Adults, Couples",
-    "row": 4,
+    "row": 2,
     "hidden": false,
-    "lat": 21.3152,
-    "lng": -157.862,
+    "lat": 21.3138,
+    "lng": -157.8612,
     "hasFee": true,
-    "hasAnimal": true
+    "hasAnimal": true,
+    "addressKey": "357 n king st honolulu hi 96817"
   },
   {
     "Name": "Behaviorial Health Crisis Center (BHCC)",
@@ -559,12 +575,13 @@ const facilities = [
     "Address": "806 Iwilei Road, Honolulu, HI 96817",
     "Phone": "808-699-8412",
     "Services for": "Adults",
-    "row": 5,
+    "row": 3,
     "hidden": false,
-    "lat": 21.31681,
-    "lng": -157.86676,
+    "lat": 21.318955,
+    "lng": -157.8717,
     "hasFee": false,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "806 iwilei road honolulu hi 96817"
   },
   {
     "Name": "Behaviorial Health Crisis Center (BHCC)",
@@ -578,16 +595,17 @@ const facilities = [
     "Address": "806 Iwilei Road, Honolulu, HI 96817",
     "Phone": "808-699-8412",
     "Services for": "Adults",
-    "row": 8,
+    "row": 4,
     "hidden": false,
-    "lat": 21.316850529417657,
-    "lng": -157.86680424213267,
+    "lat": 21.318845,
+    "lng": -157.8717,
     "hasFee": false,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "806 iwilei road honolulu hi 96817"
   },
   {
     "Name": "Family Assessment Center Waianae",
-    "Capacity": "50",
+    "Capacity": "~50",
     "Support/Service Animals": "1 per HH",
     "Fee": "none",
     "City Council District": "1",
@@ -597,69 +615,133 @@ const facilities = [
     "Address": "87-191 Maliona Street, Waianae, HI 96792",
     "Phone": "808-202-9133",
     "Services for": "Families",
-    "row": 10,
+    "row": 5,
     "hidden": false,
-    "lat": 21.3985,
-    "lng": -158.1555,
+    "lat": 21.401,
+    "lng": -158.166,
     "hasFee": false,
-    "hasAnimal": true
+    "hasAnimal": true,
+    "addressKey": "87-191 maliona street waianae hi 96792"
   },
   {
-    "Name": "H4",
-    "Capacity": "30",
-    "Support/Service Animals": "no",
+    "Name": "Family Promise: Nu'uanu",
+    "Capacity": "~12",
+    "Support/Service Animals": "",
     "Fee": "none",
-    "City Council District": "6",
-    "Agency": "Premier Medical Group Hawaii",
-    "Facility Type": "Medical Respite",
+    "City Council District": "",
+    "Agency": "Family Promise of Hawaii",
+    "Facility Type": "Emergency Shelter",
     "Specialty": "",
-    "Address": "431 Kuwili St., Honolulu, HI 96817",
-    "Phone": "808-312-3913",
-    "Services for": "Adults",
-    "row": 11,
+    "Address": "Nu'uanu",
+    "Phone": "808-300-0560",
+    "Services for": "Families",
+    "row": 6,
     "hidden": false,
-    "lat": 21.3169,
-    "lng": -157.86693,
+    "lat": 21.37538697601229,
+    "lng": -157.9528177021849,
     "hasFee": false,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "nu uanu"
+  },
+  {
+    "Name": "Family Promise: Pearl City",
+    "Capacity": "~12",
+    "Support/Service Animals": "",
+    "Fee": "none",
+    "City Council District": "",
+    "Agency": "Family Promise of Hawaii",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "",
+    "Address": "Pearl City",
+    "Phone": "808-300-0560",
+    "Services for": "Families",
+    "row": 7,
+    "hidden": false,
+    "lat": 21.391,
+    "lng": -157.949,
+    "hasFee": false,
+    "hasAnimal": false,
+    "addressKey": "pearl city"
+  },
+  {
+    "Name": "Gregory House",
+    "Capacity": "11",
+    "Support/Service Animals": "yes",
+    "Fee": "30% of income",
+    "City Council District": "",
+    "Agency": "Gregory House Programs",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "living with HIV",
+    "Address": "Upper Makiki",
+    "Phone": "808-592-9022",
+    "Services for": "Adults",
+    "row": 8,
+    "hidden": false,
+    "lat": 21.30921440312716,
+    "lng": -157.8314506389573,
+    "hasFee": true,
+    "hasAnimal": true,
+    "addressKey": "upper makiki"
   },
   {
     "Name": "Hale Imi Ola",
-    "Capacity": "40",
+    "Capacity": "~40",
     "Support/Service Animals": "1 per HH",
     "Fee": "none",
     "City Council District": "5",
     "Agency": "Catholic Charities",
     "Facility Type": "Emergency Shelter",
     "Specialty": "",
-    "Address": "2241 Kapiolani Blvd, Honolulu, HI 96826",
+    "Address": "2241 Kapiolani Blvd Honolulu HI 96826",
     "Phone": "808-897-5479",
     "Services for": "Families",
-    "row": 12,
+    "row": 9,
     "hidden": false,
-    "lat": 21.29172,
-    "lng": -157.82482,
+    "lat": 21.289555,
+    "lng": -157.8278,
     "hasFee": false,
-    "hasAnimal": true
+    "hasAnimal": true,
+    "addressKey": "2241 kapiolani blvd honolulu hi 96826"
   },
   {
     "Name": "Hale Imi Ola",
-    "Capacity": "120",
+    "Capacity": "~120",
     "Support/Service Animals": "1 per HH",
     "Fee": "$500/mo max",
     "City Council District": "5",
     "Agency": "Catholic Charities",
     "Facility Type": "Transitional Housing",
     "Specialty": "",
-    "Address": "2241 Kapiolani Blvd, Honolulu, HI 96826",
+    "Address": "2241 Kapiolani Blvd Honolulu HI 96826",
     "Phone": "808-897-5479",
     "Services for": "Families",
-    "row": 13,
+    "row": 10,
     "hidden": false,
-    "lat": 21.291760529417658,
-    "lng": -157.82486424213266,
+    "lat": 21.289445,
+    "lng": -157.8278,
     "hasFee": true,
-    "hasAnimal": true
+    "hasAnimal": true,
+    "addressKey": "2241 kapiolani blvd honolulu hi 96826"
+  },
+  {
+    "Name": "Hale Kipa",
+    "Capacity": "",
+    "Support/Service Animals": "",
+    "Fee": "",
+    "City Council District": "",
+    "Agency": "Hale Kipa",
+    "Facility Type": "Other",
+    "Specialty": "",
+    "Address": "91-2128 Old Fort Weaver Rd, Ewa Beach, HI 96706",
+    "Phone": "(808) 589-1829",
+    "Services for": "Youth",
+    "row": 11,
+    "hidden": false,
+    "lat": 21.324,
+    "lng": -158.022,
+    "hasFee": false,
+    "hasAnimal": false,
+    "addressKey": "91-2128 old fort weaver rd ewa beach hi 96706"
   },
   {
     "Name": "Hale Mauli'ola",
@@ -670,34 +752,96 @@ const facilities = [
     "Agency": "IHS",
     "Facility Type": "Emergency Shelter",
     "Specialty": "",
-    "Address": "10 Sand Island Pkwy, Honolulu, HI 96819",
+    "Address": "10 Sand Island Access Rd Honolulu HI 96819",
     "Phone": "808-319-5598",
     "Services for": "Adults, Couples",
-    "row": 16,
+    "row": 12,
     "hidden": false,
-    "lat": 21.31195,
-    "lng": -157.8878,
+    "lat": 21.3216,
+    "lng": -157.8805,
     "hasFee": true,
-    "hasAnimal": true
+    "hasAnimal": true,
+    "addressKey": "10 sand island access rd honolulu hi 96819"
+  },
+  {
+    "Name": "Hale O Kumumamo",
+    "Capacity": "18",
+    "Support/Service Animals": "",
+    "Fee": "",
+    "City Council District": "",
+    "Agency": "Kealahou West Oahu (KWO)",
+    "Facility Type": "Permanent Housing",
+    "Specialty": "",
+    "Address": "91-1078 Yorktown St., Kapolei, HI 96707",
+    "Phone": "",
+    "Services for": "Adults",
+    "row": 13,
+    "hidden": false,
+    "lat": 21.324,
+    "lng": -158.07,
+    "hasFee": false,
+    "hasAnimal": false,
+    "addressKey": "91-1078 yorktown st kapolei hi 96707"
+  },
+  {
+    "Name": "Hale Punawai",
+    "Capacity": "20 studios",
+    "Support/Service Animals": "yes",
+    "Fee": "30% of income",
+    "City Council District": "6",
+    "Agency": "Steadfast Housing Development Corp",
+    "Facility Type": "Permanent Supportive Housing",
+    "Specialty": "",
+    "Address": "431 Kuwili St., Honolulu, HI 96817 (3rd floor)",
+    "Phone": "",
+    "Services for": "Adults",
+    "row": 14,
+    "hidden": false,
+    "lat": 21.318245,
+    "lng": -157.8707,
+    "hasFee": true,
+    "hasAnimal": true,
+    "addressKey": "431 kuwili st honolulu hi 96817"
+  },
+  {
+    "Name": "Hale Ulu Pono",
+    "Capacity": "",
+    "Support/Service Animals": "",
+    "Fee": "none",
+    "City Council District": "1",
+    "Agency": "Steadfast Housing Development Corp",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "",
+    "Address": "91-1075 Shangrila St, Kapolei, HI 96707",
+    "Phone": "(808) 682-4466",
+    "Services for": "Adults",
+    "row": 15,
+    "hidden": false,
+    "lat": 21.322,
+    "lng": -158.07,
+    "hasFee": false,
+    "hasAnimal": false,
+    "addressKey": "91-1075 shangrila st kapolei hi 96707"
   },
   {
     "Name": "Hauula Family Assessment Center",
-    "Capacity": "26",
+    "Capacity": "~26",
     "Support/Service Animals": "no",
     "Fee": "none",
     "City Council District": "2",
-    "Agency": "Corazon",
+    "Agency": "Corazon Hawaii",
     "Facility Type": "Emergency Shelter",
     "Specialty": "",
     "Address": "8453A Hauula Homestead Rd Hauula HI 96717",
     "Phone": "808-293-0939",
     "Services for": "Families",
-    "row": 17,
+    "row": 16,
     "hidden": false,
-    "lat": 21.6102,
-    "lng": -157.9121,
+    "lat": 21.613,
+    "lng": -157.916,
     "hasFee": false,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "8453a hauula homestead rd hauula hi 96717"
   },
   {
     "Name": "Hawaii Cedar Church",
@@ -711,12 +855,13 @@ const facilities = [
     "Address": "1545 Kamehameha IV Rd, Honolulu, HI 96819",
     "Phone": "(808)255-1234",
     "Services for": "Adults",
-    "row": 18,
+    "row": 17,
     "hidden": false,
-    "lat": 21.3445,
-    "lng": -157.8768,
+    "lat": 21.349,
+    "lng": -157.888,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "1545 kamehameha iv rd honolulu hi 96819"
   },
   {
     "Name": "Hawaii Health & Harm Reduction Center",
@@ -730,16 +875,37 @@ const facilities = [
     "Address": "677 Ala Moana Blvd #226, Honolulu, HI 96813",
     "Phone": "(808) 521-2437",
     "Services for": "Adults",
+    "row": 18,
+    "hidden": false,
+    "lat": 21.299,
+    "lng": -157.862,
+    "hasFee": false,
+    "hasAnimal": false,
+    "addressKey": "677 ala moana blvd #226 honolulu hi 96813"
+  },
+  {
+    "Name": "Hawaii Homeless Healthcare Hui (H4)",
+    "Capacity": "30 beds",
+    "Support/Service Animals": "no",
+    "Fee": "none",
+    "City Council District": "6",
+    "Agency": "Premier Medical Group Hawaii",
+    "Facility Type": "Medical Respite",
+    "Specialty": "",
+    "Address": "431 Kuwili St., Honolulu, HI 96817",
+    "Phone": "808-312-3913",
+    "Services for": "Adults",
     "row": 19,
     "hidden": false,
-    "lat": 21.2998,
-    "lng": -157.8643,
+    "lat": 21.3183275,
+    "lng": -157.87064887,
     "hasFee": false,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "431 kuwili st honolulu hi 96817"
   },
   {
     "Name": "Hawaii State Hospital",
-    "Capacity": "417 beds",
+    "Capacity": "297 beds",
     "Support/Service Animals": "",
     "Fee": "varies",
     "City Council District": "3",
@@ -751,29 +917,31 @@ const facilities = [
     "Services for": "Adults",
     "row": 20,
     "hidden": false,
-    "lat": 21.4050303,
-    "lng": -157.8159967,
+    "lat": 21.405,
+    "lng": -157.807,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "45-710 keaahala rd kaneohe hi 96744"
   },
   {
-    "Name": "Holomua Na Ohana (Weinberg Village)",
-    "Capacity": "",
-    "Support/Service Animals": "",
+    "Name": "Ho'okahi Leo Kauhale",
+    "Capacity": "22",
+    "Support/Service Animals": "yes",
     "Fee": "varies",
-    "City Council District": "3",
-    "Agency": "Holomua Na Ohana",
+    "City Council District": "6",
+    "Agency": "H3RC",
     "Facility Type": "Transitional Housing",
     "Specialty": "",
-    "Address": "41-490 Saddle City Rd, Waimanalo, HI 96795",
-    "Phone": "(808) 204-0982",
-    "Services for": "Adults, Families",
+    "Address": "850 N King St, Honolulu, HI 96817",
+    "Phone": "(808) 724-4972",
+    "Services for": "Adults, Couples",
     "row": 21,
     "hidden": false,
-    "lat": 21.341,
-    "lng": -157.7335,
+    "lat": 21.321,
+    "lng": -157.87,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": true,
+    "addressKey": "850 n king st honolulu hi 96817"
   },
   {
     "Name": "Homes of Redemption: Halina",
@@ -789,13 +957,34 @@ const facilities = [
     "Services for": "Adult men",
     "row": 22,
     "hidden": false,
-    "lat": 21.34,
-    "lng": -157.8795,
+    "lat": 21.338,
+    "lng": -157.884,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "2108 halina st honolulu hi 96819"
   },
   {
-    "Name": "Homes of Redemption: Pearl City",
+    "Name": "HONU",
+    "Capacity": "~64",
+    "Support/Service Animals": "2 per HH",
+    "Fee": "none",
+    "City Council District": "1",
+    "Agency": "CCH",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "",
+    "Address": "471 Kamaaha Ave., Kapolei, HI 96707",
+    "Phone": "808-768-4668",
+    "Services for": "Adults, Couples, Families",
+    "row": 23,
+    "hidden": false,
+    "lat": 21.332,
+    "lng": -158.08,
+    "hasFee": false,
+    "hasAnimal": true,
+    "addressKey": "471 kamaaha ave kapolei hi 96707"
+  },
+  {
+    "Name": "House of Redemption: Pearl City",
     "Capacity": "18",
     "Support/Service Animals": "no",
     "Fee": "$650/mo",
@@ -806,50 +995,13 @@ const facilities = [
     "Address": "98-218 Kaluamoi Pl Aiea HI 96782",
     "Phone": "808-492-1868",
     "Services for": "Adult men",
-    "row": 23,
-    "hidden": false,
-    "lat": 21.3904,
-    "lng": -157.9415,
-    "hasFee": true,
-    "hasAnimal": false
-  },
-  {
-    "Name": "HONU",
-    "Capacity": "~86",
-    "Support/Service Animals": "2 per HH",
-    "Fee": "none",
-    "City Council District": "1",
-    "Agency": "CCH",
-    "Facility Type": "Emergency Shelter",
-    "Specialty": "",
-    "Address": "471 Kamaaha Ave., Kapolei, HI 96707",
-    "Phone": "808-768-4668",
-    "Services for": "Adults, Couples, Families",
     "row": 24,
     "hidden": false,
-    "lat": 21.3371,
-    "lng": -158.0791,
-    "hasFee": false,
-    "hasAnimal": true
-  },
-  {
-    "Name": "Ho'okahi Leo Kauhale",
-    "Capacity": "22",
-    "Support/Service Animals": "yes",
-    "Fee": "varies",
-    "City Council District": "6",
-    "Agency": "H3RC",
-    "Facility Type": "Transitional Housing",
-    "Specialty": "",
-    "Address": "850 N King St, Honolulu, HI 96817",
-    "Phone": "(808) 724-4972",
-    "Services for": "Adults, Couples",
-    "row": 25,
-    "hidden": false,
-    "lat": 21.3201,
-    "lng": -157.865,
+    "lat": 21.392,
+    "lng": -157.937,
     "hasFee": true,
-    "hasAnimal": true
+    "hasAnimal": false,
+    "addressKey": "98-218 kaluamoi pl aiea hi 96782"
   },
   {
     "Name": "Hui Mahi'ai Aina (Aunty Blanche)",
@@ -863,12 +1015,13 @@ const facilities = [
     "Address": "41-902 Oluolu St, Waimanalo, HI 96795",
     "Phone": "(808) 482-5883",
     "Services for": "Adults, Families",
-    "row": 26,
+    "row": 25,
     "hidden": false,
-    "lat": 21.3375,
-    "lng": -157.7275,
+    "lat": 21.344,
+    "lng": -157.722,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "41-902 oluolu st waimanalo hi 96795"
   },
   {
     "Name": "Imi Ola Piha",
@@ -882,31 +1035,53 @@ const facilities = [
     "Address": "551 Dillingham Blvd Honolulu HI 96817",
     "Phone": "808-782-8231",
     "Services for": "Adults",
+    "row": 26,
+    "hidden": false,
+    "lat": 21.321,
+    "lng": -157.873,
+    "hasFee": true,
+    "hasAnimal": false,
+    "addressKey": "551 dillingham blvd honolulu hi 96817"
+  },
+  {
+    "Name": "Joey's Place",
+    "Capacity": "14",
+    "Support/Service Animals": "yes",
+    "Fee": "30% of income",
+    "City Council District": "",
+    "Agency": "Gregory House Programs",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "living with HIV",
+    "Address": "Lower Makiki",
+    "Phone": "808-592-9022",
+    "Services for": "Adults",
     "row": 27,
     "hidden": false,
-    "lat": 21.31745,
-    "lng": -157.86637,
+    "lat": 21.305372035455022,
+    "lng": -157.84422269093236,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": true,
+    "addressKey": "lower makiki"
   },
   {
     "Name": "Ka Malu Ko'olau",
-    "Capacity": "34 households",
-    "Support/Service Animals": "",
+    "Capacity": "32",
+    "Support/Service Animals": "yes",
     "Fee": "0-6mo: no fee\n6-9 mo: $150\n9-12 mo: $300\n12+mo: $450",
-    "City Council District": "",
+    "City Council District": "3",
     "Agency": "Project Vision",
     "Facility Type": "Permanent Supportive Housing",
     "Specialty": "",
     "Address": "45-889 Pookela St, Kaneohe, HI 96744",
     "Phone": "(808) 724-4972",
-    "Services for": "Adults, Families",
+    "Services for": "Adults",
     "row": 28,
     "hidden": false,
-    "lat": 21.4155,
-    "lng": -157.8055,
+    "lat": 21.41,
+    "lng": -157.803,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": true,
+    "addressKey": "45-889 pookela st kaneohe hi 96744"
   },
   {
     "Name": "Ka'aahi Women's & Family Shelter",
@@ -922,10 +1097,11 @@ const facilities = [
     "Services for": "Adult Women & Families",
     "row": 29,
     "hidden": false,
-    "lat": 21.31786,
-    "lng": -157.86595,
+    "lat": 21.318,
+    "lng": -157.869,
     "hasFee": true,
-    "hasAnimal": true
+    "hasAnimal": true,
+    "addressKey": "546 kaaahi st honolulu hi 96817"
   },
   {
     "Name": "Kahauiki Village",
@@ -941,10 +1117,11 @@ const facilities = [
     "Services for": "Adults & Families",
     "row": 30,
     "hidden": false,
-    "lat": 21.332187,
-    "lng": -157.891618,
+    "lat": 21.335,
+    "lng": -157.91,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "2475 n nimitz hwy honolulu hi 96819"
   },
   {
     "Name": "Kahi Mohala",
@@ -954,20 +1131,21 @@ const facilities = [
     "City Council District": "1",
     "Agency": "The Queen's Health Systems",
     "Facility Type": "Hospital",
-    "Specialty": "Psychiatric services",
+    "Specialty": "Psychiatric & Behavioral services",
     "Address": "91-2301 Old Fort Weaver Rd, ʻEwa Beach, HI 96706",
     "Phone": "(808) 671-8511",
     "Services for": "Youth, Adults",
     "row": 31,
     "hidden": false,
-    "lat": 21.37268,
-    "lng": -158.03305,
+    "lat": 21.32,
+    "lng": -158.035,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "91-2301 old fort weaver rd ewa beach hi 96706"
   },
   {
     "Name": "Kahuku Medical Center",
-    "Capacity": "21 beds",
+    "Capacity": "",
     "Support/Service Animals": "",
     "Fee": "varies",
     "City Council District": "2",
@@ -979,14 +1157,15 @@ const facilities = [
     "Services for": "everyone",
     "row": 32,
     "hidden": false,
-    "lat": 21.6743,
-    "lng": -157.9527,
+    "lat": 21.676,
+    "lng": -157.947,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "56-117 pualalea st kahuku hi 96731"
   },
   {
     "Name": "Kaiser Permanente: Moanalua Medical Center",
-    "Capacity": "286 beds",
+    "Capacity": "",
     "Support/Service Animals": "",
     "Fee": "varies",
     "City Council District": "7",
@@ -998,14 +1177,15 @@ const facilities = [
     "Services for": "",
     "row": 33,
     "hidden": false,
-    "lat": 21.3628,
-    "lng": -157.9012,
+    "lat": 21.363,
+    "lng": -157.93,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "3288 moanalua rd honolulu hi 96819"
   },
   {
     "Name": "Kapiolani Medical Center for Women & Children",
-    "Capacity": "243",
+    "Capacity": "",
     "Support/Service Animals": "",
     "Fee": "varies",
     "City Council District": "5",
@@ -1017,14 +1197,15 @@ const facilities = [
     "Services for": "Women & Children",
     "row": 34,
     "hidden": false,
-    "lat": 21.3002,
+    "lat": 21.297,
     "lng": -157.834,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "1319 punahou st honolulu hi 96826"
   },
   {
     "Name": "Kauhale @ Iwilei Center",
-    "Capacity": "50",
+    "Capacity": "50 beds",
     "Support/Service Animals": "no",
     "Fee": "none",
     "City Council District": "6",
@@ -1036,14 +1217,15 @@ const facilities = [
     "Services for": "Adults",
     "row": 35,
     "hidden": false,
-    "lat": 21.3167,
-    "lng": -157.8666,
+    "lat": 21.3185,
+    "lng": -157.8704,
     "hasFee": false,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "505 kaaahi st honolulu hi 96817"
   },
   {
     "Name": "Kauhale Health",
-    "Capacity": "31",
+    "Capacity": "31 beds",
     "Support/Service Animals": "no",
     "Fee": "none",
     "City Council District": "6",
@@ -1055,14 +1237,15 @@ const facilities = [
     "Services for": "Adults, Medical Respite",
     "row": 36,
     "hidden": false,
-    "lat": 21.31599519853162,
-    "lng": -157.86311659079976,
+    "lat": 21.316055,
+    "lng": -157.863,
     "hasFee": false,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "445 n king st honolulu hi 96817"
   },
   {
     "Name": "Kauhale Health",
-    "Capacity": "30",
+    "Capacity": "30 units",
     "Support/Service Animals": "no",
     "Fee": "none",
     "City Council District": "6",
@@ -1074,14 +1257,55 @@ const facilities = [
     "Services for": "Adults",
     "row": 37,
     "hidden": false,
-    "lat": 21.31606274756105,
-    "lng": -157.86319032768756,
+    "lat": 21.315945,
+    "lng": -157.863,
     "hasFee": false,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "445 n king st honolulu hi 96817"
+  },
+  {
+    "Name": "Kauhale Kahana",
+    "Capacity": "8 5BR units",
+    "Support/Service Animals": "yes",
+    "Fee": "",
+    "City Council District": "1",
+    "Agency": "Kealahou West Oahu (KWO)",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "",
+    "Address": "84-788 Farrington Hwy, Waianae, HI 96792",
+    "Phone": "(844) 651-8647",
+    "Services for": "Families",
+    "row": 38,
+    "hidden": false,
+    "lat": 21.464,
+    "lng": -158.203,
+    "hasFee": false,
+    "hasAnimal": true,
+    "addressKey": "84-788 farrington hwy waianae hi 96792"
+  },
+  {
+    "Name": "Kauhale Kamaile",
+    "Capacity": "~16 units",
+    "Support/Service Animals": "yes",
+    "Fee": "varies",
+    "City Council District": "1",
+    "Agency": "Housing Solutions Inc.",
+    "Facility Type": "Permanent Supportive Housing",
+    "Specialty": "",
+    "Address": "85-248 Farrington Hwy, Waiʻanae, HI 96792",
+    "Phone": "(844) 651-8647",
+    "Services for": "Families",
+    "row": 39,
+    "hidden": false,
+    "lat": 21.45,
+    "lng": -158.185,
+    "hasFee": true,
+    "hasAnimal": true,
+    "addressKey": "85-248 farrington hwy waianae hi 96792"
   },
   {
     "Name": "Keauhou",
-    "Capacity": "66",
+    "Capacity": "66 units",
     "Support/Service Animals": "1 per HH",
     "Fee": "$250/mo max",
     "City Council District": "5",
@@ -1091,12 +1315,13 @@ const facilities = [
     "Address": "1020 Isenberg St Honolulu HI 96826",
     "Phone": "808-537-8330",
     "Services for": "Adults, Couples",
-    "row": 38,
+    "row": 40,
     "hidden": false,
-    "lat": 21.293808,
-    "lng": -157.82559,
+    "lat": 21.292,
+    "lng": -157.828,
     "hasFee": true,
-    "hasAnimal": true
+    "hasAnimal": true,
+    "addressKey": "1020 isenberg st honolulu hi 96826"
   },
   {
     "Name": "Kinai Eha",
@@ -1110,16 +1335,17 @@ const facilities = [
     "Address": "42-470 Kalanianaole Hwy, Kailua (Bldg 8)",
     "Phone": "808-489-4003",
     "Services for": "Youth",
-    "row": 39,
+    "row": 41,
     "hidden": false,
-    "lat": 21.374226,
-    "lng": -157.751908,
+    "lat": 21.398,
+    "lng": -157.744,
     "hasFee": false,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "42-470 kalanianaole hwy kailua"
   },
   {
     "Name": "Kuakini Medical Center",
-    "Capacity": "212 beds",
+    "Capacity": "",
     "Support/Service Animals": "",
     "Fee": "varies",
     "City Council District": "6",
@@ -1129,18 +1355,59 @@ const facilities = [
     "Address": "347 N. Kuakini St, Honolulu, HI 96817",
     "Phone": "(808) 536-2236",
     "Services for": "everyone",
-    "row": 40,
+    "row": 42,
     "hidden": false,
-    "lat": 21.321117,
-    "lng": -157.8567,
+    "lat": 21.323,
+    "lng": -157.857,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "347 n kuakini st honolulu hi 96817"
+  },
+  {
+    "Name": "Kulaokahua Emergency Women's Shelter",
+    "Capacity": "",
+    "Support/Service Animals": "",
+    "Fee": "",
+    "City Council District": "5",
+    "Agency": "Corazon Hawaii",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "Women",
+    "Address": "1311 Ward Ave, Honolulu, HI 96814",
+    "Phone": "808-599-5759",
+    "Services for": "Adult women",
+    "row": 43,
+    "hidden": false,
+    "lat": 21.305055,
+    "lng": -157.846,
+    "hasFee": false,
+    "hasAnimal": false,
+    "addressKey": "1311 ward ave honolulu hi 96814"
+  },
+  {
+    "Name": "Kulaokahua Family Assessment Center",
+    "Capacity": "",
+    "Support/Service Animals": "",
+    "Fee": "",
+    "City Council District": "5",
+    "Agency": "Corazon Hawaii",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "",
+    "Address": "1311 Ward Ave, Honolulu, HI 96814",
+    "Phone": "808-599-5759",
+    "Services for": "Families",
+    "row": 44,
+    "hidden": false,
+    "lat": 21.304945,
+    "lng": -157.846,
+    "hasFee": false,
+    "hasAnimal": false,
+    "addressKey": "1311 ward ave honolulu hi 96814"
   },
   {
     "Name": "Kumu Ola Hou Phase I",
-    "Capacity": "15",
-    "Support/Service Animals": "no",
-    "Fee": "$350 max",
+    "Capacity": "",
+    "Support/Service Animals": "",
+    "Fee": "",
     "City Council District": "6",
     "Agency": "IHS",
     "Facility Type": "Emergency Shelter",
@@ -1148,12 +1415,13 @@ const facilities = [
     "Address": "414 Kuwili St Honolulu HI 96817",
     "Phone": "808-447-2871",
     "Services for": "Adults, Couples",
-    "row": 41,
+    "row": 45,
     "hidden": false,
-    "lat": 21.31661,
-    "lng": -157.86651,
-    "hasFee": true,
-    "hasAnimal": false
+    "lat": 21.318255,
+    "lng": -157.87,
+    "hasFee": false,
+    "hasAnimal": false,
+    "addressKey": "414 kuwili st honolulu hi 96817"
   },
   {
     "Name": "Kumu Ola Hou Phase II",
@@ -1167,53 +1435,36 @@ const facilities = [
     "Address": "414 Kuwili St Honolulu HI 96817",
     "Phone": "808-447-2871",
     "Services for": "Adults, Couples",
-    "row": 42,
+    "row": 46,
     "hidden": false,
-    "lat": 21.316655,
-    "lng": -157.866555,
+    "lat": 21.318145,
+    "lng": -157.87,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "414 kuwili st honolulu hi 96817"
   },
   {
-    "Name": "KWO: Onelau'ena",
-    "Capacity": "",
+    "Name": "Kumuhonua",
+    "Capacity": "65 units",
     "Support/Service Animals": "",
-    "Fee": "",
+    "Fee": "30% of income",
     "City Council District": "1",
-    "Agency": "Kealahou West Oahu",
-    "Facility Type": "Emergency Shelter",
-    "Specialty": "",
-    "Address": "50 Belleau Woods St. Kapolei, HI 96707",
-    "Phone": "808-782-4342",
-    "Services for": "Families",
-    "row": 43,
-    "hidden": false,
-    "lat": 21.3277,
-    "lng": -158.0857,
-    "hasFee": false,
-    "hasAnimal": false
-  },
-  {
-    "Name": "KWO: Onemalu",
-    "Capacity": "",
-    "Support/Service Animals": "",
-    "Fee": "",
-    "City Council District": "1",
-    "Agency": "Kealahou West Oahu",
+    "Agency": "Honolulu Community Action Program (HCAP)",
     "Facility Type": "Transitional Housing",
     "Specialty": "",
-    "Address": "48 Belleau Woods St., Kapolei, HI 96707",
-    "Phone": "808-682-3869",
-    "Services for": "Adults, Families",
-    "row": 44,
+    "Address": "91-1096 Yorktown St., Building 36, Kapolei, HI 96707",
+    "Phone": "808-682-5494",
+    "Services for": "Adults, Couples",
+    "row": 47,
     "hidden": false,
-    "lat": 21.3281,
-    "lng": -158.0848,
-    "hasFee": false,
-    "hasAnimal": false
+    "lat": 21.3244,
+    "lng": -158.0704,
+    "hasFee": true,
+    "hasAnimal": false,
+    "addressKey": "91-1096 yorktown st building 36 kapolei hi 96707"
   },
   {
-    "Name": "Leahi Respite",
+    "Name": "Leahi Behavioral & Medical Respite",
     "Capacity": "24",
     "Support/Service Animals": "no",
     "Fee": "none",
@@ -1224,16 +1475,37 @@ const facilities = [
     "Address": "3650 Maunalei Ave., Honolulu, HI 96816",
     "Phone": "808-562-5630",
     "Services for": "Adults",
-    "row": 46,
+    "row": 48,
     "hidden": false,
-    "lat": 21.272967,
-    "lng": -157.80251,
+    "lat": 21.277,
+    "lng": -157.79,
     "hasFee": false,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "3650 maunalei ave honolulu hi 96816"
+  },
+  {
+    "Name": "Licensed Crisis Residential Services (LCRS) Salt Lake",
+    "Capacity": "",
+    "Support/Service Animals": "",
+    "Fee": "",
+    "City Council District": "",
+    "Agency": "CARE Hawaii",
+    "Facility Type": "Treatment Center",
+    "Specialty": "Stabilization",
+    "Address": "5165 Likini St, Honolulu, HI 96818",
+    "Phone": "",
+    "Services for": "Adults",
+    "row": 49,
+    "hidden": false,
+    "lat": 21.356,
+    "lng": -157.917,
+    "hasFee": false,
+    "hasAnimal": false,
+    "addressKey": "5165 likini st honolulu hi 96818"
   },
   {
     "Name": "Ohana Navigation Center Mo'ili'ili",
-    "Capacity": "20",
+    "Capacity": "~12",
     "Support/Service Animals": "1 per HH",
     "Fee": "none",
     "City Council District": "5",
@@ -1243,16 +1515,17 @@ const facilities = [
     "Address": "2106 Young St Honolulu HI 96826",
     "Phone": "808-300-0560",
     "Services for": "Adults, Couples",
-    "row": 47,
+    "row": 50,
     "hidden": false,
-    "lat": 21.2952381,
-    "lng": -157.8278496,
+    "lat": 21.293,
+    "lng": -157.825,
     "hasFee": false,
-    "hasAnimal": true
+    "hasAnimal": true,
+    "addressKey": "2106 young st honolulu hi 96826"
   },
   {
     "Name": "Ohana Navigation Center Wahiawa",
-    "Capacity": "68",
+    "Capacity": "~44",
     "Support/Service Animals": "1 per HH",
     "Fee": "none",
     "City Council District": "2",
@@ -1262,12 +1535,93 @@ const facilities = [
     "Address": "360 California Ave Wahiawa HI 96786",
     "Phone": "808-300-0560",
     "Services for": "Families",
-    "row": 48,
+    "row": 51,
     "hidden": false,
-    "lat": 21.5005,
-    "lng": -158.023,
+    "lat": 21.503,
+    "lng": -158.025,
     "hasFee": false,
-    "hasAnimal": true
+    "hasAnimal": true,
+    "addressKey": "360 california ave wahiawa hi 96786"
+  },
+  {
+    "Name": "Ohana Ola O Kahumana Waianae (OOOK) Phase I",
+    "Capacity": "14 units",
+    "Support/Service Animals": "1 per HH",
+    "Fee": "30% of income",
+    "City Council District": "1",
+    "Agency": "Alternative Structures International (ASI) dba Kahumana",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "",
+    "Address": "86-704 Lualualei Homestead Rd, Waianae, HI 96792",
+    "Phone": "808-696-4095",
+    "Services for": "Families",
+    "row": 52,
+    "hidden": false,
+    "lat": 21.444055,
+    "lng": -158.175,
+    "hasFee": true,
+    "hasAnimal": true,
+    "addressKey": "86-704 lualualei homestead rd waianae hi 96792"
+  },
+  {
+    "Name": "Ohana Ola O Kahumana Waianae (OOOK) Phase II",
+    "Capacity": "34 units\n6 3BR, 28 2 BR",
+    "Support/Service Animals": "1 per HH",
+    "Fee": "30% of income",
+    "City Council District": "1",
+    "Agency": "Alternative Structures International (ASI) dba Kahumana",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "",
+    "Address": "86-704 Lualualei Homestead Rd, Waianae, HI 96792",
+    "Phone": "808-696-4095",
+    "Services for": "Families",
+    "row": 53,
+    "hidden": false,
+    "lat": 21.443945,
+    "lng": -158.175,
+    "hasFee": true,
+    "hasAnimal": true,
+    "addressKey": "86-704 lualualei homestead rd waianae hi 96792"
+  },
+  {
+    "Name": "Onelau'ena",
+    "Capacity": "",
+    "Support/Service Animals": "",
+    "Fee": "",
+    "City Council District": "1",
+    "Agency": "Kealahou West Oahu (KWO)",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "",
+    "Address": "50 Belleau Woods St. Kapolei, HI 96707",
+    "Phone": "808-782-4342",
+    "Services for": "Families",
+    "row": 54,
+    "hidden": false,
+    "lat": 21.3202,
+    "lng": -158.072,
+    "hasFee": false,
+    "hasAnimal": false,
+    "addressKey": "50 belleau woods st kapolei hi 96707"
+  },
+  {
+    "Name": "Onemalu",
+    "Capacity": "",
+    "Support/Service Animals": "",
+    "Fee": "",
+    "City Council District": "1",
+    "Agency": "Kealahou West Oahu (KWO)",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "",
+    "Address": "48 Belleau Woods St., Kapolei, HI 96707",
+    "Phone": "808-682-3869",
+    "Services for": "Adults, Families",
+    "row": 55,
+    "hidden": false,
+    "lat": 21.32,
+    "lng": -158.0712,
+    "hasFee": false,
+    "hasAnimal": false,
+    "addressKey": "48 belleau woods st kapolei hi 96707"
   },
   {
     "Name": "Paepae Hou",
@@ -1281,16 +1635,17 @@ const facilities = [
     "Address": "2352 Wilson Street., Honolulu, HI 96819",
     "Phone": "808-260-1808",
     "Services for": "Adult men",
-    "row": 49,
+    "row": 56,
     "hidden": false,
-    "lat": 21.34,
-    "lng": -157.8785,
+    "lat": 21.331,
+    "lng": -157.884,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "2352 wilson street honolulu hi 96819"
   },
   {
     "Name": "Pali Momi Medical Center",
-    "Capacity": "118 beds",
+    "Capacity": "",
     "Support/Service Animals": "",
     "Fee": "varies",
     "City Council District": "7",
@@ -1300,17 +1655,18 @@ const facilities = [
     "Address": "98-1079 Moanalua Rd, ʻAiea, HI 96701",
     "Phone": "(808) 486-6000",
     "Services for": "everyone",
-    "row": 50,
+    "row": 57,
     "hidden": false,
-    "lat": 21.3848,
-    "lng": -157.9443,
+    "lat": 21.385,
+    "lng": -157.941,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "98-1079 moanalua rd aiea hi 96701"
   },
   {
     "Name": "Punawai Rest Stop",
-    "Capacity": "",
-    "Support/Service Animals": "",
+    "Capacity": "n/a",
+    "Support/Service Animals": "yes",
     "Fee": "none",
     "City Council District": "6",
     "Agency": "Mental Health Kokua",
@@ -1319,31 +1675,13 @@ const facilities = [
     "Address": "431 Kuwili St., Honolulu, HI 96817",
     "Phone": "808-599-9750",
     "Services for": "Houseless individuals",
-    "row": 51,
+    "row": 58,
     "hidden": false,
-    "lat": 21.316945,
-    "lng": -157.866975,
+    "lat": 21.3183275,
+    "lng": -157.87075113,
     "hasFee": false,
-    "hasAnimal": false
-  },
-  {
-    "Name": "RYSE",
-    "Capacity": "20",
-    "Support/Service Animals": "accepts",
-    "Fee": "none",
-    "City Council District": "3",
-    "Agency": "RYSE",
-    "Facility Type": "Emergency Shelter",
-    "Specialty": "",
-    "Address": "42-470 Kalanianaʻole Highway #6\nKailua, HI 96734",
-    "Phone": "808-498-5180",
-    "Services for": "Young Adults (18-24)",
-    "row": 52,
-    "hidden": false,
-    "lat": 21.37426,
-    "lng": -157.751965,
-    "hasFee": false,
-    "hasAnimal": true
+    "hasAnimal": true,
+    "addressKey": "431 kuwili st honolulu hi 96817"
   },
   {
     "Name": "RYSE",
@@ -1357,16 +1695,37 @@ const facilities = [
     "Address": "42-470 Kalanianaʻole Highway #6\nKailua, HI 96734",
     "Phone": "808-498-5180",
     "Services for": "Young Adults (18-24)",
-    "row": 53,
+    "row": 59,
     "hidden": false,
-    "lat": 21.374300529417656,
-    "lng": -157.7520092421327,
+    "lat": 21.39896271,
+    "lng": -157.74205297,
     "hasFee": false,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "42-470 kalanianaole highway #6 kailua hi 96734"
+  },
+  {
+    "Name": "RYSE",
+    "Capacity": "20",
+    "Support/Service Animals": "accepts",
+    "Fee": "none",
+    "City Council District": "3",
+    "Agency": "RYSE",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "",
+    "Address": "42-470 Kalanianaʻole Highway #6\nKailua, HI 96734",
+    "Phone": "808-498-5180",
+    "Services for": "Young Adults (18-24)",
+    "row": 60,
+    "hidden": false,
+    "lat": 21.39885271,
+    "lng": -157.74205297,
+    "hasFee": false,
+    "hasAnimal": true,
+    "addressKey": "42-470 kalanianaole highway #6 kailua hi 96734"
   },
   {
     "Name": "Sand Island Treatment Center (SITC)",
-    "Capacity": "123",
+    "Capacity": "123 beds",
     "Support/Service Animals": "no",
     "Fee": "none",
     "City Council District": "6",
@@ -1376,35 +1735,37 @@ const facilities = [
     "Address": "524 Kaaahi St., Honolulu HI 96817",
     "Phone": "808-841-2319",
     "Services for": "Adults",
-    "row": 54,
+    "row": 61,
     "hidden": false,
-    "lat": 21.31748,
-    "lng": -157.865979,
+    "lat": 21.318,
+    "lng": -157.869,
     "hasFee": false,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "524 kaaahi st honolulu hi 96817"
   },
   {
-    "Name": "Steadfast Hale Ulu Pono",
+    "Name": "Shelter of Wisdom",
     "Capacity": "",
     "Support/Service Animals": "",
-    "Fee": "none",
-    "City Council District": "1",
-    "Agency": "Steadfast Housing Development Corp",
+    "Fee": "",
+    "City Council District": "",
+    "Agency": "Shelter of Wisdom",
     "Facility Type": "Transitional Housing",
     "Specialty": "",
-    "Address": "91-1075 Shangrila St, Kapolei, HI 96707",
-    "Phone": "(808) 682-4466",
+    "Address": "n/a",
+    "Phone": "(808) 383 - 9498",
     "Services for": "Adults",
-    "row": 55,
+    "row": 62,
     "hidden": false,
-    "lat": 21.3269,
-    "lng": -158.0869,
+    "lat": 21.347789508404553,
+    "lng": -157.96716606624074,
     "hasFee": false,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "n a"
   },
   {
     "Name": "Straub Benioff Medical Center",
-    "Capacity": "159 beds",
+    "Capacity": "",
     "Support/Service Animals": "",
     "Fee": "varies",
     "City Council District": "6",
@@ -1414,12 +1775,13 @@ const facilities = [
     "Address": "888 S. King St, Honolulu, HI 96813",
     "Phone": "(808) 522-4000",
     "Services for": "everyone",
-    "row": 56,
+    "row": 63,
     "hidden": false,
-    "lat": 21.3025,
-    "lng": -157.8495,
+    "lat": 21.301,
+    "lng": -157.849,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "888 s king st honolulu hi 96813"
   },
   {
     "Name": "Sumner Men's Shelter",
@@ -1433,16 +1795,17 @@ const facilities = [
     "Address": "350 Sumner St Honolulu HI 96817",
     "Phone": "808-447-2900",
     "Services for": "Adult men",
-    "row": 57,
+    "row": 64,
     "hidden": false,
-    "lat": 21.31652,
-    "lng": -157.86718,
+    "lat": 21.314,
+    "lng": -157.861,
     "hasFee": true,
-    "hasAnimal": true
+    "hasAnimal": true,
+    "addressKey": "350 sumner st honolulu hi 96817"
   },
   {
     "Name": "The Queen's Medical Center: Hale Pulama Mau",
-    "Capacity": "40 beds",
+    "Capacity": "",
     "Support/Service Animals": "",
     "Fee": "varies",
     "City Council District": "6",
@@ -1452,35 +1815,37 @@ const facilities = [
     "Address": "347 N. Kuakini St, 7th Floor, Honolulu, HI 96817",
     "Phone": "(808) 691-8731",
     "Services for": "everyone",
-    "row": 58,
+    "row": 65,
     "hidden": false,
-    "lat": 21.321185,
-    "lng": -157.856755,
+    "lat": 21.303222842136506,
+    "lng": -157.85848968786104,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "347 n kuakini st 7th floor honolulu hi 96817"
   },
   {
-    "Name": "The Queen's Medical Center: Punchbowl",
-    "Capacity": "535 beds",
+    "Name": "The Queen's Medical Center: Kekela",
+    "Capacity": "",
     "Support/Service Animals": "",
     "Fee": "varies",
     "City Council District": "6",
     "Agency": "The Queen's Health Systems",
     "Facility Type": "Hospital",
-    "Specialty": "Level I trauma",
+    "Specialty": "Psychiatric services",
     "Address": "1301 Punchbowl St, Honolulu, HI 96813",
     "Phone": "808-691-1000",
     "Services for": "everyone",
-    "row": 59,
+    "row": 66,
     "hidden": false,
-    "lat": 21.3089,
-    "lng": -157.8544,
+    "lat": 21.307,
+    "lng": -157.854,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "1301 punchbowl st honolulu hi 96813"
   },
   {
     "Name": "The Queen's Medical Center: Wahiawa",
-    "Capacity": "42 beds",
+    "Capacity": "",
     "Support/Service Animals": "",
     "Fee": "varies",
     "City Council District": "2",
@@ -1490,16 +1855,17 @@ const facilities = [
     "Address": "128 Lehua St, Wahiawā, HI 96786",
     "Phone": "(808) 691-6800",
     "Services for": "everyone",
-    "row": 60,
+    "row": 67,
     "hidden": false,
-    "lat": 21.5028,
-    "lng": -158.0238,
+    "lat": 21.5,
+    "lng": -158.024,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "128 lehua st wahiawa hi 96786"
   },
   {
     "Name": "The Queen's Medical Center: West Oahu",
-    "Capacity": "104 beds",
+    "Capacity": "",
     "Support/Service Animals": "",
     "Fee": "varies",
     "City Council District": "1",
@@ -1509,16 +1875,17 @@ const facilities = [
     "Address": "91-2141 Fort Weaver Rd, ʻEwa Beach, HI 96706",
     "Phone": "(808) 691-3000",
     "Services for": "everyone",
-    "row": 61,
+    "row": 68,
     "hidden": false,
-    "lat": 21.336,
-    "lng": -158.0267,
+    "lat": 21.316,
+    "lng": -158.009,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "91-2141 fort weaver rd ewa beach hi 96706"
   },
   {
     "Name": "The Shelter",
-    "Capacity": "30",
+    "Capacity": "~30",
     "Support/Service Animals": "1 per HH",
     "Fee": "$200 to $300",
     "City Council District": "3",
@@ -1528,16 +1895,37 @@ const facilities = [
     "Address": "47-323 Ahuimanu Rd, Kaneohe, HI 96744",
     "Phone": "808-468-1810",
     "Services for": "Families",
-    "row": 62,
+    "row": 69,
     "hidden": false,
-    "lat": 21.4490018,
-    "lng": -157.8338549,
+    "lat": 21.45,
+    "lng": -157.837,
     "hasFee": true,
-    "hasAnimal": true
+    "hasAnimal": true,
+    "addressKey": "47-323 ahuimanu rd kaneohe hi 96744"
+  },
+  {
+    "Name": "Tutu Bert's Medical Respite: Haumana (1st fl)",
+    "Capacity": "12 beds",
+    "Support/Service Animals": "no",
+    "Fee": "none",
+    "City Council District": "6",
+    "Agency": "IHS",
+    "Facility Type": "Medical Respite",
+    "Specialty": "",
+    "Address": "2360 Haumana Pl Honolulu HI 96819",
+    "Phone": "808-260-9615",
+    "Services for": "Adults",
+    "row": 70,
+    "hidden": false,
+    "lat": 21.334055,
+    "lng": -157.884,
+    "hasFee": false,
+    "hasAnimal": false,
+    "addressKey": "2360 haumana pl honolulu hi 96819"
   },
   {
     "Name": "Tutu Bert's Medical Respite: Kahai",
-    "Capacity": "22",
+    "Capacity": "22 beds",
     "Support/Service Animals": "no",
     "Fee": "none",
     "City Council District": "7",
@@ -1547,16 +1935,17 @@ const facilities = [
     "Address": "1922 Kahai St. Honolulu, HI 96819",
     "Phone": "808-447-2849",
     "Services for": "Adults, Couples",
-    "row": 63,
+    "row": 71,
     "hidden": false,
-    "lat": 21.336,
-    "lng": -157.8752,
+    "lat": 21.34,
+    "lng": -157.886,
     "hasFee": false,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "1922 kahai st honolulu hi 96819"
   },
   {
     "Name": "Tutu Bert's Medical Respite: Kilohana",
-    "Capacity": "20",
+    "Capacity": "20 beds",
     "Support/Service Animals": "no",
     "Fee": "none",
     "City Council District": "6",
@@ -1566,16 +1955,17 @@ const facilities = [
     "Address": "1600 Kilohana St Honolulu HI 96819",
     "Phone": "808-845-3850",
     "Services for": "Adult men",
-    "row": 64,
+    "row": 72,
     "hidden": false,
-    "lat": 21.3327,
-    "lng": -157.879,
+    "lat": 21.336,
+    "lng": -157.884,
     "hasFee": false,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "1600 kilohana st honolulu hi 96819"
   },
   {
     "Name": "Tutu Bert's Medical Respite: Makiki",
-    "Capacity": "10",
+    "Capacity": "10 beds",
     "Support/Service Animals": "no",
     "Fee": "none",
     "City Council District": "5",
@@ -1585,31 +1975,13 @@ const facilities = [
     "Address": "1330 Dominis St Honolulu HI 96822",
     "Phone": "808-845-3850",
     "Services for": "Adults",
-    "row": 65,
+    "row": 73,
     "hidden": false,
-    "lat": 21.308,
-    "lng": -157.834,
+    "lat": 21.312,
+    "lng": -157.828,
     "hasFee": false,
-    "hasAnimal": false
-  },
-  {
-    "Name": "Tutu Bert's Medical Respite: VET House Haumana",
-    "Capacity": "12",
-    "Support/Service Animals": "no",
-    "Fee": "none",
-    "City Council District": "6",
-    "Agency": "IHS",
-    "Facility Type": "Medical Respite",
-    "Specialty": "Veterans",
-    "Address": "2360 Haumana Pl Honolulu HI 96819",
-    "Phone": "808-260-9615",
-    "Services for": "Adults",
-    "row": 66,
-    "hidden": false,
-    "lat": 21.3377,
-    "lng": -157.8789,
-    "hasFee": false,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "1330 dominis st honolulu hi 96822"
   },
   {
     "Name": "US VETS Barber's Point",
@@ -1623,12 +1995,53 @@ const facilities = [
     "Address": "91-1039 Shangrila St, Kapolei, HI 96707",
     "Phone": "808-953-5477",
     "Services for": "Adults",
-    "row": 67,
+    "row": 74,
     "hidden": false,
-    "lat": 21.3266,
-    "lng": -158.0877,
+    "lat": 21.3224,
+    "lng": -158.071,
     "hasFee": false,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "91-1039 shangrila st kapolei hi 96707"
+  },
+  {
+    "Name": "US VETS Barber's Point Kama'oku Kauhale",
+    "Capacity": "",
+    "Support/Service Animals": "",
+    "Fee": "",
+    "City Council District": "1",
+    "Agency": "US VETS Barber's Point",
+    "Facility Type": "Permanent Housing",
+    "Specialty": "",
+    "Address": "",
+    "Phone": "",
+    "Services for": "",
+    "row": 75,
+    "hidden": false,
+    "lat": 21.3819,
+    "lng": -157.7565,
+    "hasFee": false,
+    "hasAnimal": false,
+    "addressKey": "us vets barber s point kama oku kauhale"
+  },
+  {
+    "Name": "Veterans Engaged in Transition (VET House) (2nd fl)",
+    "Capacity": "12",
+    "Support/Service Animals": "no",
+    "Fee": "none",
+    "City Council District": "6",
+    "Agency": "IHS",
+    "Facility Type": "Transitional Housing",
+    "Specialty": "Veterans",
+    "Address": "2360 Haumana Pl Honolulu HI 96819",
+    "Phone": "808-260-9615",
+    "Services for": "Adults",
+    "row": 76,
+    "hidden": false,
+    "lat": 21.333945,
+    "lng": -157.884,
+    "hasFee": false,
+    "hasAnimal": false,
+    "addressKey": "2360 haumana pl honolulu hi 96819"
   },
   {
     "Name": "Villages of Redemption",
@@ -1642,15 +2055,36 @@ const facilities = [
     "Address": "2007 Kalihi St Honolulu HI 96819",
     "Phone": "808-843-1349",
     "Services for": "Adults",
-    "row": 68,
+    "row": 77,
     "hidden": false,
-    "lat": 21.3427,
-    "lng": -157.88,
+    "lat": 21.339,
+    "lng": -157.879,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "2007 kalihi st honolulu hi 96819"
   },
   {
-    "Name": "Waianae Civic Center: Kulia",
+    "Name": "Waiamanalo Emergency Shelter (WES)",
+    "Capacity": "50 units\nstudios, 1BR, 2BR, 3BR",
+    "Support/Service Animals": "1 per HH",
+    "Fee": "30% ($400-$800)",
+    "City Council District": "3",
+    "Agency": "Alternative Structures International (ASI) dba Kahumana",
+    "Facility Type": "Emergency Shelter",
+    "Specialty": "",
+    "Address": "41-490 Saddle City Rd.Waiamanalo, HI 96795",
+    "Phone": "(808) 204-0982",
+    "Services for": "Adults, Couples, Families",
+    "row": 78,
+    "hidden": false,
+    "lat": 21.34166893093822,
+    "lng": -157.72467429186813,
+    "hasFee": true,
+    "hasAnimal": true,
+    "addressKey": "41-490 saddle city rd waiamanalo hi 96795"
+  },
+  {
+    "Name": "Waianae Civic Center: Kulia I Ka Nuu",
     "Capacity": "19",
     "Support/Service Animals": "2 per HH",
     "Fee": "max of $250/mo",
@@ -1661,12 +2095,13 @@ const facilities = [
     "Address": "85-296 Ala Hema St. Waianae, HI 96792",
     "Phone": "808-462-0280",
     "Services for": "Adults",
-    "row": 69,
+    "row": 79,
     "hidden": false,
-    "lat": 21.4534,
-    "lng": -158.1902,
+    "lat": 21.449,
+    "lng": -158.185,
     "hasFee": true,
-    "hasAnimal": true
+    "hasAnimal": true,
+    "addressKey": "85-296 ala hema st waianae hi 96792"
   },
   {
     "Name": "Waianae Civic Center: Pai’olu Kaiaulu",
@@ -1680,12 +2115,13 @@ const facilities = [
     "Address": "85-638 Farrington Hwy Waianae HI 96792 (B Wing)",
     "Phone": "808-462-0280",
     "Services for": "Adults, Couples, Families",
-    "row": 70,
+    "row": 80,
     "hidden": false,
-    "lat": 21.4504786,
-    "lng": -158.191193,
+    "lat": 21.452,
+    "lng": -158.188,
     "hasFee": true,
-    "hasAnimal": true
+    "hasAnimal": true,
+    "addressKey": "85-638 farrington hwy waianae hi 96792"
   },
   {
     "Name": "Women in Need",
@@ -1699,29 +2135,52 @@ const facilities = [
     "Address": "98-1238 Kaahumanu St., Ste. #403 Pearl City, HI 96782",
     "Phone": "(808)486-1996",
     "Services for": "Adults, Families",
-    "row": 71,
+    "row": 81,
     "hidden": false,
-    "lat": 21.394,
-    "lng": -157.973,
+    "lat": 21.391,
+    "lng": -157.949,
     "hasFee": true,
-    "hasAnimal": false
+    "hasAnimal": false,
+    "addressKey": "98-1238 kaahumanu st ste #403 pearl city hi 96782"
   }
 ];
-// Coordinates reviewed and corrected for known public-coordinate sources; same-building/campus facilities are tightly clustered.
-// Kaaahi/Kuwili shared-building clusters manually tightened: H4+Punawai; Kumu Ola Hou Phase I+II.
-// Hale Mauliola visually nudged inland/on-site so it does not render in harbor water on OSM.
-// Final address/location correction pass applied: Hale Imi Ola moved onto Kapiolani; Kaaahi/Kuwili and Sand Island clusters reviewed.
+// Current spreadsheet data loaded; same-address/campus facilities are tightly clustered.
 const categoryColors = {
   "Emergency Shelter": "#dc2626",
   "Transitional Housing": "#2563eb",
   "Medical Respite": "#16a34a",
   "Behaviorial/Medical Respite": "#0f766e",
+  "Behavioral/Medical Respite": "#0f766e",
   "Treatment Center": "#7c3aed",
   "Hospital": "#0284c7",
   "Drop-in Center": "#f59e0b",
-  "Permanent Supportive Housing": "#9333ea"
+  "Permanent Supportive Housing": "#9333ea",
+  "Permanent Housing": "#0f766e",
+  "Other": "#64748b"
 };
 const defaultColor = "#64748b";
+
+function applyTightSameAddressOffsets() {
+  const groups = new Map();
+  facilities.forEach(f => {
+    const key = String(f.addressKey || f.Address || f.Name || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+    if (!key || key === 'n a') return;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(f);
+  });
+  groups.forEach(group => {
+    if (group.length < 2) return;
+    const baseLat = group.reduce((sum, f) => sum + Number(f.lat || 0), 0) / group.length;
+    const baseLng = group.reduce((sum, f) => sum + Number(f.lng || 0), 0) / group.length;
+    const radius = group.length <= 3 ? 0.000035 : group.length <= 6 ? 0.000050 : 0.000065;
+    group.forEach((f, i) => {
+      const angle = (-Math.PI / 2) + (2 * Math.PI * i / group.length);
+      f.lat = baseLat + Math.sin(angle) * radius;
+      f.lng = baseLng + Math.cos(angle) * radius;
+    });
+  });
+}
+
 let map;
 let markerLayer;
 let markers = new Map();
@@ -1813,6 +2272,7 @@ function initMap() {
   }).addTo(map);
 
   markerLayer = L.layerGroup().addTo(map);
+  applyTightSameAddressOffsets();
   renderControls();
   renderLegend();
   renderFacilities();
