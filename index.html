@@ -503,6 +503,7 @@
     <input class="search" id="searchBox" placeholder="Search by name, agency, address, type..." />
     <div class="filters">
       <select id="typeFilter"><option value="">All types</option></select>
+      <select id="serviceFilter"><option value="">All services for</option></select>
       <select id="districtFilter"><option value="">All districts</option></select>
       <button id="resetBtn">Reset</button>
       <button id="fitBtn">Fit map</button>
@@ -922,8 +923,8 @@ const facilities = [
     "Services for": "Adults, Couples, Families",
     "Specialty": "",
     "row": 26,
-    "lat": 21.3371,
-    "lng": -158.0791,
+    "lat": 21.33372,
+    "lng": -158.06705,
     "hasFee": false,
     "hasAnimal": true
   },
@@ -1999,6 +2000,65 @@ function colorFor(type) {
   return categoryColors[type] || defaultColor;
 }
 
+const SERVICE_FILTER_OPTIONS = ["Young Adults", "Adults", "Adult Men", "Adult Women", "Couples", "Families"];
+
+function normalizedServiceText(facility) {
+  return String(facility["Services for"] || "")
+    .toLowerCase()
+    .replace(/\([^)]*\)/g, " ")
+    .replace(/&/g, ",")
+    .replace(/\band\b/g, ",")
+    .replace(/[^a-z,\s-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function serviceCategoriesFor(facility) {
+  const text = normalizedServiceText(facility);
+  const categories = new Set();
+
+  // Exact explicit category matching only.
+  // This intentionally does NOT convert "everyone", "houseless individuals",
+  // "Youth", or "Women & Children" into one of these shelter audience filters.
+  if (/\byoung\s+adults?\b/.test(text)) {
+    categories.add("Young Adults");
+  }
+
+  if (/\badult\s+men\b/.test(text)) {
+    categories.add("Adult Men");
+  }
+
+  if (/\badult\s+women\b/.test(text)) {
+    categories.add("Adult Women");
+  }
+
+  if (/\bcouples?\b/.test(text)) {
+    categories.add("Couples");
+  }
+
+  if (/\bfamilies\b/.test(text) || /\bfamily\b/.test(text)) {
+    categories.add("Families");
+  }
+
+  // "Adults" is only the standalone/general Adults category.
+  // It excludes Adult Men, Adult Women, and Young Adults unless the row separately says Adults.
+  const withoutSpecificAdults = text
+    .replace(/\byoung\s+adults?\b/g, " ")
+    .replace(/\badult\s+men\b/g, " ")
+    .replace(/\badult\s+women\b/g, " ");
+  if (/\badults?\b/.test(withoutSpecificAdults)) {
+    categories.add("Adults");
+  }
+
+  return [...categories];
+}
+
+function matchesServiceFilter(facility, selectedService) {
+  if (!selectedService) return true;
+  return serviceCategoriesFor(facility).includes(selectedService);
+}
+
+
 function markerIcon(facility) {
   const color = colorFor(facility["Facility Type"]);
   const fee = facility.hasFee ? '<span class="marker-fee">$</span>' : '';
@@ -2022,7 +2082,7 @@ function popupHtml(f) {
   const specialtyRow = rawSpecialty
     ? `<div class="popup-row"><span class="popup-label">Specialty:</span> ${escapeHtml(rawSpecialty)}</div>`
     : "";
-  const services = escapeHtml(f["Services for"] || "Not listed");
+  const services = SERVICE_FILTER_OPTIONS;
   const agency = escapeHtml(f["Agency"] || "Not listed");
   const phone = escapeHtml(f["Phone"] || "Not listed");
   const address = escapeHtml(f["Address"] || "Not listed");
@@ -2084,6 +2144,7 @@ function initMap() {
 
 function renderControls() {
   const types = [...new Set(facilities.map(f => f["Facility Type"]).filter(Boolean))].sort();
+  const services = SERVICE_FILTER_OPTIONS;
   const districts = [...new Set(facilities.map(f => f["City Council District"]).filter(Boolean))].sort((a,b) => Number(a)-Number(b));
 
   const typeFilter = document.getElementById("typeFilter");
@@ -2092,6 +2153,15 @@ function renderControls() {
     opt.value = type;
     opt.textContent = type;
     typeFilter.appendChild(opt);
+  });
+
+  const serviceFilter = document.getElementById("serviceFilter");
+  serviceFilter.innerHTML = '<option value="">All services for</option>';
+  services.forEach(service => {
+    const opt = document.createElement("option");
+    opt.value = service;
+    opt.textContent = service;
+    serviceFilter.appendChild(opt);
   });
 
   const districtFilter = document.getElementById("districtFilter");
@@ -2104,10 +2174,12 @@ function renderControls() {
 
   document.getElementById("searchBox").addEventListener("input", renderFacilities);
   typeFilter.addEventListener("change", renderFacilities);
+  serviceFilter.addEventListener("change", renderFacilities);
   districtFilter.addEventListener("change", renderFacilities);
   document.getElementById("resetBtn").addEventListener("click", () => {
     document.getElementById("searchBox").value = "";
     typeFilter.value = "";
+    serviceFilter.value = "";
     districtFilter.value = "";
     renderFacilities();
   });
@@ -2128,17 +2200,29 @@ function renderLegend() {
 function currentFiltered() {
   const q = document.getElementById("searchBox").value.toLowerCase().trim();
   const type = document.getElementById("typeFilter").value;
+  const service = document.getElementById("serviceFilter").value;
   const district = document.getElementById("districtFilter").value;
 
   return facilities.filter(f => {
+    if (type && f["Facility Type"] !== type) return false;
+    if (service && !matchesServiceFilter(f, service)) return false;
+    if (district && String(f["City Council District"] || "") !== district) return false;
+
     const text = [
-      f.Name, f.Agency, f["Facility Type"], f["Specialty"], f["Specialty "], f.Address,
-      f.Phone, f["Services for"], f.Fee, f["Support/Service Animals"]
+      f.Name,
+      f.Agency,
+      f["Facility Type"],
+      f["Specialty"],
+      f["Specialty "],
+      f.Address,
+      f.Phone,
+      f["Services for"],
+      f.Fee,
+      f["Support/Service Animals"],
+      f.Capacity
     ].join(" ").toLowerCase();
 
     if (q && !text.includes(q)) return false;
-    if (type && f["Facility Type"] !== type) return false;
-    if (district && f["City Council District"] !== district) return false;
     return true;
   });
 }
@@ -2181,8 +2265,38 @@ function openFullFacilityPopup(row) {
 }
 
 
+function filteredFacilities() {
+  const q = document.getElementById("searchBox").value.toLowerCase().trim();
+  const type = document.getElementById("typeFilter").value;
+  const service = document.getElementById("serviceFilter").value;
+  const district = document.getElementById("districtFilter").value;
+
+  return facilities.filter(f => {
+    if (type && f["Facility Type"] !== type) return false;
+    if (service && !matchesServiceFilter(f, service)) return false;
+    if (district && String(f["City Council District"] || "") !== district) return false;
+
+    const text = [
+      f.Name,
+      f.Agency,
+      f.Address,
+      f.Phone,
+      f["Facility Type"],
+      f["City Council District"],
+      f["Services for"],
+      f.Specialty,
+      f.Capacity,
+      f.Fee,
+      f["Support/Service Animals"]
+    ].join(" ").toLowerCase();
+
+    if (q && !text.includes(q)) return false;
+    return true;
+  });
+}
+
 function renderFacilities() {
-  const filtered = currentFiltered();
+  const filtered = filteredFacilities();
   markerLayer.clearLayers();
   markers.clear();
 
