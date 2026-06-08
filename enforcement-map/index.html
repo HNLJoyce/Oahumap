@@ -2,2488 +2,295 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Oʻahu Enforcement Map — Street-Level Weekly Timeline</title>
+<title>Oʻahu Enforcement Operations Timeline</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-  :root {
-    --bg: #f6f8fc;
-    --panel: #ffffff;
-    --ink: #1e293b;
-    --muted: #64748b;
-    --line: #dbe3ef;
-  }
-  html, body { height:100%; margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif; background:var(--bg); color:var(--ink); }
-  .app {
-    min-height:100vh;
-    display:grid;
-    grid-template-columns:minmax(0,1fr) 420px;
-    grid-template-rows:auto minmax(680px,1fr) auto;
-  }
-  header {
-    grid-column:1/-1;
-    padding:18px 22px;
-    background:linear-gradient(90deg,#0f172a,#1e3a8a);
-    color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:16px;
-  }
-  h1 { margin:0; font-size:clamp(20px,2.7vw,34px); letter-spacing:-.03em; }
-  .subtitle { margin-top:4px; color:rgba(255,255,255,.82); font-size:14px; }
-  .chip { border:1px solid rgba(255,255,255,.28); background:rgba(255,255,255,.12); padding:8px 12px; border-radius:999px; font-size:13px; }
-  #map { width:100%; height:100%; min-height:680px; background:#dbeafe; }
-  aside { background:var(--panel); border-left:1px solid var(--line); padding:18px; overflow:auto; }
-  aside h2 { margin:0 0 10px; font-size:19px; }
-  .note { color:var(--muted); font-size:13px; line-height:1.45; margin-bottom:12px; }
-  .week-card {
-    border:1px solid var(--line);
-    border-left:8px solid #cbd5e1;
-    border-radius:14px;
-    padding:12px;
-    margin-bottom:10px;
-    cursor:pointer;
-    background:#fff;
-  }
-  .week-card.active { box-shadow:0 10px 24px rgba(15,23,42,.08); transform:translateY(-1px); }
-  .week-title { font-weight:800; font-size:15px; display:flex; justify-content:space-between; gap:8px; }
-  .week-summary { font-size:13px; color:var(--muted); line-height:1.4; margin-top:6px; }
-  .count { font-size:12px; border-radius:999px; padding:2px 8px; white-space:nowrap; }
-  .legend {
-    display:grid;
-    gap:8px;
-    margin:0 0 14px;
-    padding:12px;
-    background:#f8fafc;
-    border:1px solid var(--line);
-    border-radius:14px;
-  }
-  .legend-row { display:flex; align-items:center; gap:10px; font-size:13px; }
-  .swatch { width:14px; height:14px; border-radius:50%; border:2px solid white; box-shadow:0 0 0 1px rgba(15,23,42,.1); }
-  footer {
-    grid-column:1/-1;
-    background:#fff;
-    border-top:1px solid var(--line);
-    padding:14px 18px 18px;
-    box-shadow:0 -10px 28px rgba(15,23,42,.05);
-  }
-  .controls {
-    display:flex;
-    align-items:center;
-    gap:12px;
-    max-width:1240px;
-    margin:0 auto;
-    flex-wrap:wrap;
-  }
-  .btn {
-    border:1px solid var(--line);
-    background:#fff;
-    color:var(--ink);
-    border-radius:999px;
-    width:38px; height:38px;
-    font-size:16px; cursor:pointer;
-  }
-  .slider-wrap { flex:1; min-width:220px; }
-  input[type=range] { width:100%; cursor:pointer; }
-  .ticks {
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:6px;
-    margin-top:6px;
-    font-size:12px;
-    color:var(--muted);
-    text-align:center;
-  }
-  .ticks span { padding-top:4px; border-top:4px solid transparent; }
-  .ticks span.active { font-weight:800; }
-  .bottom-note { font-size:12px; color:var(--muted); }
-  .leaflet-popup-content { font-size:13px; line-height:1.35; }
-  .popup-title { font-weight:800; font-size:14px; margin-bottom:5px; }
-  .popup-meta { color:var(--muted); margin-bottom:6px; }
-  .leaflet-tooltip {
-    background:#0f172a;
-    color:#fff;
-    border:0;
-    border-radius:8px;
-    padding:6px 8px;
-    box-shadow:0 8px 20px rgba(15,23,42,.25);
-  }
-  @media (max-width: 980px) {
-    .app { grid-template-columns:1fr; grid-template-rows:auto 680px auto auto; }
-    aside { border-left:0; border-top:1px solid var(--line); max-height:520px; }
-  }
+:root {
+  --bg:#f7f9fc; --panel:#ffffff; --ink:#172033; --muted:#5f6b7a; --line:#dbe3ef;
+  --dfm:#f4c430; --dlnr:#2563eb;
+}
+html,body {height:100%; margin:0; font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--ink); background:var(--bg);}
+.app {height:100%; display:grid; grid-template-columns:minmax(0,1fr) 390px; grid-template-rows:auto 1fr;}
+header {grid-column:1/-1; padding:18px 22px; background:linear-gradient(90deg,#0f172a,#1e3a8a); color:white; display:flex; justify-content:space-between; gap:20px; align-items:center;}
+h1 {margin:0; font-size:clamp(22px,3vw,36px); letter-spacing:-.03em;}
+.subtitle {color:rgba(255,255,255,.82); font-size:14px; margin-top:4px;}
+.header-actions {display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end;}
+.small-chip {border:1px solid rgba(255,255,255,.28); background:rgba(255,255,255,.12); border-radius:999px; padding:7px 10px; font-size:12px; font-weight:700;}
+.mobile-panel-btn {display:none; border:1px solid rgba(255,255,255,.32); background:rgba(255,255,255,.14); color:white; border-radius:999px; padding:8px 11px; font-size:12px; font-weight:800;}
+#map {min-height:720px; height:100%; width:100%; background:#bfdbfe;}
+.leaflet-tile-pane {filter:saturate(1.45) contrast(1.12) brightness(1.02);}
+aside {background:var(--panel); border-left:1px solid var(--line); overflow:auto; padding:16px;}
+.panel-title {margin:0 0 8px 0; font-size:18px;}
+.search {width:100%; box-sizing:border-box; border:1px solid var(--line); border-radius:12px; padding:10px 12px; font-size:14px; margin-bottom:10px;}
+.controls {display:grid; grid-template-columns:1fr; gap:8px; margin-bottom:12px;}
+select,button {border:1px solid var(--line); border-radius:12px; background:white; padding:9px 10px; font-size:13px;}
+button {cursor:pointer; font-weight:800;}
+.week-strip {display:grid; grid-template-columns:1fr; gap:7px; margin:10px 0 12px;}
+.week-btn {text-align:left; background:#f8fafc;}
+.week-btn.active {background:#0f172a; color:white; border-color:#0f172a;}
+.agency-toggle {display:flex; gap:8px;}
+.agency-toggle button {flex:1;}
+.agency-toggle button.active[data-agency="DFM"] {background:var(--dfm); color:#111827; border-color:#b7791f;}
+.agency-toggle button.active[data-agency="DLNR"] {background:var(--dlnr); color:#fff; border-color:var(--dlnr);}
+.summary {border:1px solid var(--line); border-radius:14px; padding:10px 12px; background:#f8fafc; font-size:12px; line-height:1.35; color:var(--muted); margin-bottom:12px;}
+.op-list {display:grid; gap:9px;}
+.op-card {border:1px solid var(--line); border-left:7px solid #64748b; border-radius:14px; padding:10px 11px; background:white; cursor:pointer; transition:.15s ease;}
+.op-card:hover {box-shadow:0 8px 18px rgba(15,23,42,.09); transform:translateY(-1px);}
+.op-name {font-weight:900; font-size:14px; line-height:1.25;}
+.op-meta {color:var(--muted); font-size:12px; line-height:1.35; margin-top:4px;}
+.marker-dot {width:18px; height:18px; border-radius:50%; border:3px solid white; box-shadow:0 0 0 5px rgba(15,23,42,.08),0 8px 18px rgba(15,23,42,.22); position:relative;}
+.marker-dot::after {content:attr(data-label); position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); color:#fff; font-size:9px; font-weight:900;}
+.marker-dot[data-label="C"]::after {color:#111827;}
+.line-label-dot {height:18px; min-width:34px; padding:0 6px; border-radius:999px; border:2px solid #fff; color:#fff; font-size:10px; line-height:18px; font-weight:900; text-align:center; box-shadow:0 0 0 4px rgba(15,23,42,.08),0 8px 18px rgba(15,23,42,.22); white-space:nowrap;}
+.hover-tooltip {width:420px; max-width:420px; min-width:330px; white-space:normal; background:#0f172a; color:#fff; border:0; border-radius:13px; padding:12px 14px; box-shadow:0 12px 30px rgba(15,23,42,.30); line-height:1.35;}
+.hover-title {font-weight:900; font-size:15px; margin-bottom:7px; letter-spacing:-.01em;}
+.hover-grid {display:grid; grid-template-columns:82px minmax(0,1fr); column-gap:8px; row-gap:4px; align-items:start;}
+.hover-label {color:#cbd5e1; font-weight:800; font-size:12px; white-space:nowrap;}
+.hover-value {color:#fff; font-size:12px; overflow-wrap:anywhere;}
+.leaflet-popup-content {font-size:13px; line-height:1.4; min-width:250px;}
+.popup-title {font-weight:900; font-size:15px; margin-bottom:5px;}
+.popup-row {margin:3px 0;}
+.popup-label {color:var(--muted); font-weight:700;}
+.panel-close,.panel-backdrop {display:none;}
+@media (max-width:980px) {
+  html,body {height:100%; overflow:hidden;}
+  .app {height:100dvh; min-height:100dvh; display:grid; grid-template-columns:1fr; grid-template-rows:auto minmax(0,1fr);}
+  header {align-items:flex-start; flex-direction:column; padding:12px 14px; gap:10px;}
+  h1 {font-size:20px; line-height:1.15;}
+  .subtitle {font-size:12px;}
+  .header-actions {width:100%; justify-content:flex-start; gap:6px;}
+  .small-chip {font-size:11px; padding:6px 8px;}
+  .mobile-panel-btn {display:inline-flex; align-items:center; justify-content:center; min-height:36px;}
+  #map {height:100%; min-height:0;}
+  aside {position:fixed; left:0; right:0; bottom:0; z-index:2000; max-height:78dvh; min-height:42dvh; overflow:auto; border-left:0; border-top:1px solid var(--line); border-radius:18px 18px 0 0; box-shadow:0 -18px 44px rgba(15,23,42,.24); transform:translateY(calc(100% - 62px)); transition:transform .22s ease; padding:14px; -webkit-overflow-scrolling:touch;}
+  aside.open {transform:translateY(0);}
+  .panel-close {display:block; float:right; border:1px solid var(--line); background:#fff; border-radius:999px; padding:7px 10px; font-size:12px; font-weight:800; margin:0 0 8px 8px; min-height:36px;}
+  .panel-backdrop {display:none; position:fixed; inset:0; z-index:1999; background:rgba(15,23,42,.28);}
+  .panel-backdrop.open {display:block;}
+  .search,select {min-height:44px; font-size:16px;}
+  .hover-tooltip {display:none!important;}
+}
 </style>
 </head>
 <body>
 <div class="app">
-  <header>
-    <div>
-      <h1>Oʻahu Enforcement Map — Street-Level Weekly Timeline</h1>
-      <div class="subtitle">Actual street segments are drawn where the schedule names streets; parks, beach parks, and facilities remain point markers.</div>
-    </div>
-    <div class="chip">Week color = street color</div>
-  </header>
-
-  <main id="map"></main>
-
-  <aside>
-    <h2>Weeks</h2>
-    <div class="note">
-    </div>
-    <div class="legend" id="legend"></div>
-    <div id="weekCards"></div>
-  </aside>
-
-  <footer>
-    <div class="controls">
-      <button class="btn" id="prevBtn" title="Previous week">‹</button>
-      <button class="btn" id="playBtn" title="Play timeline">▶</button>
-      <button class="btn" id="nextBtn" title="Next week">›</button>
-      <div class="slider-wrap">
-        <input id="weekSlider" type="range" min="0" max="4" step="1" value="4">
-        <div class="ticks" id="ticks"></div>
-      </div>
-      <div class="bottom-note">Selected week is boldest. Other weeks remain visible in their assigned colors for comparison.</div>
-    </div>
-  </footer>
+<header>
+  <div><h1>Oʻahu Enforcement Operations Timeline</h1><div class="subtitle">Regular Monday–Sunday timeline layers for DFM and DLNR operations, May–June 2026.</div></div>
+  <div class="header-actions"><span class="small-chip" style="background:#f4c430;color:#111827;border-color:#b7791f">DFM = City</span><span class="small-chip" style="background:#2563eb;color:#fff;border-color:#2563eb">DLNR = State</span><button class="mobile-panel-btn" id="mobilePanelBtn" type="button">Timeline & List</button></div>
+</header>
+<main id="map"></main>
+<div class="panel-backdrop" id="panelBackdrop"></div>
+<aside id="sidePanel"><button class="panel-close" id="panelCloseBtn" type="button">Close</button>
+<h2 class="panel-title">Timeline layers</h2>
+<input class="search" id="searchBox" placeholder="Search location, agency, crew, notes..." />
+<div class="controls">
+  <select id="weekFilter"><option value="">All weeks</option></select>
+  <select id="agencyFilter"><option value="">Both agencies</option><option value="DFM">DFM - City</option><option value="DLNR">DLNR - State</option></select>
+  <button id="resetBtn">Reset</button><button id="fitBtn">Fit visible</button>
 </div>
-
+<div class="agency-toggle"><button class="active" data-agency="DFM" id="dfmQuick">DFM</button><button class="active" data-agency="DLNR" id="dlnrQuick">DLNR</button></div>
+<div class="week-strip" id="weekButtons"></div>
+<div class="summary" id="summaryBox"></div>
+<div class="op-list" id="opList"></div>
+</aside>
+</div>
 <script>
-const weeks = [
-  {
-    "label": "May 4–8",
-    "dateRange": "May 4–8, 2026",
-    "color": "#2563eb",
-    "streets": [
-      {
-        "name": "S King St. (Richards to Punahou)",
-        "coords": [
-          [
-            21.3078,
-            -157.8629
-          ],
-          [
-            21.3037,
-            -157.8552
-          ],
-          [
-            21.3007,
-            -157.8438
-          ],
-          [
-            21.2999,
-            -157.8317
-          ]
-        ]
-      },
-      {
-        "name": "Young St. (Victoria to Punahou)",
-        "coords": [
-          [
-            21.3008,
-            -157.8387
-          ],
-          [
-            21.2999,
-            -157.8317
-          ]
-        ]
-      },
-      {
-        "name": "Kapiolani Blvd. (Ward to Kalakaua)",
-        "coords": [
-          [
-            21.2967,
-            -157.8575
-          ],
-          [
-            21.291,
-            -157.845
-          ],
-          [
-            21.2858,
-            -157.8338
-          ]
-        ]
-      },
-      {
-        "name": "Ward Ave. (S Beretania to Ala Moana)",
-        "coords": [
-          [
-            21.3044,
-            -157.8509
-          ],
-          [
-            21.2967,
-            -157.8505
-          ]
-        ]
-      },
-      {
-        "name": "Ala Wai Promenade (Makai)",
-        "coords": [
-          [
-            21.2878,
-            -157.8408
-          ],
-          [
-            21.2869,
-            -157.8336
-          ],
-          [
-            21.2858,
-            -157.8275
-          ]
-        ]
-      },
-      {
-        "name": "Diamond Head Beach Rd.",
-        "coords": [
-          [
-            21.2556,
-            -157.8055
-          ],
-          [
-            21.2584,
-            -157.802
-          ],
-          [
-            21.2633,
-            -157.7985
-          ]
-        ]
-      },
-      {
-        "name": "S Beretania St. (University to McCully)",
-        "coords": [
-          [
-            21.2985,
-            -157.8175
-          ],
-          [
-            21.2994,
-            -157.8102
-          ],
-          [
-            21.3001,
-            -157.8045
-          ]
-        ]
-      },
-      {
-        "name": "S King St. (Punahou to Kapiolani)",
-        "coords": [
-          [
-            21.2999,
-            -157.8317
-          ],
-          [
-            21.2957,
-            -157.8223
-          ],
-          [
-            21.2917,
-            -157.8135
-          ]
-        ]
-      }
-    ],
-    "points": [
-      {
-        "name": "Alapai Transit",
-        "lat": 21.3057,
-        "lng": -157.852,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Bishop / Adams",
-        "lat": 21.3098,
-        "lng": -157.8604,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Hotel / River",
-        "lat": 21.311,
-        "lng": -157.86,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Maunakea / Kukui",
-        "lat": 21.3158,
-        "lng": -157.8598,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Iwilei / Kuwili / Pine / Sumner / Pacific",
-        "lat": 21.3218,
-        "lng": -157.8765,
-        "details": "Day Crew area"
-      },
-      {
-        "name": "N King / Akepo Ln.",
-        "lat": 21.3181,
-        "lng": -157.8796,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Kanoa St.",
-        "lat": 21.3205,
-        "lng": -157.8736,
-        "details": "Day Crew"
-      },
-      {
-        "name": "1752 Kealia Dr.",
-        "lat": 21.3192,
-        "lng": -157.8698,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Pokai Bay Beach Park",
-        "lat": 21.4358,
-        "lng": -158.1862,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Bayview / Guard St. unimproved",
-        "lat": 21.4367,
-        "lng": -158.1878,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Atkinson St. / Kapiolani",
-        "lat": 21.2902,
-        "lng": -157.841,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Koali Rd.",
-        "lat": 21.2795,
-        "lng": -157.8007,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Mauumae Park",
-        "lat": 21.2864,
-        "lng": -157.8047,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Ainakea Way",
-        "lat": 21.2796,
-        "lng": -157.7928,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Kaiaka Beach Park",
-        "lat": 21.592,
-        "lng": -158.1033,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Alii Beach Park",
-        "lat": 21.5956,
-        "lng": -158.1049,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Haleiwa Beach Park",
-        "lat": 21.5945,
-        "lng": -158.102,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Puaena Point",
-        "lat": 21.5995,
-        "lng": -158.1038,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Waimea Bay Beach Park",
-        "lat": 21.6403,
-        "lng": -158.0657,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Pupukea Beach Park",
-        "lat": 21.6528,
-        "lng": -158.0572,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Log Cabins",
-        "lat": 21.6682,
-        "lng": -158.0475,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Sunset Beach",
-        "lat": 21.6787,
-        "lng": -158.0405,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Moiliili Field",
-        "lat": 21.2927,
-        "lng": -157.8177,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Makahiki Way",
-        "lat": 21.2918,
-        "lng": -157.8148,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Algaroba St.",
-        "lat": 21.291,
-        "lng": -157.813,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Waiola St.",
-        "lat": 21.2925,
-        "lng": -157.8162,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Ala Wai CP",
-        "lat": 21.2861,
-        "lng": -157.8244,
-        "details": "Day Crew"
-      },
-      {
-        "name": "University Ave.",
-        "lat": 21.2962,
-        "lng": -157.8192,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Kamanele Park",
-        "lat": 21.2911,
-        "lng": -157.8159,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Kaala St.",
-        "lat": 21.291,
-        "lng": -157.8208,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Isenberg St.",
-        "lat": 21.291,
-        "lng": -157.811,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Waianae District Park",
-        "lat": 21.4465,
-        "lng": -158.1893,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Aala Park",
-        "lat": 21.3166,
-        "lng": -157.8587,
-        "details": "Night Crew"
-      },
-      {
-        "name": "College Walk",
-        "lat": 21.3135,
-        "lng": -157.8583,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Smith / Beretania",
-        "lat": 21.313,
-        "lng": -157.858,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Dole Park",
-        "lat": 21.3021,
-        "lng": -157.8396,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Pawaa Park",
-        "lat": 21.2953,
-        "lng": -157.8392,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Cartwright Field",
-        "lat": 21.2825,
-        "lng": -157.8218,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Auiki St.",
-        "lat": 21.3079,
-        "lng": -157.8786,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Salt Lake Blvd.",
-        "lat": 21.3516,
-        "lng": -157.925,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Kapiolani Blvd. BS999",
-        "lat": 21.2903,
-        "lng": -157.8472,
-        "details": "Day Crew"
-      },
-      {
-        "name": "610 Ala Moana Blvd.",
-        "lat": 21.2999,
-        "lng": -157.8628,
-        "details": "Day Crew"
-      }
-    ]
-  },
-  {
-    "label": "May 11–15",
-    "dateRange": "May 11–15, 2026",
-    "color": "#ef4444",
-    "streets": [
-      {
-        "name": "S King St. (Richards to Punahou)",
-        "coords": [
-          [
-            21.3078,
-            -157.8629
-          ],
-          [
-            21.3037,
-            -157.8552
-          ],
-          [
-            21.3007,
-            -157.8438
-          ],
-          [
-            21.2999,
-            -157.8317
-          ]
-        ]
-      },
-      {
-        "name": "Young St. (Victoria to Punahou)",
-        "coords": [
-          [
-            21.3008,
-            -157.8387
-          ],
-          [
-            21.2999,
-            -157.8317
-          ]
-        ]
-      },
-      {
-        "name": "Kapiolani Blvd. (Ward to Kalakaua)",
-        "coords": [
-          [
-            21.2967,
-            -157.8575
-          ],
-          [
-            21.291,
-            -157.845
-          ],
-          [
-            21.2858,
-            -157.8338
-          ]
-        ]
-      },
-      {
-        "name": "Ward Ave. (S Beretania to Ala Moana)",
-        "coords": [
-          [
-            21.3044,
-            -157.8509
-          ],
-          [
-            21.2967,
-            -157.8505
-          ]
-        ]
-      },
-      {
-        "name": "Ala Wai Promenade (Makai)",
-        "coords": [
-          [
-            21.2878,
-            -157.8408
-          ],
-          [
-            21.2869,
-            -157.8336
-          ],
-          [
-            21.2858,
-            -157.8275
-          ]
-        ]
-      },
-      {
-        "name": "Kapahulu Bike Path",
-        "coords": [
-          [
-            21.2794,
-            -157.8185
-          ],
-          [
-            21.2785,
-            -157.8137
-          ],
-          [
-            21.2778,
-            -157.8095
-          ]
-        ]
-      },
-      {
-        "name": "Ala Wai Golf Course Rd.",
-        "coords": [
-          [
-            21.2822,
-            -157.8118
-          ],
-          [
-            21.2789,
-            -157.806
-          ]
-        ]
-      },
-      {
-        "name": "Kalakaua Ave. (central corridor)",
-        "coords": [
-          [
-            21.3,
-            -157.836
-          ],
-          [
-            21.2897,
-            -157.8375
-          ],
-          [
-            21.2803,
-            -157.8294
-          ]
-        ]
-      }
-    ],
-    "points": [
-      {
-        "name": "Alapai Transit",
-        "lat": 21.3057,
-        "lng": -157.852,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Iwilei / Mapunapuna",
-        "lat": 21.338,
-        "lng": -157.8945,
-        "details": "Day Crew area"
-      },
-      {
-        "name": "766 Mapunapuna",
-        "lat": 21.3366,
-        "lng": -157.8948,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Kam Hwy / Laumaka",
-        "lat": 21.3336,
-        "lng": -157.8956,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Old Stadium",
-        "lat": 21.2869,
-        "lng": -157.8198,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Moiliili",
-        "lat": 21.2914,
-        "lng": -157.815,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Kalo",
-        "lat": 21.2889,
-        "lng": -157.8182,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Frank C. Judd Mini Park",
-        "lat": 21.2857,
-        "lng": -157.8207,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Wailupe Beach Park",
-        "lat": 21.278,
-        "lng": -157.7708,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Kawaikui Beach Park",
-        "lat": 21.2774,
-        "lng": -157.76,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Kuliouou Beach Park",
-        "lat": 21.2782,
-        "lng": -157.7485,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Maunalua Bay Beach Park",
-        "lat": 21.2785,
-        "lng": -157.7252,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Joe Lukela / Hawaii Kai area",
-        "lat": 21.281,
-        "lng": -157.7075,
-        "details": "Night Crew"
-      },
-      {
-        "name": "527 Judd St.",
-        "lat": 21.3147,
-        "lng": -157.8509,
-        "details": "Day Crew"
-      },
-      {
-        "name": "1670 Kalakaua Ave.",
-        "lat": 21.2936,
-        "lng": -157.8385,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Coral / Auahi",
-        "lat": 21.2959,
-        "lng": -157.8582,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Ala Moana Beach Park",
-        "lat": 21.2894,
-        "lng": -157.8477,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Kewalo Basin",
-        "lat": 21.2894,
-        "lng": -157.8546,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Ala Moana / Forrest",
-        "lat": 21.292,
-        "lng": -157.8524,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Pohukaina",
-        "lat": 21.2972,
-        "lng": -157.8573,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Keawe St.",
-        "lat": 21.299,
-        "lng": -157.857,
-        "details": "Day Crew"
-      },
-      {
-        "name": "South St.",
-        "lat": 21.302,
-        "lng": -157.8578,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Ewa Beach Community Park",
-        "lat": 21.3151,
-        "lng": -158.0072,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Puuloa Beach Park",
-        "lat": 21.3097,
-        "lng": -158.0167,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Kapolei Regional Park",
-        "lat": 21.334,
-        "lng": -158.0765,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Halawa District Park",
-        "lat": 21.3831,
-        "lng": -157.941,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Aiea Stream Bridge",
-        "lat": 21.383,
-        "lng": -157.9425,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Pearlridge Park",
-        "lat": 21.3937,
-        "lng": -157.945,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Manana Community Park",
-        "lat": 21.3997,
-        "lng": -157.9681,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Crestview Park",
-        "lat": 21.4026,
-        "lng": -157.9699,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Ala Moana",
-        "lat": 21.2898,
-        "lng": -157.847,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Thomas Square",
-        "lat": 21.3004,
-        "lng": -157.8414,
-        "details": "Night Crew"
-      },
-      {
-        "name": "98-281 Aiea Kai Pl.",
-        "lat": 21.3917,
-        "lng": -157.9347,
-        "details": "Day Crew"
-      },
-      {
-        "name": "98-077 Kamehameha Hwy",
-        "lat": 21.3888,
-        "lng": -157.9383,
-        "details": "Day Crew"
-      },
-      {
-        "name": "98-147 Kamehameha Hwy",
-        "lat": 21.39,
-        "lng": -157.9372,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Paiwa St. Bridge",
-        "lat": 21.3962,
-        "lng": -157.9808,
-        "details": "Day Crew"
-      },
-      {
-        "name": "1395 Farrington Hwy",
-        "lat": 21.3857,
-        "lng": -158.0045,
-        "details": "Day Crew"
-      },
-      {
-        "name": "94-322 Pupuole St.",
-        "lat": 21.3846,
-        "lng": -158.0012,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Kapolei Pkwy / Alohikea / Wakea / Kealakapu / Kamaaha / Haumea",
-        "lat": 21.3348,
-        "lng": -158.0792,
-        "details": "Day Crew area"
-      },
-      {
-        "name": "Waikiki",
-        "lat": 21.2793,
-        "lng": -157.8293,
-        "details": "Night Crew"
-      }
-    ]
-  },
-  {
-    "label": "May 18–22",
-    "dateRange": "May 18–22, 2026",
-    "color": "#10b981",
-    "streets": [
-      {
-        "name": "S King St. (Richards to Punahou)",
-        "coords": [
-          [
-            21.3078,
-            -157.8629
-          ],
-          [
-            21.3037,
-            -157.8552
-          ],
-          [
-            21.3007,
-            -157.8438
-          ],
-          [
-            21.2999,
-            -157.8317
-          ]
-        ]
-      },
-      {
-        "name": "Young St. (Victoria to Punahou)",
-        "coords": [
-          [
-            21.3008,
-            -157.8387
-          ],
-          [
-            21.2999,
-            -157.8317
-          ]
-        ]
-      },
-      {
-        "name": "Kapiolani Blvd. (Ward to Kalakaua)",
-        "coords": [
-          [
-            21.2967,
-            -157.8575
-          ],
-          [
-            21.291,
-            -157.845
-          ],
-          [
-            21.2858,
-            -157.8338
-          ]
-        ]
-      },
-      {
-        "name": "Ward Ave. (S Beretania to Ala Moana)",
-        "coords": [
-          [
-            21.3044,
-            -157.8509
-          ],
-          [
-            21.2967,
-            -157.8505
-          ]
-        ]
-      },
-      {
-        "name": "Pensacola St.",
-        "coords": [
-          [
-            21.3032,
-            -157.841
-          ],
-          [
-            21.298,
-            -157.841
-          ]
-        ]
-      },
-      {
-        "name": "Cedar St.",
-        "coords": [
-          [
-            21.3014,
-            -157.839
-          ],
-          [
-            21.2969,
-            -157.839
-          ]
-        ]
-      },
-      {
-        "name": "Kalihi St. (Hoe to Auiki)",
-        "coords": [
-          [
-            21.3215,
-            -157.8845
-          ],
-          [
-            21.3158,
-            -157.8825
-          ],
-          [
-            21.3095,
-            -157.8795
-          ]
-        ]
-      },
-      {
-        "name": "Pahounui St.",
-        "coords": [
-          [
-            21.3175,
-            -157.9025
-          ],
-          [
-            21.3128,
-            -157.896
-          ]
-        ]
-      },
-      {
-        "name": "South / Keawe / Kalakaua / Kinau / Makiki corridor",
-        "coords": [
-          [
-            21.3018,
-            -157.8578
-          ],
-          [
-            21.2988,
-            -157.857
-          ],
-          [
-            21.2965,
-            -157.8525
-          ],
-          [
-            21.299,
-            -157.8415
-          ],
-          [
-            21.296,
-            -157.838
-          ],
-          [
-            21.2923,
-            -157.8375
-          ]
-        ]
-      },
-      {
-        "name": "S Beretania St.",
-        "coords": [
-          [
-            21.305,
-            -157.8578
-          ],
-          [
-            21.3024,
-            -157.846
-          ],
-          [
-            21.2996,
-            -157.8363
-          ],
-          [
-            21.2978,
-            -157.823
-          ]
-        ]
-      },
-      {
-        "name": "Harding Ave.",
-        "coords": [
-          [
-            21.2796,
-            -157.7955
-          ],
-          [
-            21.2794,
-            -157.804
-          ],
-          [
-            21.2798,
-            -157.8118
-          ]
-        ]
-      },
-      {
-        "name": "S King St. (Punahou to Kapahulu)",
-        "coords": [
-          [
-            21.2999,
-            -157.8317
-          ],
-          [
-            21.2957,
-            -157.8223
-          ],
-          [
-            21.2905,
-            -157.8115
-          ]
-        ]
-      }
-    ],
-    "points": [
-      {
-        "name": "1505 Young St.",
-        "lat": 21.2988,
-        "lng": -157.8375,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Iwilei / Kuwili / Pine / Sumner / Pacific",
-        "lat": 21.3218,
-        "lng": -157.8765,
-        "details": "Day Crew area"
-      },
-      {
-        "name": "1519 Kaumualii St.",
-        "lat": 21.3157,
-        "lng": -157.8895,
-        "details": "Day Crew"
-      },
-      {
-        "name": "1489 Mokauea St.",
-        "lat": 21.3264,
-        "lng": -157.8922,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Middle St. Bridge",
-        "lat": 21.3212,
-        "lng": -157.89,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Waianae District Park",
-        "lat": 21.4465,
-        "lng": -158.1893,
-        "details": "Day Crew"
-      },
-      {
-        "name": "1148 2nd Ave.",
-        "lat": 21.3204,
-        "lng": -157.799,
-        "details": "Day Crew"
-      },
-      {
-        "name": "99-257 Ohialomi Pl.",
-        "lat": 21.3982,
-        "lng": -157.949,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Captain Cook Ave.",
-        "lat": 21.3936,
-        "lng": -157.9465,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Kamalii Park",
-        "lat": 21.3758,
-        "lng": -157.742,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Coral / Auahi",
-        "lat": 21.2959,
-        "lng": -157.8582,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Ala Moana Regional Park",
-        "lat": 21.2875,
-        "lng": -157.8478,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Kewalo Basin",
-        "lat": 21.2894,
-        "lng": -157.8546,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Wagon Round Up",
-        "lat": 21.3075,
-        "lng": -157.8625,
-        "details": "Night Crew staging area (approx.)"
-      },
-      {
-        "name": "Waimanalo Bay Beach Park",
-        "lat": 21.3389,
-        "lng": -157.7001,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Sherwoods",
-        "lat": 21.3444,
-        "lng": -157.6869,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Kaiona Beach Park",
-        "lat": 21.3463,
-        "lng": -157.6799,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Kaupo Beach",
-        "lat": 21.3467,
-        "lng": -157.6719,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Makapuʻu",
-        "lat": 21.3091,
-        "lng": -157.657,
-        "details": "Night Crew"
-      },
-      {
-        "name": "3566 Harding Ave.",
-        "lat": 21.2791,
-        "lng": -157.7966,
-        "details": "Day Crew"
-      },
-      {
-        "name": "3912 Harding Ave.",
-        "lat": 21.2791,
-        "lng": -157.804,
-        "details": "Day Crew"
-      },
-      {
-        "name": "540 Kapahulu Ave.",
-        "lat": 21.2793,
-        "lng": -157.8143,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Harding Ave. Bridge",
-        "lat": 21.279,
-        "lng": -157.8008,
-        "details": "Day Crew"
-      },
-      {
-        "name": "357 Makaloa St.",
-        "lat": 21.2977,
-        "lng": -157.8383,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Kalakaua Ave. BS37",
-        "lat": 21.2924,
-        "lng": -157.8378,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Old Stadium",
-        "lat": 21.2869,
-        "lng": -157.8198,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Moiliili",
-        "lat": 21.2914,
-        "lng": -157.815,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Kalo",
-        "lat": 21.2889,
-        "lng": -157.8182,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Varsity Pl.",
-        "lat": 21.288,
-        "lng": -157.811,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Isenberg St.",
-        "lat": 21.291,
-        "lng": -157.811,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Makahiki Way",
-        "lat": 21.2918,
-        "lng": -157.8148,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Poha Ln.",
-        "lat": 21.292,
-        "lng": -157.82,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Liholiho St. Bridge",
-        "lat": 21.2957,
-        "lng": -157.8342,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Anapuni St. Bridge",
-        "lat": 21.2968,
-        "lng": -157.8356,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Keeaumoku St. Bridge",
-        "lat": 21.2987,
-        "lng": -157.8398,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Nehoa St. Bridge",
-        "lat": 21.3,
-        "lng": -157.8415,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Waikiki",
-        "lat": 21.2793,
-        "lng": -157.8293,
-        "details": "Night Crew"
-      }
-    ]
-  },
-  {
-    "label": "May 25–29",
-    "dateRange": "May 25–29, 2026",
-    "color": "#f59e0b",
-    "streets": [
-      {
-        "name": "Ala Wai Promenade",
-        "coords": [
-          [
-            21.2878,
-            -157.8408
-          ],
-          [
-            21.2869,
-            -157.8336
-          ],
-          [
-            21.2858,
-            -157.8275
-          ]
-        ]
-      },
-      {
-        "name": "Kapahulu Bike Path",
-        "coords": [
-          [
-            21.2794,
-            -157.8185
-          ],
-          [
-            21.2785,
-            -157.8137
-          ],
-          [
-            21.2778,
-            -157.8095
-          ]
-        ]
-      },
-      {
-        "name": "Ala Wai Golf Course Rd.",
-        "coords": [
-          [
-            21.2822,
-            -157.8118
-          ],
-          [
-            21.2789,
-            -157.806
-          ]
-        ]
-      },
-      {
-        "name": "Iwilei Rd.",
-        "coords": [
-          [
-            21.3183,
-            -157.8787
-          ],
-          [
-            21.3217,
-            -157.8755
-          ],
-          [
-            21.3255,
-            -157.8734
-          ]
-        ]
-      },
-      {
-        "name": "Kokea St. / Kapālama Canal",
-        "coords": [
-          [
-            21.323,
-            -157.889
-          ],
-          [
-            21.3198,
-            -157.8858
-          ]
-        ]
-      },
-      {
-        "name": "Lower Kokea St.",
-        "coords": [
-          [
-            21.32,
-            -157.8846
-          ],
-          [
-            21.3175,
-            -157.8825
-          ]
-        ]
-      },
-      {
-        "name": "Dillingham / Kaʻaahi St.",
-        "coords": [
-          [
-            21.3188,
-            -157.885
-          ],
-          [
-            21.317,
-            -157.8782
-          ]
-        ]
-      },
-      {
-        "name": "Koali St.",
-        "coords": [
-          [
-            21.2812,
-            -157.8011
-          ],
-          [
-            21.2795,
-            -157.8007
-          ]
-        ]
-      },
-      {
-        "name": "Hotel / Richards",
-        "coords": [
-          [
-            21.3073,
-            -157.8619
-          ],
-          [
-            21.3078,
-            -157.8629
-          ]
-        ]
-      },
-      {
-        "name": "N King / Kohou St.",
-        "coords": [
-          [
-            21.3199,
-            -157.8858
-          ],
-          [
-            21.3193,
-            -157.8883
-          ]
-        ]
-      },
-      {
-        "name": "S King St. (Richards to Punahou)",
-        "coords": [
-          [
-            21.3078,
-            -157.8629
-          ],
-          [
-            21.3037,
-            -157.8552
-          ],
-          [
-            21.3007,
-            -157.8438
-          ],
-          [
-            21.2999,
-            -157.8317
-          ]
-        ]
-      },
-      {
-        "name": "Young St. (Victoria to Punahou)",
-        "coords": [
-          [
-            21.3008,
-            -157.8387
-          ],
-          [
-            21.2999,
-            -157.8317
-          ]
-        ]
-      },
-      {
-        "name": "Kapiolani Blvd. (Ward to Kalakaua)",
-        "coords": [
-          [
-            21.2967,
-            -157.8575
-          ],
-          [
-            21.291,
-            -157.845
-          ],
-          [
-            21.2858,
-            -157.8338
-          ]
-        ]
-      },
-      {
-        "name": "Ward Ave. (S Beretania to Ala Moana)",
-        "coords": [
-          [
-            21.3044,
-            -157.8509
-          ],
-          [
-            21.2967,
-            -157.8505
-          ]
-        ]
-      }
-    ],
-    "points": [
-      {
-        "name": "Old Stadium",
-        "lat": 21.2869,
-        "lng": -157.8198,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Moiliili",
-        "lat": 21.2914,
-        "lng": -157.815,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Kalo",
-        "lat": 21.2889,
-        "lng": -157.8182,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Kamanele",
-        "lat": 21.2911,
-        "lng": -157.8159,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Kaaha Mini",
-        "lat": 21.2898,
-        "lng": -157.8165,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Frank C. Judd Mini Park",
-        "lat": 21.2857,
-        "lng": -157.8207,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Wailupe Beach Park",
-        "lat": 21.278,
-        "lng": -157.7708,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Kawaikui Beach Park",
-        "lat": 21.2774,
-        "lng": -157.76,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Kuliouou Beach Park",
-        "lat": 21.2782,
-        "lng": -157.7485,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Maunalua Bay Beach Park",
-        "lat": 21.2785,
-        "lng": -157.7252,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Joe Lukela / Hawaii Kai area",
-        "lat": 21.281,
-        "lng": -157.7075,
-        "details": "Night Crew"
-      },
-      {
-        "name": "850 Iwilei Rd.",
-        "lat": 21.321,
-        "lng": -157.8791,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Kuwili / Pine / Sumner / Pacific / Akepo / Pua",
-        "lat": 21.321,
-        "lng": -157.876,
-        "details": "Day Crew area"
-      },
-      {
-        "name": "Lanakila Park",
-        "lat": 21.3213,
-        "lng": -157.8842,
-        "details": "Day Crew"
-      },
-      {
-        "name": "1111 Hala Dr.",
-        "lat": 21.3288,
-        "lng": -157.887,
-        "details": "Day Crew"
-      },
-      {
-        "name": "1121 Middle St.",
-        "lat": 21.3322,
-        "lng": -157.886,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Hoonee Pl.",
-        "lat": 21.3301,
-        "lng": -157.8897,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Kilihau St.",
-        "lat": 21.3275,
-        "lng": -157.8742,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Halawa District Park",
-        "lat": 21.3831,
-        "lng": -157.941,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Manana Community Park",
-        "lat": 21.3997,
-        "lng": -157.9681,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Pacheco Park",
-        "lat": 21.3877,
-        "lng": -157.9997,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Hans L'Orange Park",
-        "lat": 21.3836,
-        "lng": -158.007,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Waipahu District Park",
-        "lat": 21.3864,
-        "lng": -158.0088,
-        "details": "Night Crew"
-      },
-      {
-        "name": "925 Cedar St.",
-        "lat": 21.2992,
-        "lng": -157.839,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Keawe St.",
-        "lat": 21.299,
-        "lng": -157.857,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Punchbowl St.",
-        "lat": 21.304,
-        "lng": -157.8525,
-        "details": "Day Crew"
-      },
-      {
-        "name": "718 & 929 Pumehana St.",
-        "lat": 21.2978,
-        "lng": -157.8365,
-        "details": "Day Crew"
-      },
-      {
-        "name": "915 McCully St.",
-        "lat": 21.2931,
-        "lng": -157.823,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Kewalo Basin",
-        "lat": 21.2894,
-        "lng": -157.8546,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Point Panic",
-        "lat": 21.2853,
-        "lng": -157.8493,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Kakaako Waterfront",
-        "lat": 21.2878,
-        "lng": -157.8608,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Gateways (Mauka & Makai)",
-        "lat": 21.2924,
-        "lng": -157.8568,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Mother Waldron Park",
-        "lat": 21.2928,
-        "lng": -157.8589,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Kawaiahao Mini Park",
-        "lat": 21.303,
-        "lng": -157.8583,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Hawaii Plantation Village",
-        "lat": 21.3851,
-        "lng": -158.0106,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Waikiki",
-        "lat": 21.2793,
-        "lng": -157.8293,
-        "details": "Night Crew"
-      }
-    ]
-  },
-  {
-    "label": "June 1–5",
-    "dateRange": "June 1–5, 2026",
-    "color": "#8b5cf6",
-    "streets": [
-      {
-        "name": "Iwilei Rd.",
-        "coords": [
-          [
-            21.3183,
-            -157.8787
-          ],
-          [
-            21.3217,
-            -157.8755
-          ],
-          [
-            21.3255,
-            -157.8734
-          ]
-        ]
-      },
-      {
-        "name": "Dillingham / Kaʻaahi St.",
-        "coords": [
-          [
-            21.3188,
-            -157.885
-          ],
-          [
-            21.317,
-            -157.8782
-          ]
-        ]
-      },
-      {
-        "name": "N King / Kohou St.",
-        "coords": [
-          [
-            21.3199,
-            -157.8858
-          ],
-          [
-            21.3193,
-            -157.8883
-          ]
-        ]
-      },
-      {
-        "name": "Pahounui / Sand Island Access Rd.",
-        "coords": [
-          [
-            21.3168,
-            -157.9043
-          ],
-          [
-            21.311,
-            -157.8985
-          ],
-          [
-            21.3057,
-            -157.8939
-          ]
-        ]
-      },
-      {
-        "name": "Ala Wai Promenade",
-        "coords": [
-          [
-            21.2878,
-            -157.8408
-          ],
-          [
-            21.2869,
-            -157.8336
-          ],
-          [
-            21.2858,
-            -157.8275
-          ]
-        ]
-      },
-      {
-        "name": "Ilalo / Auahi / Pohukaina / Halekuwila / Queen / South / Keawe / Coral / Cooke / Ohe / Koula corridor",
-        "coords": [
-          [
-            21.2948,
-            -157.8618
-          ],
-          [
-            21.2956,
-            -157.8582
-          ],
-          [
-            21.2972,
-            -157.8573
-          ],
-          [
-            21.2991,
-            -157.8572
-          ],
-          [
-            21.3016,
-            -157.858
-          ],
-          [
-            21.302,
-            -157.8578
-          ],
-          [
-            21.299,
-            -157.857
-          ],
-          [
-            21.2959,
-            -157.8582
-          ],
-          [
-            21.2962,
-            -157.8615
-          ],
-          [
-            21.297,
-            -157.8635
-          ],
-          [
-            21.2966,
-            -157.8652
-          ]
-        ]
-      },
-      {
-        "name": "S Beretania / S King / Young / Makiki / Kinau / Kalakaua corridor",
-        "coords": [
-          [
-            21.3005,
-            -157.845
-          ],
-          [
-            21.2995,
-            -157.8385
-          ],
-          [
-            21.2978,
-            -157.823
-          ],
-          [
-            21.297,
-            -157.8375
-          ],
-          [
-            21.2965,
-            -157.8415
-          ],
-          [
-            21.296,
-            -157.838
-          ],
-          [
-            21.2924,
-            -157.8375
-          ]
-        ]
-      },
-      {
-        "name": "Kapahulu Bike Path",
-        "coords": [
-          [
-            21.2794,
-            -157.8185
-          ],
-          [
-            21.2785,
-            -157.8137
-          ],
-          [
-            21.2778,
-            -157.8095
-          ]
-        ]
-      },
-      {
-        "name": "Ala Wai Golf Course Rd.",
-        "coords": [
-          [
-            21.2822,
-            -157.8118
-          ],
-          [
-            21.2789,
-            -157.806
-          ]
-        ]
-      },
-      {
-        "name": "Makahiki Way / Koali St.",
-        "coords": [
-          [
-            21.2918,
-            -157.8148
-          ],
-          [
-            21.2862,
-            -157.8065
-          ],
-          [
-            21.2812,
-            -157.8011
-          ]
-        ]
-      },
-      {
-        "name": "Hunakai Drainage Canal",
-        "coords": [
-          [
-            21.2735,
-            -157.7825
-          ],
-          [
-            21.276,
-            -157.7895
-          ],
-          [
-            21.2788,
-            -157.796
-          ]
-        ]
-      },
-      {
-        "name": "S King St. (Punahou to Kapiolani)",
-        "coords": [
-          [
-            21.2999,
-            -157.8317
-          ],
-          [
-            21.2957,
-            -157.8223
-          ],
-          [
-            21.2905,
-            -157.8115
-          ]
-        ]
-      },
-      {
-        "name": "S Beretania St. (S King to McCully)",
-        "coords": [
-          [
-            21.2978,
-            -157.823
-          ],
-          [
-            21.2992,
-            -157.8155
-          ],
-          [
-            21.3002,
-            -157.8045
-          ]
-        ]
-      }
-    ],
-    "points": [
-      {
-        "name": "Waikiki",
-        "lat": 21.2793,
-        "lng": -157.8293,
-        "details": "Night Crew"
-      },
-      {
-        "name": "850 Iwilei Rd.",
-        "lat": 21.321,
-        "lng": -157.8791,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Kuwili / Pine / Sumner / Pacific / Akepo / Pua",
-        "lat": 21.321,
-        "lng": -157.876,
-        "details": "Day Crew area"
-      },
-      {
-        "name": "Kokea St.",
-        "lat": 21.32,
-        "lng": -157.8846,
-        "details": "Day Crew"
-      },
-      {
-        "name": "142 Mokauea St.",
-        "lat": 21.3267,
-        "lng": -157.8891,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Kilihau St.",
-        "lat": 21.3275,
-        "lng": -157.8742,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Ala Moana Park",
-        "lat": 21.2867,
-        "lng": -157.8472,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Thomas Square",
-        "lat": 21.3004,
-        "lng": -157.8414,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Mother Waldron Park",
-        "lat": 21.2928,
-        "lng": -157.8589,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Kakaako Waterfront",
-        "lat": 21.2878,
-        "lng": -157.8608,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Point Panic",
-        "lat": 21.2853,
-        "lng": -157.8493,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Kawaiahao St.",
-        "lat": 21.3045,
-        "lng": -157.8584,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Alder St.",
-        "lat": 21.298,
-        "lng": -157.8405,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Elm St.",
-        "lat": 21.2968,
-        "lng": -157.8399,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Waiau Pl.",
-        "lat": 21.2958,
-        "lng": -157.8387,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Kaiaka Beach Park",
-        "lat": 21.592,
-        "lng": -158.1033,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Alii Beach Park",
-        "lat": 21.5956,
-        "lng": -158.1049,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Haleiwa Beach Park",
-        "lat": 21.5945,
-        "lng": -158.102,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Puaena Point",
-        "lat": 21.5995,
-        "lng": -158.1038,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Waimea Bay Beach Park",
-        "lat": 21.6403,
-        "lng": -158.0657,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Three Tables",
-        "lat": 21.6537,
-        "lng": -158.0594,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Pupukea Beach Park",
-        "lat": 21.6528,
-        "lng": -158.0572,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Log Cabins",
-        "lat": 21.6682,
-        "lng": -158.0475,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Sunset Beach",
-        "lat": 21.6787,
-        "lng": -158.0405,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Nanikai Beach Park",
-        "lat": 21.2762,
-        "lng": -157.746,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Guard Rails (Hawaii Kai coast)",
-        "lat": 21.2798,
-        "lng": -157.739,
-        "details": "Day Crew"
-      },
-      {
-        "name": "2103 Kanealii St.",
-        "lat": 21.2792,
-        "lng": -157.7955,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Alapai St.",
-        "lat": 21.3055,
-        "lng": -157.8512,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Aala",
-        "lat": 21.3166,
-        "lng": -157.8587,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Smith / Beretania",
-        "lat": 21.313,
-        "lng": -157.858,
-        "details": "Night Crew"
-      },
-      {
-        "name": "College Walk",
-        "lat": 21.3135,
-        "lng": -157.8583,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Kamamalu",
-        "lat": 21.3151,
-        "lng": -157.8571,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Dole",
-        "lat": 21.3021,
-        "lng": -157.8396,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Sheridan",
-        "lat": 21.2969,
-        "lng": -157.8382,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Pawaa",
-        "lat": 21.2953,
-        "lng": -157.8392,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Cartwright",
-        "lat": 21.2825,
-        "lng": -157.8218,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Sand Island",
-        "lat": 21.307,
-        "lng": -157.8925,
-        "details": "Day Crew"
-      },
-      {
-        "name": "Old Stadium",
-        "lat": 21.2869,
-        "lng": -157.8198,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Moiliili",
-        "lat": 21.2914,
-        "lng": -157.815,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Algaroba St.",
-        "lat": 21.291,
-        "lng": -157.813,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Isenberg St.",
-        "lat": 21.291,
-        "lng": -157.811,
-        "details": "Night Crew"
-      },
-      {
-        "name": "Varsity Pl.",
-        "lat": 21.288,
-        "lng": -157.811,
-        "details": "Night Crew"
-      }
-    ]
-  }
-];
-let map;
-let activeIndex = 4;
-let weekLayers = [];
-let playTimer = null;
+const operations = [{"id":1,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Night Crew","location":"Alapai Transit","matched":"Alapai Transit","lat":21.3085,"lng":-157.8584,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":2,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Night Crew","location":"Bishop/Adams","matched":"Bishop/Adams","lat":21.3104,"lng":-157.86,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":3,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Night Crew","location":"Hotel","matched":"Hotel","lat":21.312,"lng":-157.862,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":4,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Night Crew","location":"River","matched":"River","lat":21.314,"lng":-157.8628,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":5,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Night Crew","location":"Maunakea","matched":"Maunakea","lat":21.3132,"lng":-157.8615,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":6,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Night Crew","location":"Kukui","matched":"Kukui","lat":21.3149,"lng":-157.8592,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":7,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Night Crew","location":"S King St. (Richards to Punahou)","matched":"S King St","lat":21.3016,"lng":-157.8387,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":8,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Night Crew","location":"Kalakaua Ave. (Philip to S Beretania)","matched":"Kalakaua Ave","lat":21.29,"lng":-157.8325,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":9,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Night Crew","location":"South St","matched":"South St","lat":21.302,"lng":-157.858,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":10,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Night Crew","location":"Queen St","matched":"Queen St","lat":21.3018,"lng":-157.858,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":11,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Night Crew","location":"Makaloa St","matched":"Makaloa St","lat":21.2929,"lng":-157.8398,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":12,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Night Crew","location":"Sheridan St","matched":"Sheridan St","lat":21.2959,"lng":-157.8389,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":13,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Night Crew","location":"Piikoi St","matched":"Piikoi St","lat":21.3,"lng":-157.8443,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":14,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Night Crew","location":"Makiki St","matched":"Makiki St","lat":21.3028,"lng":-157.839,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":15,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Night Crew","location":"Kinau St","matched":"Kinau St","lat":21.3039,"lng":-157.8425,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":16,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Night Crew","location":"Halekuwila St","matched":"Halekuwila","lat":21.3001,"lng":-157.8593,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":17,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Night Crew","location":"Young St. (Victoria to Punahou)","matched":"Young St","lat":21.2972,"lng":-157.835,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":18,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Night Crew","location":"Kapiolani Blvd. (Ward to Kalakaua)","matched":"Kapiolani Blvd","lat":21.2951,"lng":-157.8395,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":19,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Night Crew","location":"Ward Ave. (S Beretania to Ala Moana)","matched":"Ward Ave","lat":21.2967,"lng":-157.8507,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":20,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Night Crew","location":"Ala Wai Promenade (Makai)","matched":"Ala Wai","lat":21.2854,"lng":-157.8318,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":21,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Night Crew","location":"Waikiki","matched":"Waikiki","lat":21.2767,"lng":-157.8245,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":22,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Day Crew","location":"Iwilei","matched":"Iwilei","lat":21.3163,"lng":-157.8654,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":23,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Day Crew","location":"Kuwili","matched":"Kuwili","lat":21.3167,"lng":-157.8667,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":24,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Day Crew","location":"Pine","matched":"Pine","lat":21.3172,"lng":-157.8674,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":25,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Day Crew","location":"Sumner","matched":"Sumner","lat":21.3168,"lng":-157.8678,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":26,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Day Crew","location":"Pacific","matched":"Pacific","lat":21.315,"lng":-157.866,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":27,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Day Crew","location":"N King/Akepo Ln","matched":"N King/Akepo","lat":21.316,"lng":-157.8663,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":28,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Day Crew","location":"Kanoa St","matched":"Kanoa St","lat":21.3208,"lng":-157.8763,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":29,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Day Crew","location":"1752 Kealia Dr","matched":"1752 Kealia Dr","lat":21.3231,"lng":-157.8955,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":30,"agency":"DFM","date":"2026-05-04","week":"May 4–10","crew":"Day Crew","location":"Kililhau St","matched":"Kililhau","lat":21.3298,"lng":-157.894,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":31,"agency":"DFM","date":"2026-05-05","week":"May 4–10","crew":"Night Crew","location":"Pokai Bay BP","matched":"Pokai Bay","lat":21.4455,"lng":-158.1933,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":32,"agency":"DFM","date":"2026-05-05","week":"May 4–10","crew":"Night Crew","location":"Pokai Bay St","matched":"Pokai Bay","lat":21.4455,"lng":-158.1935,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":33,"agency":"DFM","date":"2026-05-05","week":"May 4–10","crew":"Night Crew","location":"Bayview-Guard St. Unimproved","matched":"Bayview-Guard","lat":21.4473,"lng":-158.1924,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":34,"agency":"DFM","date":"2026-05-05","week":"May 4–10","crew":"Day Crew","location":"Diamond Head Beach Rd","matched":"Diamond Head Beach Rd","lat":21.2585,"lng":-157.8056,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":35,"agency":"DFM","date":"2026-05-05","week":"May 4–10","crew":"Day Crew","location":"Atkinson St. (Kona to Kapiolani)","matched":"Atkinson St","lat":21.2898,"lng":-157.8405,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":36,"agency":"DFM","date":"2026-05-05","week":"May 4–10","crew":"Day Crew","location":"Koali Rd","matched":"Koali Rd","lat":21.2918,"lng":-157.806,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":37,"agency":"DFM","date":"2026-05-05","week":"May 4–10","crew":"Day Crew","location":"Mauumae Park","matched":"Mauumae Park","lat":21.289,"lng":-157.804,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":38,"agency":"DFM","date":"2026-05-05","week":"May 4–10","crew":"Day Crew","location":"Ainakea Way","matched":"Ainakea Way","lat":21.2896,"lng":-157.8046,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":39,"agency":"DFM","date":"2026-05-06","week":"May 4–10","crew":"Night Crew","location":"Kaiaka BP","matched":"Kaiaka","lat":21.5848,"lng":-158.1223,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":40,"agency":"DFM","date":"2026-05-06","week":"May 4–10","crew":"Night Crew","location":"Alii BP","matched":"Alii BP","lat":21.5991,"lng":-158.103,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":41,"agency":"DFM","date":"2026-05-06","week":"May 4–10","crew":"Night Crew","location":"Haleiwa BP","matched":"Haleiwa","lat":21.594,"lng":-158.103,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":42,"agency":"DFM","date":"2026-05-06","week":"May 4–10","crew":"Night Crew","location":"Puaena BP","matched":"Puaena","lat":21.5945,"lng":-158.112,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":43,"agency":"DFM","date":"2026-05-06","week":"May 4–10","crew":"Night Crew","location":"Waimea Bay BP","matched":"Waimea Bay","lat":21.64,"lng":-158.0649,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":44,"agency":"DFM","date":"2026-05-06","week":"May 4–10","crew":"Night Crew","location":"Pupukea BP","matched":"Pupukea","lat":21.648,"lng":-158.063,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":45,"agency":"DFM","date":"2026-05-06","week":"May 4–10","crew":"Night Crew","location":"Log Cabins","matched":"Log Cabins","lat":21.6742,"lng":-158.034,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":46,"agency":"DFM","date":"2026-05-06","week":"May 4–10","crew":"Night Crew","location":"Sunset Beach","matched":"Sunset Beach","lat":21.6799,"lng":-158.0415,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":47,"agency":"DFM","date":"2026-05-06","week":"May 4–10","crew":"Day Crew","location":"Diamond Head Beach Rd","matched":"Diamond Head Beach Rd","lat":21.2585,"lng":-157.8056,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":48,"agency":"DFM","date":"2026-05-06","week":"May 4–10","crew":"Day Crew","location":"S Beretania St. (University to McCully)","matched":"S Beretania","lat":21.3009,"lng":-157.8363,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":49,"agency":"DFM","date":"2026-05-06","week":"May 4–10","crew":"Day Crew","location":"Moiliili Field","matched":"Moiliili Field","lat":21.2918,"lng":-157.8235,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":50,"agency":"DFM","date":"2026-05-06","week":"May 4–10","crew":"Day Crew","location":"S King St. (Punahou to Kapiolani)","matched":"S King St","lat":21.3016,"lng":-157.8387,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":51,"agency":"DFM","date":"2026-05-06","week":"May 4–10","crew":"Day Crew","location":"Makahiki Way","matched":"Makahiki Way","lat":21.2947,"lng":-157.8223,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":52,"agency":"DFM","date":"2026-05-06","week":"May 4–10","crew":"Day Crew","location":"Algaroba St","matched":"Algaroba St","lat":21.2928,"lng":-157.8236,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":53,"agency":"DFM","date":"2026-05-06","week":"May 4–10","crew":"Day Crew","location":"Waiola St","matched":"Waiola St","lat":21.2914,"lng":-157.8205,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":54,"agency":"DFM","date":"2026-05-06","week":"May 4–10","crew":"Day Crew","location":"Ala Wai CP","matched":"Ala Wai","lat":21.2854,"lng":-157.8318,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":55,"agency":"DFM","date":"2026-05-06","week":"May 4–10","crew":"Day Crew","location":"Kapiolani Blvd","matched":"Kapiolani Blvd","lat":21.2951,"lng":-157.8395,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":56,"agency":"DFM","date":"2026-05-06","week":"May 4–10","crew":"Day Crew","location":"University Ave","matched":"University Ave","lat":21.2945,"lng":-157.8175,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":57,"agency":"DFM","date":"2026-05-06","week":"May 4–10","crew":"Day Crew","location":"Kamanele Park","matched":"Kamanele Park","lat":21.2923,"lng":-157.817,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":58,"agency":"DFM","date":"2026-05-06","week":"May 4–10","crew":"Day Crew","location":"Kaala St","matched":"Kaala St","lat":21.2931,"lng":-157.82,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":59,"agency":"DFM","date":"2026-05-06","week":"May 4–10","crew":"Day Crew","location":"Isenberg St","matched":"Isenberg St","lat":21.2938,"lng":-157.8252,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":60,"agency":"DFM","date":"2026-05-06","week":"May 4–10","crew":"Day Crew","location":"Waianae DP","matched":"Waianae DP","lat":21.4475,"lng":-158.187,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":61,"agency":"DFM","date":"2026-05-07","week":"May 4–10","crew":"Night Crew","location":"Aala Park","matched":"Aala Park","lat":21.3156,"lng":-157.8612,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":62,"agency":"DFM","date":"2026-05-07","week":"May 4–10","crew":"Night Crew","location":"College Walk","matched":"College Walk","lat":21.3158,"lng":-157.8595,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":63,"agency":"DFM","date":"2026-05-07","week":"May 4–10","crew":"Night Crew","location":"Smith/Beretania Park","matched":"Smith/Beretania","lat":21.3135,"lng":-157.862,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":64,"agency":"DFM","date":"2026-05-07","week":"May 4–10","crew":"Night Crew","location":"Kamamahu Park","matched":"Kamamahu","lat":21.3131,"lng":-157.8578,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":65,"agency":"DFM","date":"2026-05-07","week":"May 4–10","crew":"Night Crew","location":"Dole Park","matched":"Dole Park","lat":21.3157,"lng":-157.8675,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":66,"agency":"DFM","date":"2026-05-07","week":"May 4–10","crew":"Night Crew","location":"Sheridan Park","matched":"Sheridan Park","lat":21.2948,"lng":-157.8379,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":67,"agency":"DFM","date":"2026-05-07","week":"May 4–10","crew":"Night Crew","location":"Pawaa Park","matched":"Pawaa Park","lat":21.2945,"lng":-157.8355,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":68,"agency":"DFM","date":"2026-05-07","week":"May 4–10","crew":"Night Crew","location":"Cartwright Field","matched":"Cartwright Field","lat":21.2758,"lng":-157.8227,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":69,"agency":"DFM","date":"2026-05-07","week":"May 4–10","crew":"Day Crew","location":"Waianae DP","matched":"Waianae DP","lat":21.4475,"lng":-158.187,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":70,"agency":"DFM","date":"2026-05-08","week":"May 4–10","crew":"Night Crew","location":"Waikiki","matched":"Waikiki","lat":21.2767,"lng":-157.8245,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":71,"agency":"DFM","date":"2026-05-08","week":"May 4–10","crew":"Day Crew","location":"Auiki St","matched":"Auiki St","lat":21.319,"lng":-157.888,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":72,"agency":"DFM","date":"2026-05-08","week":"May 4–10","crew":"Day Crew","location":"Salt Lake Blvd","matched":"Salt Lake Blvd","lat":21.3488,"lng":-157.9022,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":73,"agency":"DFM","date":"2026-05-08","week":"May 4–10","crew":"Day Crew","location":"Kapiolani Blvd. BS999","matched":"Kapiolani Blvd","lat":21.2951,"lng":-157.8395,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":74,"agency":"DFM","date":"2026-05-08","week":"May 4–10","crew":"Day Crew","location":"610 Ala Moana Blvd","matched":"610 Ala Moana","lat":21.301,"lng":-157.863,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":75,"agency":"DFM","date":"2026-05-08","week":"May 4–10","crew":"Day Crew","location":"Ala Wai Promenade","matched":"Ala Wai","lat":21.2854,"lng":-157.8318,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":76,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Night Crew","location":"Alapai Transit","matched":"Alapai Transit","lat":21.3085,"lng":-157.8584,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":77,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Night Crew","location":"Bishop/Adams","matched":"Bishop/Adams","lat":21.3104,"lng":-157.86,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":78,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Night Crew","location":"Hotel","matched":"Hotel","lat":21.312,"lng":-157.862,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":79,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Night Crew","location":"River","matched":"River","lat":21.314,"lng":-157.8628,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":80,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Night Crew","location":"Maunakea","matched":"Maunakea","lat":21.3132,"lng":-157.8615,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":81,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Night Crew","location":"Kukui","matched":"Kukui","lat":21.3149,"lng":-157.8592,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":82,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Night Crew","location":"S King St. (Richards to Punahou)","matched":"S King St","lat":21.3016,"lng":-157.8387,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":83,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Night Crew","location":"Kalakaua Ave. (Philip to S Beretania)","matched":"Kalakaua Ave","lat":21.29,"lng":-157.8325,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":84,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Night Crew","location":"South St","matched":"South St","lat":21.302,"lng":-157.858,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":85,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Night Crew","location":"Queen St","matched":"Queen St","lat":21.3018,"lng":-157.858,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":86,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Night Crew","location":"Makaloa St","matched":"Makaloa St","lat":21.2929,"lng":-157.8398,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":87,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Night Crew","location":"Sheridan St","matched":"Sheridan St","lat":21.2959,"lng":-157.8389,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":88,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Night Crew","location":"Piikoi St","matched":"Piikoi St","lat":21.3,"lng":-157.8443,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":89,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Night Crew","location":"Makiki St","matched":"Makiki St","lat":21.3028,"lng":-157.839,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":90,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Night Crew","location":"Kinau St","matched":"Kinau St","lat":21.3039,"lng":-157.8425,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":91,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Night Crew","location":"Halekuwila St","matched":"Halekuwila","lat":21.3001,"lng":-157.8593,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":92,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Night Crew","location":"Young St. (Victoria to Punahou)","matched":"Young St","lat":21.2972,"lng":-157.835,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":93,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Night Crew","location":"Kapiolani Blvd. (Ward to Kalakaua)","matched":"Kapiolani Blvd","lat":21.2951,"lng":-157.8395,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":94,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Night Crew","location":"Ward Ave. (S Beretania to Ala Moana)","matched":"Ward Ave","lat":21.2967,"lng":-157.8507,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":95,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Night Crew","location":"Ala Wai Promenade (Makai)","matched":"Ala Wai","lat":21.2854,"lng":-157.8318,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":96,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Night Crew","location":"Waikiki","matched":"Waikiki","lat":21.2767,"lng":-157.8245,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":97,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Day Crew","location":"Iwilei","matched":"Iwilei","lat":21.3163,"lng":-157.8654,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":98,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Day Crew","location":"Kuwili","matched":"Kuwili","lat":21.3167,"lng":-157.8667,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":99,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Day Crew","location":"Pine","matched":"Pine","lat":21.3172,"lng":-157.8674,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":100,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Day Crew","location":"Sumner","matched":"Sumner","lat":21.3168,"lng":-157.8678,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":101,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Day Crew","location":"Pacific","matched":"Pacific","lat":21.315,"lng":-157.866,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":102,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Day Crew","location":"N King/Akepo Ln","matched":"N King/Akepo","lat":21.316,"lng":-157.8663,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":103,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Day Crew","location":"Pua Ln","matched":"Pua Ln","lat":21.315,"lng":-157.8669,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":104,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Day Crew","location":"Kam Hwy/Laumaka BS451","matched":"Kam Hwy/Laumaka","lat":21.3181,"lng":-157.868,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":105,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Day Crew","location":"766 Mapunapuna","matched":"766 Mapunapuna","lat":21.3393,"lng":-157.9,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":106,"agency":"DFM","date":"2026-05-11","week":"May 11–17","crew":"Day Crew","location":"Kilihau St","matched":"Kilihau","lat":21.3298,"lng":-157.894,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":107,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Night Crew","location":"Old Stadium","matched":"Old Stadium","lat":21.2948,"lng":-157.8268,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":108,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Night Crew","location":"Moiliili","matched":"Moiliili Field","lat":21.2918,"lng":-157.8235,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":109,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Night Crew","location":"Kalo","matched":"Makaloa St","lat":21.2929,"lng":-157.8398,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":110,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Night Crew","location":"Kamanele","matched":"Kamanele Park","lat":21.2923,"lng":-157.817,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":111,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Night Crew","location":"Kaaha Mini","matched":"Kaaha Mini","lat":21.2932,"lng":-157.8226,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":112,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Night Crew","location":"Frank C Judd","matched":"Frank C Judd","lat":21.2875,"lng":-157.8182,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":113,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Night Crew","location":"Ala Wai Promenade","matched":"Ala Wai","lat":21.2854,"lng":-157.83169999999998,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":114,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Night Crew","location":"Ala Wai CP & NP","matched":"Ala Wai","lat":21.285486602540377,"lng":-157.83184999999997,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":115,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Night Crew","location":"Kapahulu Bike Path","matched":"Kapahulu Bike","lat":21.2826,"lng":-157.8159,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":116,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Night Crew","location":"Ala Wai GC Rd","matched":"Ala Wai","lat":21.28531339745962,"lng":-157.83184999999997,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":117,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Night Crew","location":"Wailupe","matched":"Wailupe","lat":21.2826,"lng":-157.7532,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":118,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Night Crew","location":"Kawaikui","matched":"Kawaikui","lat":21.279,"lng":-157.748,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":119,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Night Crew","location":"Kuliouou","matched":"Kuliouou","lat":21.287,"lng":-157.73,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":120,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Night Crew","location":"Maunalua Bay BP","matched":"Maunalua Bay","lat":21.2803,"lng":-157.7152,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":121,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Night Crew","location":"Joe Lukela BP","matched":"Joe Lukela","lat":21.2808,"lng":-157.7182,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":122,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Day Crew","location":"527 Judd St","matched":"527 Judd","lat":21.3299,"lng":-157.8549,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":123,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Day Crew","location":"1670 Kalakaua Ave","matched":"Kalakaua Ave","lat":21.29,"lng":-157.8324,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":124,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Day Crew","location":"Coral/Auahi St","matched":"Coral/Auahi","lat":21.3006,"lng":-157.8616,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":125,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Day Crew","location":"Ala Moana BP","matched":"Ala Moana BP","lat":21.2886,"lng":-157.8476,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":126,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Day Crew","location":"Kewalo Basin","matched":"Kewalo Basin","lat":21.2954,"lng":-157.8616,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":127,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Day Crew","location":"Ala Moana/Forrest","matched":"Ala Moana","lat":21.2886,"lng":-157.8478,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":128,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Day Crew","location":"Coral","matched":"Coral Sea Rd","lat":21.3166,"lng":-158.1202,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":129,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Day Crew","location":"Pohukaina","matched":"Pohukaina","lat":21.3002,"lng":-157.8604,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":130,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Day Crew","location":"Halekuwila","matched":"Halekuwila","lat":21.3001,"lng":-157.8593,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":131,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Day Crew","location":"Keawe","matched":"Keawe","lat":21.3002,"lng":-157.8592,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":132,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Day Crew","location":"S Beretania St","matched":"S Beretania","lat":21.3009,"lng":-157.8363,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":133,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Day Crew","location":"Kalakaua Ave","matched":"Kalakaua Ave","lat":21.29,"lng":-157.8326,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":134,"agency":"DFM","date":"2026-05-12","week":"May 11–17","crew":"Day Crew","location":"South St","matched":"South St","lat":21.302,"lng":-157.858,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":135,"agency":"DFM","date":"2026-05-13","week":"May 11–17","crew":"Night Crew","location":"Ewa Beach CP","matched":"Ewa Beach CP","lat":21.3154,"lng":-158.0072,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":136,"agency":"DFM","date":"2026-05-13","week":"May 11–17","crew":"Night Crew","location":"Puuloa BP","matched":"Puuloa BP","lat":21.3068,"lng":-157.9995,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":137,"agency":"DFM","date":"2026-05-13","week":"May 11–17","crew":"Night Crew","location":"Kapolei RP","matched":"Kapolei RP","lat":21.3346,"lng":-158.0788,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":138,"agency":"DFM","date":"2026-05-13","week":"May 11–17","crew":"Day Crew","location":"Halawa DP","matched":"Halawa DP","lat":21.3843,"lng":-157.92,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":139,"agency":"DFM","date":"2026-05-13","week":"May 11–17","crew":"Day Crew","location":"Aiea Stream Bridge","matched":"Aiea Stream Bridge","lat":21.3827,"lng":-157.9338,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":140,"agency":"DFM","date":"2026-05-13","week":"May 11–17","crew":"Day Crew","location":"Moanalua/Kaahele St","matched":"Moanalua/Kaahele","lat":21.386,"lng":-157.9466,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":141,"agency":"DFM","date":"2026-05-13","week":"May 11–17","crew":"Day Crew","location":"Pearlridge Park","matched":"Pearlridge Park","lat":21.3858,"lng":-157.9478,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":142,"agency":"DFM","date":"2026-05-13","week":"May 11–17","crew":"Day Crew","location":"Moanalua/Kaahumanu St. BS1998","matched":"Moanalua/Kaahumanu","lat":21.385,"lng":-157.9453,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":143,"agency":"DFM","date":"2026-05-13","week":"May 11–17","crew":"Day Crew","location":"Manana CP","matched":"Manana CP","lat":21.409,"lng":-157.9795,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":144,"agency":"DFM","date":"2026-05-13","week":"May 11–17","crew":"Day Crew","location":"Leokane/Leowaena St","matched":"Leokane/Leowaena","lat":21.389,"lng":-157.9995,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":145,"agency":"DFM","date":"2026-05-13","week":"May 11–17","crew":"Day Crew","location":"Crestview Park","matched":"Crestview Park","lat":21.431,"lng":-158.003,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":146,"agency":"DFM","date":"2026-05-14","week":"May 11–17","crew":"Night Crew","location":"Ala Moana","matched":"610 Ala Moana","lat":21.301,"lng":-157.863,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":147,"agency":"DFM","date":"2026-05-14","week":"May 11–17","crew":"Night Crew","location":"Ala Wai Promenade","matched":"Ala Wai","lat":21.2854,"lng":-157.8318,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":148,"agency":"DFM","date":"2026-05-14","week":"May 11–17","crew":"Night Crew","location":"Thomas Square","matched":"Thomas Square","lat":21.3041,"lng":-157.8484,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":149,"agency":"DFM","date":"2026-05-14","week":"May 11–17","crew":"Day Crew","location":"Halawa DP","matched":"Halawa DP","lat":21.3843,"lng":-157.92,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":150,"agency":"DFM","date":"2026-05-14","week":"May 11–17","crew":"Day Crew","location":"98-281 Aiea Kai Pl","matched":"98-281 Aiea Kai","lat":21.3849,"lng":-157.9345,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":151,"agency":"DFM","date":"2026-05-14","week":"May 11–17","crew":"Day Crew","location":"98-077 Kam Hwy","matched":"98-077 Kam Hwy","lat":21.3814,"lng":-157.9361,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":152,"agency":"DFM","date":"2026-05-14","week":"May 11–17","crew":"Day Crew","location":"98-147 Kam Hwy","matched":"98-147 Kam Hwy","lat":21.3819,"lng":-157.937,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":153,"agency":"DFM","date":"2026-05-14","week":"May 11–17","crew":"Day Crew","location":"Paiwa St. Bridge","matched":"Paiwa St. Bridge","lat":21.3898,"lng":-158.008,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":154,"agency":"DFM","date":"2026-05-14","week":"May 11–17","crew":"Day Crew","location":"1395 Farrington Hwy","matched":"1395 Farrington","lat":21.3812,"lng":-158.0123,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":155,"agency":"DFM","date":"2026-05-14","week":"May 11–17","crew":"Day Crew","location":"94-322 Pupuole St","matched":"94-322 Pupuole","lat":21.3863,"lng":-158.0085,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":156,"agency":"DFM","date":"2026-05-14","week":"May 11–17","crew":"Day Crew","location":"Crestview Park","matched":"Crestview Park","lat":21.431,"lng":-158.003,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":157,"agency":"DFM","date":"2026-05-15","week":"May 11–17","crew":"Night Crew","location":"Waikiki","matched":"Waikiki","lat":21.2767,"lng":-157.8245,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":158,"agency":"DFM","date":"2026-05-15","week":"May 11–17","crew":"Day Crew","location":"Kapolei Pkwy","matched":"Kapolei Pkwy","lat":21.3346,"lng":-158.0757,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":159,"agency":"DFM","date":"2026-05-15","week":"May 11–17","crew":"Day Crew","location":"Alohikea","matched":"Alohikea","lat":21.3382,"lng":-158.0775,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":160,"agency":"DFM","date":"2026-05-15","week":"May 11–17","crew":"Day Crew","location":"Wakea","matched":"Wakea","lat":21.335,"lng":-158.0779,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":161,"agency":"DFM","date":"2026-05-15","week":"May 11–17","crew":"Day Crew","location":"Kealakapu","matched":"Kealakapu","lat":21.3376,"lng":-158.077,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":162,"agency":"DFM","date":"2026-05-15","week":"May 11–17","crew":"Day Crew","location":"Wakea","matched":"Wakea","lat":21.335,"lng":-158.0781,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":163,"agency":"DFM","date":"2026-05-15","week":"May 11–17","crew":"Day Crew","location":"Kamaaha","matched":"Kamaaha","lat":21.337,"lng":-158.0791,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":164,"agency":"DFM","date":"2026-05-15","week":"May 11–17","crew":"Day Crew","location":"Haumea","matched":"Haumea","lat":21.3362,"lng":-158.0782,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":165,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"Alapai Transit","matched":"Alapai Transit","lat":21.3085,"lng":-157.8584,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":166,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"Bishop/Adams","matched":"Bishop/Adams","lat":21.3104,"lng":-157.86,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":167,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"Hotel","matched":"Hotel","lat":21.312,"lng":-157.862,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":168,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"River","matched":"River","lat":21.314,"lng":-157.8628,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":169,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"Maunakea","matched":"Maunakea","lat":21.3132,"lng":-157.8615,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":170,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"Kukui","matched":"Kukui","lat":21.3149,"lng":-157.8592,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":171,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"S King St. (Richards to Punahou)","matched":"S King St","lat":21.3016,"lng":-157.8387,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":172,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"Kalakaua Ave. (Philip to S Beretania)","matched":"Kalakaua Ave","lat":21.29,"lng":-157.8325,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":173,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"South St","matched":"South St","lat":21.302,"lng":-157.858,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":174,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"Queen St","matched":"Queen St","lat":21.3018,"lng":-157.858,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":175,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"Makaloa St","matched":"Makaloa St","lat":21.2929,"lng":-157.8398,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":176,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"Sheridan St","matched":"Sheridan St","lat":21.2959,"lng":-157.8389,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":177,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"Piikoi St","matched":"Piikoi St","lat":21.3,"lng":-157.8443,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":178,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"Makiki St","matched":"Makiki St","lat":21.3028,"lng":-157.839,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":179,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"Kinau St","matched":"Kinau St","lat":21.3039,"lng":-157.8425,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":180,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"Halekuwila St","matched":"Halekuwila","lat":21.3001,"lng":-157.8593,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":181,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"Young St. (Victoria to Punahou)","matched":"Young St","lat":21.2972,"lng":-157.8349,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":182,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"Kapiolani Blvd. (Ward to Kalakaua)","matched":"Kapiolani Blvd","lat":21.2951,"lng":-157.8395,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":183,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"Ward Ave. (S Beretania to Ala Moana)","matched":"Ward Ave","lat":21.2967,"lng":-157.8507,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":184,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"Pensacola St","matched":"Pensacola St","lat":21.3051,"lng":-157.8429,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":185,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"Cedar St","matched":"Cedar St","lat":21.2955,"lng":-157.8282,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":186,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"1505 Young St","matched":"Young St","lat":21.2972,"lng":-157.8351,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":187,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Night Crew","location":"Waikiki","matched":"Waikiki","lat":21.2767,"lng":-157.8245,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":188,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Day Crew","location":"Iwilei","matched":"Iwilei","lat":21.3163,"lng":-157.8654,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":189,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Day Crew","location":"Kuwili","matched":"Kuwili","lat":21.3167,"lng":-157.8667,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":190,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Day Crew","location":"Pine","matched":"Pine","lat":21.3172,"lng":-157.8674,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":191,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Day Crew","location":"Sumner","matched":"Sumner","lat":21.3168,"lng":-157.8678,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":192,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Day Crew","location":"Pacific","matched":"Pacific","lat":21.315,"lng":-157.866,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":193,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Day Crew","location":"N King/Akepo Ln","matched":"N King/Akepo","lat":21.316,"lng":-157.8663,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":194,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Day Crew","location":"Pua Ln","matched":"Pua Ln","lat":21.315,"lng":-157.8669,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":195,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Day Crew","location":"1519 Kaumualii St","matched":"1519 Kaumualii","lat":21.3305,"lng":-157.8822,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":196,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Day Crew","location":"1489 Mokauea St","matched":"1489 Mokauea","lat":21.3287,"lng":-157.8811,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":197,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Day Crew","location":"Kalihi St. (Hoe to Auiki)","matched":"Kalihi St","lat":21.3308,"lng":-157.8767,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":198,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Day Crew","location":"Middle St. Bridge","matched":"Oahu general area","lat":21.4389,"lng":-157.995,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":199,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Day Crew","location":"Pahounui St","matched":"Pahounui","lat":21.3196,"lng":-157.8786,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":200,"agency":"DFM","date":"2026-05-18","week":"May 18–24","crew":"Day Crew","location":"Kilihau St","matched":"Kilihau","lat":21.3298,"lng":-157.894,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":201,"agency":"DFM","date":"2026-05-19","week":"May 18–24","crew":"Day Crew","location":"Waianae DP","matched":"Waianae DP","lat":21.4475,"lng":-158.187,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":202,"agency":"DFM","date":"2026-05-19","week":"May 18–24","crew":"Day Crew","location":"1148 2nd Ave","matched":"Oahu general area","lat":21.4389,"lng":-157.995,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":203,"agency":"DFM","date":"2026-05-19","week":"May 18–24","crew":"Day Crew","location":"99-257 Ohialomi Pl","matched":"99-257 Ohialomi","lat":21.3847,"lng":-157.9095,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":204,"agency":"DFM","date":"2026-05-19","week":"May 18–24","crew":"Day Crew","location":"Captain Cook Ave","matched":"Captain Cook Ave","lat":21.365,"lng":-157.9222,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":205,"agency":"DFM","date":"2026-05-19","week":"May 18–24","crew":"Day Crew","location":"Kamalii Park","matched":"Kamalii Park","lat":21.3446,"lng":-157.93,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":206,"agency":"DFM","date":"2026-05-19","week":"May 18–24","crew":"Day Crew","location":"Coral/Ahui St","matched":"Coral/Ahui","lat":21.3006,"lng":-157.8615,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":207,"agency":"DFM","date":"2026-05-19","week":"May 18–24","crew":"Day Crew","location":"Ala Moana RP","matched":"Ala Moana RP","lat":21.2886,"lng":-157.8476,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":208,"agency":"DFM","date":"2026-05-19","week":"May 18–24","crew":"Day Crew","location":"Kewalo Basin","matched":"Kewalo Basin","lat":21.2954,"lng":-157.8616,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":209,"agency":"DFM","date":"2026-05-19","week":"May 18–24","crew":"Day Crew","location":"Coral St","matched":"Coral","lat":21.3006,"lng":-157.8617,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":210,"agency":"DFM","date":"2026-05-19","week":"May 18–24","crew":"Day Crew","location":"Ala Moana/Forrest Ave","matched":"Ala Moana","lat":21.2886,"lng":-157.8478,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":211,"agency":"DFM","date":"2026-05-19","week":"May 18–24","crew":"Day Crew","location":"Pohukaina St","matched":"Pohukaina","lat":21.3002,"lng":-157.8604,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":212,"agency":"DFM","date":"2026-05-19","week":"May 18–24","crew":"Day Crew","location":"Keawe St","matched":"Keawe","lat":21.3002,"lng":-157.8592,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":213,"agency":"DFM","date":"2026-05-19","week":"May 18–24","crew":"Day Crew","location":"South St","matched":"South St","lat":21.302,"lng":-157.858,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":214,"agency":"DFM","date":"2026-05-19","week":"May 18–24","crew":"Day Crew","location":"Kalakaua Ave","matched":"Kalakaua Ave","lat":21.29,"lng":-157.8325,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":215,"agency":"DFM","date":"2026-05-19","week":"May 18–24","crew":"Day Crew","location":"Kinau St","matched":"Kinau St","lat":21.3039,"lng":-157.8425,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":216,"agency":"DFM","date":"2026-05-19","week":"May 18–24","crew":"Day Crew","location":"Makiki St","matched":"Makiki St","lat":21.3028,"lng":-157.839,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":217,"agency":"DFM","date":"2026-05-19","week":"May 18–24","crew":"Day Crew","location":"Young St. S Beretania St","matched":"Young St","lat":21.2972,"lng":-157.835,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":218,"agency":"DFM","date":"2026-05-20","week":"May 18–24","crew":"Day Crew","location":"Waianae DP","matched":"Waianae DP","lat":21.4475,"lng":-158.187,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":219,"agency":"DFM","date":"2026-05-21","week":"May 18–24","crew":"Night Crew","location":"Waimanalo BP & DP","matched":"Waimanalo BP","lat":21.3335,"lng":-157.695,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":220,"agency":"DFM","date":"2026-05-21","week":"May 18–24","crew":"Night Crew","location":"Sherwoods","matched":"Sherwoods","lat":21.3335,"lng":-157.6952,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":221,"agency":"DFM","date":"2026-05-21","week":"May 18–24","crew":"Night Crew","location":"Kaiona BP","matched":"Kaiona BP","lat":21.3291,"lng":-157.6826,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":222,"agency":"DFM","date":"2026-05-21","week":"May 18–24","crew":"Night Crew","location":"Kaupo","matched":"Kaupo","lat":21.311,"lng":-157.659,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":223,"agency":"DFM","date":"2026-05-21","week":"May 18–24","crew":"Night Crew","location":"Makapuu","matched":"Makapuu","lat":21.3095,"lng":-157.6562,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":224,"agency":"DFM","date":"2026-05-21","week":"May 18–24","crew":"Day Crew","location":"3566 Harding Ave","matched":"3566 Harding","lat":21.2813,"lng":-157.807,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":225,"agency":"DFM","date":"2026-05-21","week":"May 18–24","crew":"Day Crew","location":"Varsity Pl","matched":"Varsity Pl","lat":21.2939,"lng":-157.8161,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":226,"agency":"DFM","date":"2026-05-21","week":"May 18–24","crew":"Day Crew","location":"540 Kapahulu Ave","matched":"540 Kapahulu","lat":21.2776,"lng":-157.8143,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":227,"agency":"DFM","date":"2026-05-21","week":"May 18–24","crew":"Day Crew","location":"3912 Harding Ave","matched":"3912 Harding","lat":21.2801,"lng":-157.8003,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":228,"agency":"DFM","date":"2026-05-21","week":"May 18–24","crew":"Day Crew","location":"Harding Ave. Bridge","matched":"Oahu general area","lat":21.4389,"lng":-157.995,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":229,"agency":"DFM","date":"2026-05-21","week":"May 18–24","crew":"Day Crew","location":"357 Makaloa St","matched":"Makaloa St","lat":21.2929,"lng":-157.8398,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":230,"agency":"DFM","date":"2026-05-21","week":"May 18–24","crew":"Day Crew","location":"Kalakaua Ave BS37","matched":"Kalakaua Ave","lat":21.29,"lng":-157.8325,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":231,"agency":"DFM","date":"2026-05-22","week":"May 18–24","crew":"Night Crew","location":"Waikiki","matched":"Waikiki","lat":21.2767,"lng":-157.8245,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":232,"agency":"DFM","date":"2026-05-22","week":"May 18–24","crew":"Night Crew","location":"Old Stadium","matched":"Old Stadium","lat":21.2948,"lng":-157.8268,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":233,"agency":"DFM","date":"2026-05-22","week":"May 18–24","crew":"Night Crew","location":"Moiliili","matched":"Moiliili Field","lat":21.2918,"lng":-157.8235,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":234,"agency":"DFM","date":"2026-05-22","week":"May 18–24","crew":"Night Crew","location":"Kalo","matched":"Makaloa St","lat":21.2929,"lng":-157.8398,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":235,"agency":"DFM","date":"2026-05-22","week":"May 18–24","crew":"Night Crew","location":"Varsity Pl","matched":"Varsity Pl","lat":21.2939,"lng":-157.8161,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":236,"agency":"DFM","date":"2026-05-22","week":"May 18–24","crew":"Night Crew","location":"S Beretania St","matched":"S Beretania","lat":21.3009,"lng":-157.8363,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":237,"agency":"DFM","date":"2026-05-22","week":"May 18–24","crew":"Night Crew","location":"Isenberg St","matched":"Isenberg St","lat":21.2938,"lng":-157.8252,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":238,"agency":"DFM","date":"2026-05-22","week":"May 18–24","crew":"Night Crew","location":"Young St","matched":"Young St","lat":21.2972,"lng":-157.835,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":239,"agency":"DFM","date":"2026-05-22","week":"May 18–24","crew":"Night Crew","location":"Makahiki Way","matched":"Makahiki Way","lat":21.2947,"lng":-157.8223,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":240,"agency":"DFM","date":"2026-05-22","week":"May 18–24","crew":"Night Crew","location":"Poha Ln","matched":"Poha Ln","lat":21.2925,"lng":-157.8246,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":241,"agency":"DFM","date":"2026-05-22","week":"May 18–24","crew":"Night Crew","location":"S King St. (Punahou to Kapahulu)","matched":"S King St","lat":21.3016,"lng":-157.8387,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":242,"agency":"DFM","date":"2026-05-22","week":"May 18–24","crew":"Day Crew","location":"Liholiho St Bridge","matched":"Liholiho St Bridge","lat":21.3005,"lng":-157.8331,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":243,"agency":"DFM","date":"2026-05-22","week":"May 18–24","crew":"Day Crew","location":"Anapuni St. Bridge","matched":"Anapuni St. Bridge","lat":21.3041,"lng":-157.8336,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":244,"agency":"DFM","date":"2026-05-22","week":"May 18–24","crew":"Day Crew","location":"Keeaumoku St. Bridge","matched":"Keeaumoku St. Bridge","lat":21.2988,"lng":-157.8375,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":245,"agency":"DFM","date":"2026-05-22","week":"May 18–24","crew":"Day Crew","location":"Nehoa St. Bridge","matched":"Nehoa St. Bridge","lat":21.3096,"lng":-157.8355,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":246,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Night Crew","location":"Old Stadium","matched":"Old Stadium","lat":21.2948,"lng":-157.8268,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":247,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Night Crew","location":"Moiliili","matched":"Moiliili Field","lat":21.2918,"lng":-157.8235,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":248,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Night Crew","location":"Kalo","matched":"Makaloa St","lat":21.2929,"lng":-157.8398,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":249,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Night Crew","location":"Kamanele","matched":"Kamanele Park","lat":21.2923,"lng":-157.817,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":250,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Night Crew","location":"Kaaha Mini","matched":"Kaaha Mini","lat":21.2932,"lng":-157.8226,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":251,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Night Crew","location":"Frank C Judd","matched":"Frank C Judd","lat":21.2875,"lng":-157.8182,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":252,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Night Crew","location":"Ala Wai Promenade","matched":"Ala Wai","lat":21.2854,"lng":-157.83169999999998,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":253,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Night Crew","location":"Ala Wai CP & NP","matched":"Ala Wai","lat":21.285486602540377,"lng":-157.83184999999997,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":254,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Night Crew","location":"Kapahulu Bike","matched":"Kapahulu Bike","lat":21.2826,"lng":-157.8159,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":255,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Night Crew","location":"Ala Wai GC","matched":"Ala Wai","lat":21.28531339745962,"lng":-157.83184999999997,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":256,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Night Crew","location":"Wailupe","matched":"Wailupe","lat":21.2826,"lng":-157.7532,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":257,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Night Crew","location":"Kawaikui","matched":"Kawaikui","lat":21.279,"lng":-157.748,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":258,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Night Crew","location":"Kuliouou","matched":"Kuliouou","lat":21.287,"lng":-157.73,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":259,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Night Crew","location":"Maunalua Bay BP","matched":"Maunalua Bay","lat":21.2803,"lng":-157.7152,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":260,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Night Crew","location":"Joe Lukela BP","matched":"Joe Lukela","lat":21.2808,"lng":-157.7182,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":261,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Day Crew","location":"850 Iwilei Rd. BS899","matched":"Iwilei","lat":21.3163,"lng":-157.8653,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":262,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Day Crew","location":"Iwilei Rd","matched":"Iwilei","lat":21.3163,"lng":-157.8655,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":263,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Day Crew","location":"Kuwili","matched":"Kuwili","lat":21.3167,"lng":-157.8667,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":264,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Day Crew","location":"Pine","matched":"Pine","lat":21.3172,"lng":-157.8674,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":265,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Day Crew","location":"Sumner","matched":"Sumner","lat":21.3168,"lng":-157.8678,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":266,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Day Crew","location":"Pacific","matched":"Pacific","lat":21.315,"lng":-157.866,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":267,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Day Crew","location":"N King/Akepo","matched":"N King/Akepo","lat":21.316,"lng":-157.8663,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":268,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Day Crew","location":"Pua Ln","matched":"Pua Ln","lat":21.315,"lng":-157.8669,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":269,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Day Crew","location":"Kokea St./Kapalama Canal","matched":"Kokea St","lat":21.3248,"lng":-157.8688,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":270,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Day Crew","location":"Lower Kokea St","matched":"Kokea St","lat":21.3248,"lng":-157.869,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":271,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Day Crew","location":"Dillingham/Kaaha St","matched":"Dillingham/Kaa","lat":21.3164,"lng":-157.8665,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":272,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Day Crew","location":"Lanakila Park","matched":"Lanakila Park","lat":21.3256,"lng":-157.8637,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":273,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Day Crew","location":"1111 Hala Dr","matched":"1111 Hala","lat":21.3321,"lng":-157.879,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":274,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Day Crew","location":"1121 Middle St","matched":"1121 Middle","lat":21.3302,"lng":-157.8777,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":275,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Day Crew","location":"Hoonee Pl","matched":"Hoonee Pl","lat":21.3308,"lng":-157.895,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":276,"agency":"DFM","date":"2026-05-26","week":"May 25–31","crew":"Day Crew","location":"Kilihau St","matched":"Kilihau","lat":21.3298,"lng":-157.894,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":277,"agency":"DFM","date":"2026-05-27","week":"May 25–31","crew":"Night Crew","location":"Halawa DP","matched":"Halawa DP","lat":21.3843,"lng":-157.92,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":278,"agency":"DFM","date":"2026-05-27","week":"May 25–31","crew":"Night Crew","location":"Manana CP","matched":"Manana CP","lat":21.409,"lng":-157.9795,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":279,"agency":"DFM","date":"2026-05-27","week":"May 25–31","crew":"Night Crew","location":"Pacheco Park","matched":"Oahu general area","lat":21.4389,"lng":-157.9949,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":280,"agency":"DFM","date":"2026-05-27","week":"May 25–31","crew":"Night Crew","location":"Hans L’Orange","matched":"Oahu general area","lat":21.439,"lng":-157.995,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":281,"agency":"DFM","date":"2026-05-27","week":"May 25–31","crew":"Night Crew","location":"Waipahu DP","matched":"Oahu general area","lat":21.4389,"lng":-157.9951,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":282,"agency":"DFM","date":"2026-05-27","week":"May 25–31","crew":"Day Crew","location":"Koali St","matched":"Koali St","lat":21.2918,"lng":-157.806,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":283,"agency":"DFM","date":"2026-05-27","week":"May 25–31","crew":"Day Crew","location":"925 Cedar St","matched":"Cedar St","lat":21.2955,"lng":-157.8282,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":284,"agency":"DFM","date":"2026-05-27","week":"May 25–31","crew":"Day Crew","location":"Hotel/Richards St","matched":"Hotel","lat":21.312,"lng":-157.862,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":285,"agency":"DFM","date":"2026-05-27","week":"May 25–31","crew":"Day Crew","location":"N King/Kohou St","matched":"Oahu general area","lat":21.4388,"lng":-157.995,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":286,"agency":"DFM","date":"2026-05-27","week":"May 25–31","crew":"Day Crew","location":"Keawe St","matched":"Keawe","lat":21.3002,"lng":-157.8592,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":287,"agency":"DFM","date":"2026-05-27","week":"May 25–31","crew":"Day Crew","location":"Punchbowl St","matched":"Punchbowl","lat":21.3041,"lng":-157.855,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":288,"agency":"DFM","date":"2026-05-27","week":"May 25–31","crew":"Day Crew","location":"718 & 929 Pumehana St","matched":"Pumehana","lat":21.2924,"lng":-157.8315,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":289,"agency":"DFM","date":"2026-05-27","week":"May 25–31","crew":"Day Crew","location":"915 McCully St","matched":"McCully","lat":21.2921,"lng":-157.8331,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":290,"agency":"DFM","date":"2026-05-28","week":"May 25–31","crew":"Night Crew","location":"Kewalo Basin","matched":"Kewalo Basin","lat":21.2954,"lng":-157.8616,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":291,"agency":"DFM","date":"2026-05-28","week":"May 25–31","crew":"Night Crew","location":"Point Panic","matched":"Point Panic","lat":21.2936,"lng":-157.8627,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":292,"agency":"DFM","date":"2026-05-28","week":"May 25–31","crew":"Night Crew","location":"Waterfront","matched":"Waterfront","lat":21.2942,"lng":-157.8648,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":293,"agency":"DFM","date":"2026-05-28","week":"May 25–31","crew":"Night Crew","location":"Gateways (Mauka & Makai)","matched":"Gateways","lat":21.295,"lng":-157.8619,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":294,"agency":"DFM","date":"2026-05-28","week":"May 25–31","crew":"Night Crew","location":"Mother Waldron","matched":"Mother Waldron","lat":21.3,"lng":-157.8602,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":295,"agency":"DFM","date":"2026-05-28","week":"May 25–31","crew":"Night Crew","location":"Kawaiahao Mini","matched":"Kawaiahao Mini","lat":21.3042,"lng":-157.8565,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":296,"agency":"DFM","date":"2026-05-28","week":"May 25–31","crew":"Day Crew","location":"Hawaii Plantation Village (Unimproved)","matched":"Hawaii Plantation Village","lat":21.3814,"lng":-158.0055,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":297,"agency":"DFM","date":"2026-05-29","week":"May 25–31","crew":"Night Crew","location":"Alapai Transit","matched":"Alapai Transit","lat":21.3085,"lng":-157.8584,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":298,"agency":"DFM","date":"2026-05-29","week":"May 25–31","crew":"Night Crew","location":"Bishop/Adams","matched":"Bishop/Adams","lat":21.3104,"lng":-157.86,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":299,"agency":"DFM","date":"2026-05-29","week":"May 25–31","crew":"Night Crew","location":"Hotel","matched":"Hotel","lat":21.312,"lng":-157.862,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":300,"agency":"DFM","date":"2026-05-29","week":"May 25–31","crew":"Night Crew","location":"River","matched":"River","lat":21.314,"lng":-157.8628,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":301,"agency":"DFM","date":"2026-05-29","week":"May 25–31","crew":"Night Crew","location":"Maunakea","matched":"Maunakea","lat":21.3132,"lng":-157.8615,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":302,"agency":"DFM","date":"2026-05-29","week":"May 25–31","crew":"Night Crew","location":"Kukui","matched":"Kukui","lat":21.3149,"lng":-157.8592,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":303,"agency":"DFM","date":"2026-05-29","week":"May 25–31","crew":"Night Crew","location":"S King St. (Richards to Punahou)","matched":"S King St","lat":21.3016,"lng":-157.8387,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":304,"agency":"DFM","date":"2026-05-29","week":"May 25–31","crew":"Night Crew","location":"Kalakaua Ave. (Philip to S Beretania)","matched":"Kalakaua Ave","lat":21.29,"lng":-157.8325,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":305,"agency":"DFM","date":"2026-05-29","week":"May 25–31","crew":"Night Crew","location":"South St","matched":"South St","lat":21.302,"lng":-157.858,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":306,"agency":"DFM","date":"2026-05-29","week":"May 25–31","crew":"Night Crew","location":"Queen St","matched":"Queen St","lat":21.3018,"lng":-157.858,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":307,"agency":"DFM","date":"2026-05-29","week":"May 25–31","crew":"Night Crew","location":"Makaloa St","matched":"Makaloa St","lat":21.2929,"lng":-157.8398,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":308,"agency":"DFM","date":"2026-05-29","week":"May 25–31","crew":"Night Crew","location":"Sheridan St","matched":"Sheridan St","lat":21.2959,"lng":-157.8389,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":309,"agency":"DFM","date":"2026-05-29","week":"May 25–31","crew":"Night Crew","location":"Piikoi St","matched":"Piikoi St","lat":21.3,"lng":-157.8443,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":310,"agency":"DFM","date":"2026-05-29","week":"May 25–31","crew":"Night Crew","location":"Makiki St","matched":"Makiki St","lat":21.3028,"lng":-157.839,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":311,"agency":"DFM","date":"2026-05-29","week":"May 25–31","crew":"Night Crew","location":"Kinau St","matched":"Kinau St","lat":21.3039,"lng":-157.8425,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":312,"agency":"DFM","date":"2026-05-29","week":"May 25–31","crew":"Night Crew","location":"Halekuwila St","matched":"Halekuwila","lat":21.3001,"lng":-157.8593,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":313,"agency":"DFM","date":"2026-05-29","week":"May 25–31","crew":"Night Crew","location":"Young St. (Victoria to Punahou)","matched":"Young St","lat":21.2972,"lng":-157.835,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":314,"agency":"DFM","date":"2026-05-29","week":"May 25–31","crew":"Night Crew","location":"Kapiolani Blvd. (Ward to Kalakaua)","matched":"Kapiolani Blvd","lat":21.2951,"lng":-157.8395,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":315,"agency":"DFM","date":"2026-05-29","week":"May 25–31","crew":"Night Crew","location":"Ward Ave. (S Beretania to Ala Moana)","matched":"Ward Ave","lat":21.2967,"lng":-157.8507,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":316,"agency":"DFM","date":"2026-05-29","week":"May 25–31","crew":"Night Crew","location":"Waikiki","matched":"Waikiki","lat":21.2767,"lng":-157.8245,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":317,"agency":"DFM","date":"2026-05-29","week":"May 25–31","crew":"Day Crew","location":"Hawaii Plantation Village (Unimproved)","matched":"Hawaii Plantation Village","lat":21.3814,"lng":-158.0055,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":318,"agency":"DFM","date":"2026-06-01","week":"June 1–7","crew":"Night Crew","location":"Waikiki","matched":"Waikiki","lat":21.2767,"lng":-157.8245,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":319,"agency":"DFM","date":"2026-06-01","week":"June 1–7","crew":"Day Crew","location":"850 Iwilei Rd. BS899","matched":"Iwilei","lat":21.3163,"lng":-157.8653,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":320,"agency":"DFM","date":"2026-06-01","week":"June 1–7","crew":"Day Crew","location":"Iwilei Rd","matched":"Iwilei","lat":21.3163,"lng":-157.8655,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":321,"agency":"DFM","date":"2026-06-01","week":"June 1–7","crew":"Day Crew","location":"Kuwili St","matched":"Kuwili","lat":21.3167,"lng":-157.8667,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":322,"agency":"DFM","date":"2026-06-01","week":"June 1–7","crew":"Day Crew","location":"Pine St","matched":"Pine","lat":21.3172,"lng":-157.8674,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":323,"agency":"DFM","date":"2026-06-01","week":"June 1–7","crew":"Day Crew","location":"Sumner St","matched":"Sumner","lat":21.3168,"lng":-157.8678,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":324,"agency":"DFM","date":"2026-06-01","week":"June 1–7","crew":"Day Crew","location":"Pacific St","matched":"Pacific","lat":21.315,"lng":-157.866,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":325,"agency":"DFM","date":"2026-06-01","week":"June 1–7","crew":"Day Crew","location":"N King/Akepo Ln","matched":"N King/Akepo","lat":21.316,"lng":-157.8663,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":326,"agency":"DFM","date":"2026-06-01","week":"June 1–7","crew":"Day Crew","location":"Pua Ln","matched":"Pua Ln","lat":21.315,"lng":-157.8669,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":327,"agency":"DFM","date":"2026-06-01","week":"June 1–7","crew":"Day Crew","location":"Dillingham/Kaaahi St","matched":"Dillingham/Kaa","lat":21.3164,"lng":-157.8665,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":328,"agency":"DFM","date":"2026-06-01","week":"June 1–7","crew":"Day Crew","location":"Kokea St","matched":"Kokea St","lat":21.3248,"lng":-157.8689,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":329,"agency":"DFM","date":"2026-06-01","week":"June 1–7","crew":"Day Crew","location":"N King/Kohou St","matched":"Oahu general area","lat":21.4389,"lng":-157.995,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":330,"agency":"DFM","date":"2026-06-01","week":"June 1–7","crew":"Day Crew","location":"142 Mokauea St","matched":"142 Mokauea","lat":21.3287,"lng":-157.8811,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":331,"agency":"DFM","date":"2026-06-01","week":"June 1–7","crew":"Day Crew","location":"Pahounui/Sand Island Access Rd","matched":"Sand Island","lat":21.3039,"lng":-157.887,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":332,"agency":"DFM","date":"2026-06-01","week":"June 1–7","crew":"Day Crew","location":"Kilihau St","matched":"Kilihau","lat":21.3298,"lng":-157.894,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":333,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Ala Moana Park","matched":"Ala Moana Park","lat":21.2886,"lng":-157.8477,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":334,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Thomas Square","matched":"Thomas Square","lat":21.3041,"lng":-157.8484,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":335,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Ala Wai Promenade","matched":"Ala Wai","lat":21.2854,"lng":-157.8318,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":336,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Mother Waldron","matched":"Mother Waldron","lat":21.3,"lng":-157.8602,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":337,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Kakaako Waterfront","matched":"Waterfront","lat":21.2942,"lng":-157.8648,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":338,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Point Panic","matched":"Point Panic","lat":21.2936,"lng":-157.8627,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":339,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Ilalo St","matched":"Ilalo","lat":21.2968,"lng":-157.8614,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":340,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Auahi St","matched":"Auahi","lat":21.2995,"lng":-157.8595,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":341,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Pohukaina St","matched":"Pohukaina","lat":21.3002,"lng":-157.8604,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":342,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Halekuwila St","matched":"Halekuwila","lat":21.3001,"lng":-157.8593,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":343,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Queen St","matched":"Queen St","lat":21.3018,"lng":-157.858,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":344,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Kawaiahoa St","matched":"Oahu general area","lat":21.4389,"lng":-157.995,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":345,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"South St","matched":"South St","lat":21.302,"lng":-157.8579,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":346,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Keawe St","matched":"Keawe","lat":21.3002,"lng":-157.85909999999998,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":347,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Coral St","matched":"Coral","lat":21.3006,"lng":-157.8615,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":348,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"South St","matched":"South St","lat":21.302,"lng":-157.8581,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":349,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Keawe St","matched":"Keawe","lat":21.3002,"lng":-157.8593,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":350,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Coral St","matched":"Coral","lat":21.3006,"lng":-157.8617,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":351,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Cooke St","matched":"Cooke","lat":21.2992,"lng":-157.8585,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":352,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Ohe St","matched":"Ohe","lat":21.3,"lng":-157.8545,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":353,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Koula St","matched":"Koula","lat":21.2977,"lng":-157.8524,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":354,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"S Beretania St","matched":"S Beretania","lat":21.3009,"lng":-157.8363,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":355,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"S King St","matched":"S King St","lat":21.3016,"lng":-157.8387,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":356,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Alder St","matched":"Alder","lat":21.2999,"lng":-157.837,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":357,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Elm St","matched":"Elm","lat":21.2991,"lng":-157.8375,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":358,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Young St","matched":"Young St","lat":21.2972,"lng":-157.835,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":359,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Makiki St","matched":"Makiki St","lat":21.3028,"lng":-157.839,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":360,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Waiau Pl","matched":"Waiau Pl","lat":21.304,"lng":-157.842,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":361,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Kinau St","matched":"Kinau St","lat":21.3039,"lng":-157.8425,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":362,"agency":"DFM","date":"2026-06-02","week":"June 1–7","crew":"Day Crew","location":"Kalakaua Ave","matched":"Kalakaua Ave","lat":21.29,"lng":-157.8325,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":363,"agency":"DFM","date":"2026-06-03","week":"June 1–7","crew":"Night Crew","location":"Kaiaka BP","matched":"Kaiaka","lat":21.5848,"lng":-158.1223,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":364,"agency":"DFM","date":"2026-06-03","week":"June 1–7","crew":"Night Crew","location":"Alii BP","matched":"Alii BP","lat":21.5991,"lng":-158.103,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":365,"agency":"DFM","date":"2026-06-03","week":"June 1–7","crew":"Night Crew","location":"Haleiwa BP","matched":"Haleiwa","lat":21.594,"lng":-158.103,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":366,"agency":"DFM","date":"2026-06-03","week":"June 1–7","crew":"Night Crew","location":"Puaena Pt","matched":"Puaena","lat":21.5945,"lng":-158.112,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":367,"agency":"DFM","date":"2026-06-03","week":"June 1–7","crew":"Night Crew","location":"Waimea Bay BP","matched":"Waimea Bay","lat":21.64,"lng":-158.0649,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":368,"agency":"DFM","date":"2026-06-03","week":"June 1–7","crew":"Night Crew","location":"3Tables","matched":"3Tables","lat":21.6424,"lng":-158.0627,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":369,"agency":"DFM","date":"2026-06-03","week":"June 1–7","crew":"Night Crew","location":"Pupukea BP","matched":"Pupukea","lat":21.648,"lng":-158.063,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":370,"agency":"DFM","date":"2026-06-03","week":"June 1–7","crew":"Night Crew","location":"Log Cabins","matched":"Log Cabins","lat":21.6742,"lng":-158.034,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":371,"agency":"DFM","date":"2026-06-03","week":"June 1–7","crew":"Night Crew","location":"Sunset Beach","matched":"Sunset Beach","lat":21.6799,"lng":-158.0415,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":372,"agency":"DFM","date":"2026-06-03","week":"June 1–7","crew":"Day Crew","location":"Nanikai BP","matched":"Nanikai","lat":21.3945,"lng":-157.7145,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":373,"agency":"DFM","date":"2026-06-03","week":"June 1–7","crew":"Day Crew","location":"Guard Rails","matched":"SPO guard rails","lat":21.3066,"lng":-157.8583,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":374,"agency":"DFM","date":"2026-06-03","week":"June 1–7","crew":"Day Crew","location":"2103 Kanealii St","matched":"Kanealii","lat":21.414,"lng":-157.804,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":375,"agency":"DFM","date":"2026-06-03","week":"June 1–7","crew":"Day Crew","location":"Alapai St","matched":"Alapai St","lat":21.3085,"lng":-157.8584,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":376,"agency":"DFM","date":"2026-06-03","week":"June 1–7","crew":"Day Crew","location":"Makahiki Way","matched":"Makahiki Way","lat":21.2947,"lng":-157.8223,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":377,"agency":"DFM","date":"2026-06-03","week":"June 1–7","crew":"Day Crew","location":"Koali St","matched":"Koali St","lat":21.2918,"lng":-157.806,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":378,"agency":"DFM","date":"2026-06-03","week":"June 1–7","crew":"Day Crew","location":"Kapahulu Bike Path","matched":"Kapahulu Bike","lat":21.2826,"lng":-157.8159,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":379,"agency":"DFM","date":"2026-06-03","week":"June 1–7","crew":"Day Crew","location":"Ala Wai GC Rd","matched":"Ala Wai","lat":21.2854,"lng":-157.8318,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":380,"agency":"DFM","date":"2026-06-03","week":"June 1–7","crew":"Day Crew","location":"Hunakai Drainage Canal","matched":"Hunakai","lat":21.2767,"lng":-157.7842,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":381,"agency":"DFM","date":"2026-06-04","week":"June 1–7","crew":"Night Crew","location":"Aala","matched":"Kaala St","lat":21.2931,"lng":-157.82,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":382,"agency":"DFM","date":"2026-06-04","week":"June 1–7","crew":"Night Crew","location":"Smith/Beretania","matched":"Smith/Beretania","lat":21.3135,"lng":-157.862,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":383,"agency":"DFM","date":"2026-06-04","week":"June 1–7","crew":"Night Crew","location":"College Walk","matched":"College Walk","lat":21.3158,"lng":-157.8595,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":384,"agency":"DFM","date":"2026-06-04","week":"June 1–7","crew":"Night Crew","location":"Kamamalu","matched":"Kamamalu","lat":21.3131,"lng":-157.8578,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":385,"agency":"DFM","date":"2026-06-04","week":"June 1–7","crew":"Night Crew","location":"Dole","matched":"Dole Park","lat":21.3157,"lng":-157.8675,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":386,"agency":"DFM","date":"2026-06-04","week":"June 1–7","crew":"Night Crew","location":"Sheridan","matched":"Sheridan St","lat":21.2959,"lng":-157.8389,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":387,"agency":"DFM","date":"2026-06-04","week":"June 1–7","crew":"Night Crew","location":"Pawaa","matched":"Pawaa Park","lat":21.2945,"lng":-157.8355,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":388,"agency":"DFM","date":"2026-06-04","week":"June 1–7","crew":"Night Crew","location":"Cartwright","matched":"Cartwright Field","lat":21.2758,"lng":-157.8227,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":389,"agency":"DFM","date":"2026-06-04","week":"June 1–7","crew":"Day Crew","location":"Nanikai BP","matched":"Nanikai","lat":21.3945,"lng":-157.7145,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":390,"agency":"DFM","date":"2026-06-04","week":"June 1–7","crew":"Day Crew","location":"Guard Rails","matched":"SPO guard rails","lat":21.3066,"lng":-157.8583,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":391,"agency":"DFM","date":"2026-06-04","week":"June 1–7","crew":"Day Crew","location":"Sand Island","matched":"Sand Island","lat":21.3039,"lng":-157.887,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":392,"agency":"DFM","date":"2026-06-05","week":"June 1–7","crew":"Night Crew","location":"Waikiki","matched":"Waikiki","lat":21.2767,"lng":-157.8245,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":393,"agency":"DFM","date":"2026-06-05","week":"June 1–7","crew":"Night Crew","location":"Old Stadium","matched":"Old Stadium","lat":21.2948,"lng":-157.8268,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":394,"agency":"DFM","date":"2026-06-05","week":"June 1–7","crew":"Night Crew","location":"Moiliili","matched":"Moiliili Field","lat":21.2918,"lng":-157.8235,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":395,"agency":"DFM","date":"2026-06-05","week":"June 1–7","crew":"Night Crew","location":"Makahiki Way","matched":"Makahiki Way","lat":21.2947,"lng":-157.8223,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":396,"agency":"DFM","date":"2026-06-05","week":"June 1–7","crew":"Night Crew","location":"Algaroba St","matched":"Algaroba St","lat":21.2928,"lng":-157.8236,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":397,"agency":"DFM","date":"2026-06-05","week":"June 1–7","crew":"Night Crew","location":"S King St. (Punahou to Kapiolani)","matched":"S King St","lat":21.3016,"lng":-157.8387,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":398,"agency":"DFM","date":"2026-06-05","week":"June 1–7","crew":"Night Crew","location":"S Beretania St. (S King to McCully)","matched":"S Beretania","lat":21.3009,"lng":-157.8363,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":399,"agency":"DFM","date":"2026-06-05","week":"June 1–7","crew":"Night Crew","location":"Isenberg St","matched":"Isenberg St","lat":21.2938,"lng":-157.8252,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":400,"agency":"DFM","date":"2026-06-05","week":"June 1–7","crew":"Night Crew","location":"Varsity Pl","matched":"Varsity Pl","lat":21.2939,"lng":-157.8161,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":401,"agency":"DFM","date":"2026-06-05","week":"June 1–7","crew":"Night Crew","location":"Ala Wai CP","matched":"Ala Wai","lat":21.2854,"lng":-157.8318,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":402,"agency":"DFM","date":"2026-06-05","week":"June 1–7","crew":"Day Crew","location":"Kokea St","matched":"Kokea St","lat":21.3248,"lng":-157.8689,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":403,"agency":"DFM","date":"2026-06-05","week":"June 1–7","crew":"Day Crew","location":"Sand Island","matched":"Sand Island","lat":21.3039,"lng":-157.887,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":404,"agency":"DFM","date":"2026-06-05","week":"June 1–7","crew":"Day Crew","location":"Pahounui St","matched":"Pahounui","lat":21.3196,"lng":-157.8786,"notes":"City and County of Honolulu Department of Facility Maintenance schedule"},{"id":405,"agency":"DLNR","date":"2026-05-01","week":"Apr 27–May 3","crew":"","location":"Kalihi stream","matched":"Kalihi stream","lat":21.325,"lng":-157.878,"notes":"SPO Meeting; Kalihi Stream; D1/D3 HUMPHREYS"},{"id":406,"agency":"DLNR","date":"2026-05-04","week":"May 4–10","crew":"","location":"Kalihi stream","matched":"Kalihi stream","lat":21.325,"lng":-157.878,"notes":"Kalihi Stream; D1 HUMPHREYS"},{"id":407,"agency":"DLNR","date":"2026-05-05","week":"May 4–10","crew":"","location":"Kalihi stream","matched":"Kalihi stream","lat":21.325,"lng":-157.878,"notes":"Kalihi Stream clean up; D1 HUMPHREYS"},{"id":408,"agency":"DLNR","date":"2026-05-06","week":"May 4–10","crew":"","location":"Hakimo","matched":"Hakimo","lat":21.4269,"lng":-158.1667,"notes":"SPO Waianae/Hakimo Rd/HFD; Kalihi Stream clean up; D1/D3 HUMPHREYS"},{"id":409,"agency":"DLNR","date":"2026-05-06","week":"May 4–10","crew":"","location":"Kalihi stream","matched":"Kalihi stream","lat":21.325,"lng":-157.878,"notes":"SPO Waianae/Hakimo Rd/HFD; Kalihi Stream clean up; D1/D3 HUMPHREYS"},{"id":410,"agency":"DLNR","date":"2026-05-07","week":"May 4–10","crew":"","location":"Hakimo","matched":"Hakimo","lat":21.4269,"lng":-158.1667,"notes":"SPO Waianae/Hakimo Rd/HFD; D3 HUMPHREYS"},{"id":411,"agency":"DLNR","date":"2026-05-08","week":"May 4–10","crew":"","location":"Kalihi stream","matched":"Kalihi stream","lat":21.325,"lng":-157.878,"notes":"Kalihi Stream clean up; D1 HUMPHREYS"},{"id":412,"agency":"DLNR","date":"2026-05-11","week":"May 11–17","crew":"","location":"Kalihi stream","matched":"Kalihi stream","lat":21.325,"lng":-157.878,"notes":"Kalihi Stream; D1 HUMPHREYS"},{"id":413,"agency":"DLNR","date":"2026-05-12","week":"May 11–17","crew":"","location":"Kalihi stream","matched":"Kalihi stream","lat":21.325,"lng":-157.878,"notes":"Kalihi Stream; D1 HUMPHREYS"},{"id":414,"agency":"DLNR","date":"2026-05-13","week":"May 11–17","crew":"","location":"Kalihi stream","matched":"Kalihi stream","lat":21.325,"lng":-157.878,"notes":"Kalihi Stream; D1 HUMPHREYS"},{"id":415,"agency":"DLNR","date":"2026-05-14","week":"May 11–17","crew":"","location":"Kalihi stream","matched":"Kalihi stream","lat":21.325,"lng":-157.878,"notes":"Kalihi Stream; D1 HUMPHREYS"},{"id":416,"agency":"DLNR","date":"2026-05-15","week":"May 11–17","crew":"","location":"Kalihi stream","matched":"Kalihi stream","lat":21.325,"lng":-157.878,"notes":"Kalihi Stream; Post Nuuanu; D1 HUMPHREYS"},{"id":417,"agency":"DLNR","date":"2026-05-15","week":"May 11–17","crew":"","location":"Nuuanu","matched":"Nuuanu Texaco","lat":21.3268,"lng":-157.852,"notes":"Kalihi Stream; Post Nuuanu; D1 HUMPHREYS"},{"id":418,"agency":"DLNR","date":"2026-05-19","week":"May 18–24","crew":"","location":"Waianae Dist Park","matched":"Waianae Dist Park","lat":21.4475,"lng":-158.187,"notes":"SPO Waianae District Park; Post Ala Wai/Waikiki/Derussy; D1/D3 HUMPHREYS Night"},{"id":419,"agency":"DLNR","date":"2026-05-19","week":"May 18–24","crew":"","location":"Ala Wai","matched":"Ala Wai","lat":21.2854,"lng":-157.8318,"notes":"SPO Waianae District Park; Post Ala Wai/Waikiki/Derussy; D1/D3 HUMPHREYS Night"},{"id":420,"agency":"DLNR","date":"2026-05-19","week":"May 18–24","crew":"","location":"Waikiki","matched":"Waikiki","lat":21.2767,"lng":-157.8245,"notes":"SPO Waianae District Park; Post Ala Wai/Waikiki/Derussy; D1/D3 HUMPHREYS Night"},{"id":421,"agency":"DLNR","date":"2026-05-19","week":"May 18–24","crew":"","location":"Derussy","matched":"Derussy","lat":21.2819,"lng":-157.8366,"notes":"SPO Waianae District Park; Post Ala Wai/Waikiki/Derussy; D1/D3 HUMPHREYS Night"},{"id":422,"agency":"DLNR","date":"2026-05-20","week":"May 18–24","crew":"","location":"Waianae Dist Park","matched":"Waianae Dist Park","lat":21.4475,"lng":-158.187,"notes":"SPO Waianae District Park; D3 HUMPHREYS"},{"id":423,"agency":"DLNR","date":"2026-05-21","week":"May 18–24","crew":"","location":"Jackass ginger","matched":"Jackass ginger","lat":21.337,"lng":-157.851,"notes":"Posting Nuuanu Jackass Ginger; D1 HUMPHREYS"},{"id":424,"agency":"DLNR","date":"2026-05-22","week":"May 18–24","crew":"","location":"Nuuanu","matched":"Nuuanu Texaco","lat":21.3268,"lng":-157.852,"notes":"Clean Nuuanu with City; D1 HUMPHREYS With City"},{"id":425,"agency":"DLNR","date":"2026-05-26","week":"May 25–31","crew":"","location":"Jackass ginger","matched":"Jackass ginger","lat":21.337,"lng":-157.851,"notes":"Nuuanu/Jackass Ginger clean up; D1 HUMPHREYS"},{"id":426,"agency":"DLNR","date":"2026-05-28","week":"May 25–31","crew":"","location":"Ala Wai","matched":"Ala Wai","lat":21.2854,"lng":-157.8318,"notes":"Ala Wai/Waikiki/Derussy clean up; D1 HUMPHREYS 0500/start 2000"},{"id":427,"agency":"DLNR","date":"2026-05-28","week":"May 25–31","crew":"","location":"Waikiki","matched":"Waikiki","lat":21.2767,"lng":-157.8245,"notes":"Ala Wai/Waikiki/Derussy clean up; D1 HUMPHREYS 0500/start 2000"},{"id":428,"agency":"DLNR","date":"2026-05-28","week":"May 25–31","crew":"","location":"Derussy","matched":"Derussy","lat":21.2819,"lng":-157.8366,"notes":"Ala Wai/Waikiki/Derussy clean up; D1 HUMPHREYS 0500/start 2000"},{"id":429,"agency":"DLNR","date":"2026-05-29","week":"May 25–31","crew":"","location":"Ala Wai","matched":"Ala Wai","lat":21.2854,"lng":-157.8318,"notes":"Ala Wai/Waikiki/Derussy clean up; D1 HUMPHREYS End 0445"},{"id":430,"agency":"DLNR","date":"2026-05-29","week":"May 25–31","crew":"","location":"Waikiki","matched":"Waikiki","lat":21.2767,"lng":-157.8245,"notes":"Ala Wai/Waikiki/Derussy clean up; D1 HUMPHREYS End 0445"},{"id":431,"agency":"DLNR","date":"2026-05-29","week":"May 25–31","crew":"","location":"Derussy","matched":"Derussy","lat":21.2819,"lng":-157.8366,"notes":"Ala Wai/Waikiki/Derussy clean up; D1 HUMPHREYS End 0445"},{"id":432,"agency":"DLNR","date":"2026-06-02","week":"June 1–7","crew":"","location":"HCC overflow lot","matched":"HCC overflow lot","lat":21.282,"lng":-157.717,"notes":"Post HCC overflow lot/Hawaii Kai Bridge; D1 Night HUMPHREYS"},{"id":433,"agency":"DLNR","date":"2026-06-02","week":"June 1–7","crew":"","location":"Hawaii Kai Bridge","matched":"Hawaii Kai Bridge","lat":21.28,"lng":-157.704,"notes":"Post HCC overflow lot/Hawaii Kai Bridge; D1 Night HUMPHREYS"},{"id":434,"agency":"DLNR","date":"2026-06-03","week":"June 1–7","crew":"","location":"guard rails","matched":"SPO guard rails","lat":21.3066,"lng":-157.8583,"notes":"SPO guard rails; Sand Island clean up; D1 HUMPHREYS With HDOT"},{"id":435,"agency":"DLNR","date":"2026-06-03","week":"June 1–7","crew":"","location":"Sand Island","matched":"Sand Island","lat":21.3039,"lng":-157.887,"notes":"SPO guard rails; Sand Island clean up; D1 HUMPHREYS With HDOT"},{"id":436,"agency":"DLNR","date":"2026-06-04","week":"June 1–7","crew":"","location":"guard rails","matched":"SPO guard rails","lat":21.3066,"lng":-157.8583,"notes":"SPO Guard rails; D3 HUMPHREYS With City and HDOT"},{"id":437,"agency":"DLNR","date":"2026-06-05","week":"June 1–7","crew":"","location":"Sand Island","matched":"Sand Island","lat":21.3039,"lng":-157.887,"notes":"Sand Island clean up; D1 HUMPHREYS With HDOT and City"},{"id":438,"agency":"DLNR","date":"2026-06-06","week":"June 1–7","crew":"","location":"Sand Island","matched":"Sand Island","lat":21.3039,"lng":-157.887,"notes":"Community clean up Sand Island; Community clean up"},{"id":439,"agency":"DLNR","date":"2026-06-09","week":"June 8–14","crew":"","location":"Waikiki","matched":"Waikiki","lat":21.2767,"lng":-157.8245,"notes":"Post Waikiki, Ala Wai, Derussy; D1 Night HUMPHREYS"},{"id":440,"agency":"DLNR","date":"2026-06-09","week":"June 8–14","crew":"","location":"Ala Wai","matched":"Ala Wai","lat":21.2854,"lng":-157.8318,"notes":"Post Waikiki, Ala Wai, Derussy; D1 Night HUMPHREYS"},{"id":441,"agency":"DLNR","date":"2026-06-09","week":"June 8–14","crew":"","location":"Derussy","matched":"Derussy","lat":21.2819,"lng":-157.8366,"notes":"Post Waikiki, Ala Wai, Derussy; D1 Night HUMPHREYS"},{"id":442,"agency":"DLNR","date":"2026-06-10","week":"June 8–14","crew":"","location":"Haleiwa SBH","matched":"Haleiwa SBH","lat":21.594,"lng":-158.103,"notes":"Post Haleiwa SBH/Alii Beach/Kaiaka Beach; D2 HUMPHREYS"},{"id":443,"agency":"DLNR","date":"2026-06-10","week":"June 8–14","crew":"","location":"Alii Beach","matched":"Alii Beach","lat":21.5991,"lng":-158.103,"notes":"Post Haleiwa SBH/Alii Beach/Kaiaka Beach; D2 HUMPHREYS"},{"id":444,"agency":"DLNR","date":"2026-06-10","week":"June 8–14","crew":"","location":"Kaiaka","matched":"Kaiaka","lat":21.5848,"lng":-158.1223,"notes":"Post Haleiwa SBH/Alii Beach/Kaiaka Beach; D2 HUMPHREYS"},{"id":445,"agency":"DLNR","date":"2026-06-11","week":"June 8–14","crew":"","location":"Waikiki","matched":"Waikiki","lat":21.2767,"lng":-157.8245,"notes":"Waikiki, Ala Wai, Derussy clean up; D1 HUMPHREYS With City, HDOT and Army Start 2000"},{"id":446,"agency":"DLNR","date":"2026-06-11","week":"June 8–14","crew":"","location":"Ala Wai","matched":"Ala Wai","lat":21.2854,"lng":-157.8318,"notes":"Waikiki, Ala Wai, Derussy clean up; D1 HUMPHREYS With City, HDOT and Army Start 2000"},{"id":447,"agency":"DLNR","date":"2026-06-11","week":"June 8–14","crew":"","location":"Derussy","matched":"Derussy","lat":21.2819,"lng":-157.8366,"notes":"Waikiki, Ala Wai, Derussy clean up; D1 HUMPHREYS With City, HDOT and Army Start 2000"},{"id":448,"agency":"DLNR","date":"2026-06-12","week":"June 8–14","crew":"","location":"Waikiki","matched":"Waikiki","lat":21.2767,"lng":-157.8245,"notes":"Waikiki, Ala Wai, Derussy clean up; D1 HUMPHREYS With City, HDOT and Army End 0445"},{"id":449,"agency":"DLNR","date":"2026-06-12","week":"June 8–14","crew":"","location":"Ala Wai","matched":"Ala Wai","lat":21.2854,"lng":-157.8318,"notes":"Waikiki, Ala Wai, Derussy clean up; D1 HUMPHREYS With City, HDOT and Army End 0445"},{"id":450,"agency":"DLNR","date":"2026-06-12","week":"June 8–14","crew":"","location":"Derussy","matched":"Derussy","lat":21.2819,"lng":-157.8366,"notes":"Waikiki, Ala Wai, Derussy clean up; D1 HUMPHREYS With City, HDOT and Army End 0445"},{"id":451,"agency":"DLNR","date":"2026-06-16","week":"June 15–21","crew":"","location":"Coral Sea Rd","matched":"Coral Sea Rd","lat":21.3166,"lng":-158.1202,"notes":"SPO Coral Sea Rd; Post Kahe Point; D3 HUMPHREYS LD"},{"id":452,"agency":"DLNR","date":"2026-06-16","week":"June 15–21","crew":"","location":"Kahe Point","matched":"Kahe Point","lat":21.3584,"lng":-158.1308,"notes":"SPO Coral Sea Rd; Post Kahe Point; D3 HUMPHREYS LD"},{"id":453,"agency":"DLNR","date":"2026-06-17","week":"June 15–21","crew":"","location":"Coral Sea Rd","matched":"Coral Sea Rd","lat":21.3166,"lng":-158.1202,"notes":"SPO Coral Sea Rd; D3 HUMPHREYS With HDOT, City"},{"id":454,"agency":"DLNR","date":"2026-06-18","week":"June 15–21","crew":"","location":"HCC overflow lot","matched":"HCC overflow lot","lat":21.282,"lng":-157.717,"notes":"Clean HCC overflow lot/Hawaii Kai Bridge; D1 Night HUMPHREYS With HDOT"},{"id":455,"agency":"DLNR","date":"2026-06-18","week":"June 15–21","crew":"","location":"Hawaii Kai Bridge","matched":"Hawaii Kai Bridge","lat":21.28,"lng":-157.704,"notes":"Clean HCC overflow lot/Hawaii Kai Bridge; D1 Night HUMPHREYS With HDOT"},{"id":456,"agency":"DLNR","date":"2026-06-23","week":"June 22–28","crew":"","location":"Kahe point","matched":"Kahe Point","lat":21.3584,"lng":-158.1308,"notes":"SPO Kahe Point; Post Nuuanu Texaco; Checks of Kapena Falls; D1 HUMPHREYS"},{"id":457,"agency":"DLNR","date":"2026-06-23","week":"June 22–28","crew":"","location":"Nuuanu Texaco","matched":"Nuuanu Texaco","lat":21.3268,"lng":-157.852,"notes":"SPO Kahe Point; Post Nuuanu Texaco; Checks of Kapena Falls; D1 HUMPHREYS"},{"id":458,"agency":"DLNR","date":"2026-06-23","week":"June 22–28","crew":"","location":"Kapena falls","matched":"Kapena falls","lat":21.333,"lng":-157.852,"notes":"SPO Kahe Point; Post Nuuanu Texaco; Checks of Kapena Falls; D1 HUMPHREYS"},{"id":459,"agency":"DLNR","date":"2026-06-24","week":"June 22–28","crew":"","location":"Kahe point","matched":"Kahe Point","lat":21.3584,"lng":-158.1308,"notes":"SPO Kahe Point; D3 HUMPHREYS With Land Div, City, HDOT"},{"id":460,"agency":"DLNR","date":"2026-06-25","week":"June 22–28","crew":"","location":"Haleiwa SBH","matched":"Haleiwa SBH","lat":21.594,"lng":-158.103,"notes":"Post Haleiwa SBH/Alii BP/Kaiaka Beach; D2 Night HUMPHREYS"},{"id":461,"agency":"DLNR","date":"2026-06-25","week":"June 22–28","crew":"","location":"Alii BP","matched":"Alii BP","lat":21.5991,"lng":-158.103,"notes":"Post Haleiwa SBH/Alii BP/Kaiaka Beach; D2 Night HUMPHREYS"},{"id":462,"agency":"DLNR","date":"2026-06-25","week":"June 22–28","crew":"","location":"Kaiaka","matched":"Kaiaka","lat":21.5848,"lng":-158.1223,"notes":"Post Haleiwa SBH/Alii BP/Kaiaka Beach; D2 Night HUMPHREYS"},{"id":463,"agency":"DLNR","date":"2026-06-26","week":"June 22–28","crew":"","location":"Nuuanu Texaco","matched":"Nuuanu Texaco","lat":21.3268,"lng":-157.852,"notes":"Clean Nuuanu Texaco; Kapena Falls; D1 HUMPHREYS With City/HDOT"},{"id":464,"agency":"DLNR","date":"2026-06-26","week":"June 22–28","crew":"","location":"Kapena falls","matched":"Kapena falls","lat":21.333,"lng":-157.852,"notes":"Clean Nuuanu Texaco; Kapena Falls; D1 HUMPHREYS With City/HDOT"},{"id":465,"agency":"DLNR","date":"2026-06-30","week":"June 29–July 5","crew":"","location":"Haleiwa SBH","matched":"Haleiwa SBH","lat":21.594,"lng":-158.103,"notes":"Haleiwa SBH/Alii BP/Kaiaka Beach; D2 Night HUMPHREYS With HDOT"},{"id":466,"agency":"DLNR","date":"2026-06-30","week":"June 29–July 5","crew":"","location":"Alii BP","matched":"Alii BP","lat":21.5991,"lng":-158.103,"notes":"Haleiwa SBH/Alii BP/Kaiaka Beach; D2 Night HUMPHREYS With HDOT"},{"id":467,"agency":"DLNR","date":"2026-06-30","week":"June 29–July 5","crew":"","location":"Kaiaka","matched":"Kaiaka","lat":21.5848,"lng":-158.1223,"notes":"Haleiwa SBH/Alii BP/Kaiaka Beach; D2 Night HUMPHREYS With HDOT"}];
+const weeks = ["Apr 27–May 3", "May 4–10", "May 11–17", "May 18–24", "May 25–31", "June 1–7", "June 8–14", "June 15–21", "June 22–28", "June 29–July 5"];
+const agencyColors = {DFM:'#f4c430', DLNR:'#2563eb'};
 
-function hexToRgba(hex, alpha) {
-  const clean = hex.replace('#','');
-  const bigint = parseInt(clean, 16);
-  const r = (bigint >> 16) & 255;
-  const g = (bigint >> 8) & 255;
-  const b = bigint & 255;
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+const routePaths = {
+  "Ala Wai": [[21.2880,-157.8442],[21.2866,-157.8376],[21.2844,-157.8302],[21.2806,-157.8219],[21.2769,-157.8177]],
+  "Ala Wai Promenade": [[21.2877,-157.8439],[21.2862,-157.8363],[21.2842,-157.8297],[21.2807,-157.8221]],
+  "Ala Wai CP": [[21.2865,-157.8354],[21.2846,-157.8298],[21.2813,-157.8229]],
+  "Ala Wai GC": [[21.2872,-157.8335],[21.2863,-157.8290],[21.2833,-157.8219]],
+  "Kapahulu Bike Path": [[21.2848,-157.8216],[21.2822,-157.8199],[21.2795,-157.8184]],
+  "S King St": [[21.3072,-157.8597],[21.3046,-157.8533],[21.3012,-157.8455],[21.2986,-157.8381],[21.2959,-157.8303],[21.2923,-157.8184]],
+  "Kalakaua Ave": [[21.3046,-157.8508],[21.3003,-157.8441],[21.2959,-157.8386],[21.2915,-157.8324],[21.2852,-157.8279],[21.2784,-157.8260]],
+  "Ward Ave": [[21.3074,-157.8505],[21.3022,-157.8505],[21.2967,-157.8507],[21.2921,-157.8509]],
+  "Kapiolani Blvd": [[21.2987,-157.8499],[21.2959,-157.8427],[21.2937,-157.8349],[21.2920,-157.8265],[21.2917,-157.8148]],
+  "South St": [[21.3051,-157.8583],[21.3018,-157.8582],[21.2985,-157.8582],[21.2955,-157.8580]],
+  "Queen St": [[21.3043,-157.8617],[21.3021,-157.8582],[21.3004,-157.8543],[21.2987,-157.8507]],
+  "Halekuwila": [[21.3022,-157.8614],[21.3006,-157.8573],[21.2998,-157.8538],[21.2995,-157.8499]],
+  "Pohukaina": [[21.3010,-157.8620],[21.2997,-157.8580],[21.2985,-157.8541],[21.2976,-157.8509]],
+  "Auahi": [[21.2998,-157.8619],[21.2980,-157.8572],[21.2962,-157.8529],[21.2941,-157.8484]],
+  "Coral": [[21.2974,-157.8594],[21.2982,-157.8565],[21.2991,-157.8539]],
+  "Keawe": [[21.3004,-157.8586],[21.2987,-157.8560],[21.2967,-157.8533]],
+  "Cooke St": [[21.3004,-157.8568],[21.2986,-157.8540],[21.2968,-157.8512]],
+  "Koula St": [[21.2947,-157.8519],[21.2967,-157.8509],[21.2986,-157.8499]],
+  "Ohe St": [[21.2968,-157.8529],[21.2988,-157.8520],[21.3002,-157.8515]],
+  "Piikoi St": [[21.3028,-157.8445],[21.2995,-157.8444],[21.2957,-157.8440],[21.2913,-157.8436]],
+  "Makiki St": [[21.3079,-157.8387],[21.3042,-157.8387],[21.3007,-157.8387],[21.2972,-157.8386]],
+  "Kinau St": [[21.3071,-157.8473],[21.3042,-157.8427],[21.3027,-157.8391],[21.3014,-157.8353]],
+  "Young St": [[21.3010,-157.8491],[21.2986,-157.8418],[21.2968,-157.8350],[21.2953,-157.8287]],
+  "S Beretania St": [[21.3119,-157.8604],[21.3088,-157.8522],[21.3053,-157.8434],[21.3014,-157.8333],[21.2988,-157.8261]],
+  "Hotel": [[21.3120,-157.8632],[21.3119,-157.8599],[21.3114,-157.8566],[21.3108,-157.8538]],
+  "River": [[21.3162,-157.8652],[21.3144,-157.8638],[21.3124,-157.8628],[21.3106,-157.8618]],
+  "Maunakea": [[21.3159,-157.8625],[21.3139,-157.8616],[21.3120,-157.8607]],
+  "Kukui": [[21.3172,-157.8618],[21.3152,-157.8595],[21.3135,-157.8578]],
+  "Iwilei": [[21.3189,-157.8692],[21.3173,-157.8662],[21.3159,-157.8637]],
+  "Kuwili": [[21.3176,-157.8681],[21.3169,-157.8668],[21.3159,-157.8647]],
+  "Pine": [[21.3180,-157.8684],[21.3171,-157.8670],[21.3163,-157.8653]],
+  "Sumner": [[21.3173,-157.8685],[21.3163,-157.8669],[21.3152,-157.8652]],
+  "Pacific": [[21.3174,-157.8671],[21.3156,-157.8662],[21.3138,-157.8653]],
+  "N King/Akepo": [[21.3172,-157.8668],[21.3154,-157.8643],[21.3139,-157.8622]],
+  "Pua Ln": [[21.3176,-157.8656],[21.3165,-157.8648],[21.3154,-157.8641]],
+  "Kokea": [[21.3230,-157.8726],[21.3211,-157.8698],[21.3196,-157.8667]],
+  "Kilihau": [[21.3332,-157.8972],[21.3310,-157.8948],[21.3288,-157.8924]],
+  "Sand Island": [[21.3169,-157.8836],[21.3120,-157.8876],[21.3060,-157.8916],[21.3015,-157.8949]],
+  "Pahounui": [[21.3175,-157.8860],[21.3150,-157.8890],[21.3124,-157.8922]],
+  "Dillingham/Kaaahi": [[21.3189,-157.8673],[21.3172,-157.8662],[21.3154,-157.8652]],
+  "Kalihi St": [[21.3357,-157.8797],[21.3327,-157.8786],[21.3295,-157.8774],[21.3257,-157.8760]],
+  "Middle St": [[21.3412,-157.8846],[21.3373,-157.8841],[21.3333,-157.8839],[21.3292,-157.8838]],
+  "Ala Moana": [[21.2918,-157.8521],[21.2897,-157.8469],[21.2888,-157.8420]],
+  "Kakaako Waterfront": [[21.2965,-157.8664],[21.2933,-157.8626],[21.2913,-157.8588]],
+  "Point Panic": [[21.2961,-157.8654],[21.2943,-157.8620],[21.2928,-157.8592]],
+  "Nuuanu": [[21.3336,-157.8522],[21.3297,-157.8523],[21.3266,-157.8520],[21.3228,-157.8509]],
+  "Kapena falls": [[21.3355,-157.8531],[21.3338,-157.8522],[21.3323,-157.8514]],
+  "Coral Sea Rd": [[21.3182,-158.1223],[21.3164,-158.1201],[21.3145,-158.1183]],
+  "Kahe Point": [[21.3638,-158.1350],[21.3608,-158.1322],[21.3577,-158.1291]],
+  "Haleiwa SBH": [[21.5964,-158.1057],[21.5945,-158.1037],[21.5925,-158.1017]],
+  "Alii BP": [[21.6022,-158.1054],[21.6000,-158.1038],[21.5977,-158.1024]],
+  "Alii Beach": [[21.6022,-158.1054],[21.6000,-158.1038],[21.5977,-158.1024]],
+  "Kaiaka": [[21.5885,-158.1246],[21.5857,-158.1222],[21.5829,-158.1198]],
+  "Waianae DP": [[21.4564,-158.1926],[21.4536,-158.1903],[21.4514,-158.1887]],
+  "Waimanalo": [[21.3414,-157.7209],[21.3364,-157.7138],[21.3307,-157.7076]],
+  "Diamond Head Beach Rd": [[21.2607,-157.8101],[21.2584,-157.8056],[21.2567,-157.8004]]
+};
+
+function routePathFor(op) {
+  const hay = `${op.location || ''} ${op.matched || ''}`.toLowerCase();
+  const entries = Object.entries(routePaths).sort((a,b)=>b[0].length-a[0].length);
+  for (const [key, path] of entries) {
+    if (hay.includes(key.toLowerCase())) return {key, path};
+  }
+  if (/\bst\.?\b|street|ave\.?|avenue|blvd\.?|boulevard|rd\.?|road|ln\.?|lane|pl\.?|place|bridge|bike path|promenade|canal/.test(hay)) {
+    const d = 0.0012;
+    return {key: op.matched || op.location, path: [[op.lat-d, op.lng-d],[op.lat, op.lng],[op.lat+d, op.lng+d]]};
+  }
+  return null;
 }
 
+function lineStyleFor(op) {
+  const color = agencyColors[op.agency] || '#64748b';
+  return {color, weight: op.agency === 'DFM' ? 6 : 5, opacity: op.agency === 'DFM' ? 0.95 : 0.84, lineCap:'round', lineJoin:'round'};
+}
+
+function makeLineMarkerIcon(op) {
+  const color = agencyColors[op.agency] || '#64748b';
+  const textColor = op.agency === 'DFM' ? '#111827' : '#ffffff';
+  const borderColor = op.agency === 'DFM' ? '#b7791f' : '#ffffff';
+  return L.divIcon({className:'', html:`<div class="line-label-dot" style="background:${color}; color:${textColor}; border-color:${borderColor}">${op.agency}</div>`, iconSize:[42,20], iconAnchor:[21,10], popupAnchor:[0,-8]});
+}
+function midpoint(path) { return path[Math.floor(path.length/2)]; }
+
+let map, markerLayer, markers = new Map();
+let activeAgencies = new Set(['DFM','DLNR']);
+function escapeHtml(value) { return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch])); }
 function initMap() {
-  map = L.map('map', { center:[21.42,-157.97], zoom:10, scrollWheelZoom:true });
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(map);
-
-  weeks.forEach((week, idx) => {
-    const group = L.layerGroup();
-
-    week.streets.forEach(feature => {
-      const line = L.polyline(feature.coords, {
-        color: week.color,
-        weight: idx === activeIndex ? 7 : 4,
-        opacity: idx === activeIndex ? 1 : 0.45,
-        lineCap: 'round',
-        lineJoin: 'round'
-      })
-      .bindPopup(`
-        <div class="popup-title">${feature.name}</div>
-        <div class="popup-meta"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${week.color};margin-right:6px;"></span>${week.dateRange} · Street segment</div>
-        <div>Approximate street geometry drawn to match the schedule description.</div>
-      `)
-      .bindTooltip(feature.name, {sticky:true});
-      group.addLayer(line);
-    });
-
-    week.points.forEach(point => {
-      const marker = L.circleMarker([point.lat, point.lng], {
-        radius: idx === activeIndex ? 6.5 : 5,
-        color: '#ffffff',
-        weight: 1.5,
-        fillColor: week.color,
-        fillOpacity: idx === activeIndex ? 0.95 : 0.62,
-        opacity: idx === activeIndex ? 1 : 0.75
-      })
-      .bindPopup(`
-        <div class="popup-title">${point.name}</div>
-        <div class="popup-meta"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${week.color};margin-right:6px;"></span>${week.dateRange} · Location marker</div>
-        <div>${point.details}</div>
-      `);
-      group.addLayer(marker);
-    });
-
-    group.addTo(map);
-    weekLayers.push(group);
-  });
-
-  renderLegend();
-  renderCards();
-  renderTicks();
-  refreshStyles();
-
-  map.fitBounds([[21.24,-158.25],[21.70,-157.64]], {padding:[24,24]});
-  setTimeout(() => map.invalidateSize(), 200);
+  map = L.map('map', {center:[21.4389,-157.9950], zoom:10, scrollWheelZoom:true});
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19, attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+  markerLayer = L.layerGroup().addTo(map);
+  renderControls(); renderOperations();
+  setTimeout(()=>map.invalidateSize(),250);
 }
-
-function refreshStyles() {
-  weekLayers.forEach((group, idx) => {
-    group.eachLayer(layer => {
-      if (layer instanceof L.Polyline && !(layer instanceof L.CircleMarker)) {
-        layer.setStyle({
-          weight: idx === activeIndex ? 7 : 4,
-          opacity: idx === activeIndex ? 1 : 0.45
-        });
-        if (idx === activeIndex) layer.bringToFront();
-      } else if (layer instanceof L.CircleMarker) {
-        layer.setStyle({
-          radius: idx === activeIndex ? 6.5 : 5,
-          fillOpacity: idx === activeIndex ? 0.95 : 0.62,
-          opacity: idx === activeIndex ? 1 : 0.75
-        });
-        if (idx === activeIndex) layer.bringToFront();
-      }
-    });
-  });
-
-  renderCards();
-  renderTicks();
-
-  const bounds = L.latLngBounds([]);
-  weekLayers[activeIndex].eachLayer(layer => {
-    if (layer.getLatLng) bounds.extend(layer.getLatLng());
-    else if (layer.getBounds) bounds.extend(layer.getBounds());
-  });
-  if (bounds.isValid()) {
-    map.fitBounds(bounds, {padding:[50,50], maxZoom:12});
-  }
+function markerIcon(op) {
+  const color = agencyColors[op.agency] || '#64748b';
+  const label = op.agency === 'DFM' ? 'C' : 'S';
+  return L.divIcon({className:'', html:`<div class="marker-dot" data-label="${label}" style="background:${color}"></div>`, iconSize:[26,26], iconAnchor:[13,13], popupAnchor:[0,-10]});
 }
-
-function setWeek(idx) {
-  activeIndex = Math.max(0, Math.min(weeks.length - 1, idx));
-  document.getElementById('weekSlider').value = activeIndex;
-  refreshStyles();
+function popupHtml(op) { return `<div class="popup-title">${escapeHtml(op.location)}</div>
+  <div class="popup-row"><span class="popup-label">Agency:</span> ${escapeHtml(op.agency)} ${op.agency==='DFM'?'(City DFM)':'(State DLNR)'}</div>
+  <div class="popup-row"><span class="popup-label">Date:</span> ${escapeHtml(op.date)} · ${escapeHtml(op.week)}</div>
+  ${op.crew ? `<div class="popup-row"><span class="popup-label">Crew:</span> ${escapeHtml(op.crew)}</div>` : ''}
+  <div class="popup-row"><span class="popup-label">Mapped as:</span> ${escapeHtml(op.matched)}</div>
+  <div class="popup-row"><span class="popup-label">Notes:</span> ${escapeHtml(op.notes)}</div>`; }
+function tooltipHtml(op) { return `<div class="hover-title">${escapeHtml(op.location)}</div><div class="hover-grid">
+  <div class="hover-label">Agency</div><div class="hover-value">${escapeHtml(op.agency)} ${op.agency==='DFM'?'City':'State'}</div>
+  <div class="hover-label">Date</div><div class="hover-value">${escapeHtml(op.date)} · ${escapeHtml(op.week)}</div>
+  ${op.crew ? `<div class="hover-label">Crew</div><div class="hover-value">${escapeHtml(op.crew)}</div>` : ''}
+  <div class="hover-label">Mapped</div><div class="hover-value">${escapeHtml(op.matched)}</div>
+  <div class="hover-label">Notes</div><div class="hover-value">${escapeHtml(op.notes)}</div>
+</div>`; }
+function renderControls() {
+  const weekFilter=document.getElementById('weekFilter');
+  weeks.forEach(w=>{let opt=document.createElement('option'); opt.value=w; opt.textContent=w; weekFilter.appendChild(opt);});
+  document.getElementById('searchBox').addEventListener('input', renderOperations);
+  weekFilter.addEventListener('change', renderOperations);
+  document.getElementById('agencyFilter').addEventListener('change', e=>{activeAgencies=new Set(e.target.value?[e.target.value]:['DFM','DLNR']); syncQuick(); renderOperations();});
+  document.getElementById('resetBtn').addEventListener('click',()=>{document.getElementById('searchBox').value=''; weekFilter.value=''; document.getElementById('agencyFilter').value=''; activeAgencies=new Set(['DFM','DLNR']); syncQuick(); renderOperations();});
+  document.getElementById('fitBtn').addEventListener('click', fitVisible);
+  document.getElementById('dfmQuick').addEventListener('click',()=>toggleAgency('DFM'));
+  document.getElementById('dlnrQuick').addEventListener('click',()=>toggleAgency('DLNR'));
+  const wb=document.getElementById('weekButtons');
+  wb.innerHTML=`<button class="week-btn active" data-week="">All weeks</button>`+weeks.map(w=>`<button class="week-btn" data-week="${escapeHtml(w)}">${escapeHtml(w)}</button>`).join('');
+  wb.addEventListener('click',e=>{let b=e.target.closest('button[data-week]'); if(!b) return; document.getElementById('weekFilter').value=b.dataset.week; document.querySelectorAll('.week-btn').forEach(x=>x.classList.toggle('active',x===b)); renderOperations();});
+  const btn=document.getElementById('mobilePanelBtn'), close=document.getElementById('panelCloseBtn'), backdrop=document.getElementById('panelBackdrop'), panel=document.getElementById('sidePanel');
+  function openPanel(){panel.classList.add('open'); backdrop.classList.add('open'); setTimeout(()=>map.invalidateSize(),180);}
+  function closePanel(){panel.classList.remove('open'); backdrop.classList.remove('open'); setTimeout(()=>map.invalidateSize(),180);}
+  btn?.addEventListener('click',openPanel); close?.addEventListener('click',closePanel); backdrop?.addEventListener('click',closePanel);
 }
-
-function renderLegend() {
-  const legend = document.getElementById('legend');
-  legend.innerHTML = weeks.map((week, idx) => `
-    <div class="legend-row">
-      <span class="swatch" style="background:${week.color};"></span>
-      <span>${week.label}</span>
-    </div>
-  `).join('');
-}
-
-function renderCards() {
-  const wrap = document.getElementById('weekCards');
-  wrap.innerHTML = '';
-  weeks.forEach((week, idx) => {
-    const div = document.createElement('div');
-    div.className = 'week-card' + (idx === activeIndex ? ' active' : '');
-    div.style.borderLeftColor = week.color;
-    div.style.background = idx === activeIndex ? hexToRgba(week.color, 0.08) : '#fff';
-    div.style.borderColor = idx === activeIndex ? hexToRgba(week.color, 0.45) : '#dbe3ef';
-    div.innerHTML = `
-      <div class="week-title">
-        <span style="color:${idx === activeIndex ? week.color : '#1e293b'};">${week.label}</span>
-        <span class="count" style="background:${hexToRgba(week.color,0.12)}; color:${week.color};">
-          ${week.streets.length} streets · ${week.points.length} points
-        </span>
-      </div>
-      <div class="week-summary">${week.dateRange}</div>
-    `;
-    div.onclick = () => setWeek(idx);
-    wrap.appendChild(div);
+function toggleAgency(a) { if(activeAgencies.has(a) && activeAgencies.size>1) activeAgencies.delete(a); else activeAgencies.add(a); document.getElementById('agencyFilter').value=activeAgencies.size===1?[...activeAgencies][0]:''; syncQuick(); renderOperations(); }
+function syncQuick() { document.getElementById('dfmQuick').classList.toggle('active',activeAgencies.has('DFM')); document.getElementById('dlnrQuick').classList.toggle('active',activeAgencies.has('DLNR')); }
+function filteredOps() {
+  const q=document.getElementById('searchBox').value.toLowerCase().trim();
+  const week=document.getElementById('weekFilter').value;
+  document.querySelectorAll('.week-btn').forEach(b=>b.classList.toggle('active',b.dataset.week===week));
+  return operations.filter(op=>{
+    if(!activeAgencies.has(op.agency)) return false;
+    if(week && op.week!==week) return false;
+    const text=[op.agency,op.date,op.week,op.crew,op.location,op.matched,op.notes].join(' ').toLowerCase();
+    if(q && !text.includes(q)) return false;
+    return true;
   });
 }
-
-function renderTicks() {
-  const ticks = document.getElementById('ticks');
-  ticks.innerHTML = '';
-  weeks.forEach((week, idx) => {
-    const span = document.createElement('span');
-    span.textContent = week.label;
-    span.style.borderTopColor = week.color;
-    if (idx === activeIndex) {
-      span.className = 'active';
-      span.style.color = week.color;
-    }
-    ticks.appendChild(span);
-  });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('weekSlider').addEventListener('input', e => setWeek(Number(e.target.value)));
-  document.getElementById('prevBtn').onclick = () => setWeek(activeIndex - 1);
-  document.getElementById('nextBtn').onclick = () => setWeek(activeIndex + 1);
-  document.getElementById('playBtn').onclick = () => {
-    const btn = document.getElementById('playBtn');
-    if (playTimer) {
-      clearInterval(playTimer);
-      playTimer = null;
-      btn.textContent = '▶';
+function renderOperations() {
+  const ops=filteredOps(); markerLayer.clearLayers(); markers.clear();
+  ops.forEach(op=>{
+    const route = routePathFor(op);
+    if (route) {
+      const line = L.polyline(route.path, lineStyleFor(op));
+      line.bindPopup(popupHtml(op));
+      line.bindTooltip(tooltipHtml(op),{sticky:true,className:'hover-tooltip',opacity:.96});
+      line.addTo(markerLayer);
+      const mid = midpoint(route.path);
+      const label = L.marker(mid,{icon:makeLineMarkerIcon(op), interactive:true});
+      label.bindPopup(popupHtml(op));
+      label.bindTooltip(tooltipHtml(op),{direction:'top',offset:[0,-12],className:'hover-tooltip',opacity:.96});
+      label.addTo(markerLayer);
+      markers.set(op.id,{kind:'line', line, label, bounds:line.getBounds()});
     } else {
-      btn.textContent = '❚❚';
-      playTimer = setInterval(() => {
-        setWeek((activeIndex + 1) % weeks.length);
-      }, 1400);
+      const marker=L.marker([op.lat,op.lng],{icon:markerIcon(op)});
+      marker.bindPopup(popupHtml(op));
+      marker.bindTooltip(tooltipHtml(op),{direction:'top',offset:[0,-12],className:'hover-tooltip',opacity:.96});
+      marker.addTo(markerLayer);
+      markers.set(op.id,{kind:'marker', marker});
     }
-  };
-  initMap();
-});
+  });
+  const list=document.getElementById('opList');
+  list.innerHTML=ops.slice().sort((a,b)=>a.date.localeCompare(b.date)||a.agency.localeCompare(b.agency)).map(op=>`<div class="op-card" data-id="${op.id}" style="border-left-color:${agencyColors[op.agency]}"><div class="op-name">${escapeHtml(op.location)}</div><div class="op-meta"><strong>${escapeHtml(op.agency)}</strong> · ${escapeHtml(op.date)} · ${escapeHtml(op.week)}${op.crew?' · '+escapeHtml(op.crew):''}<br>${escapeHtml(op.notes)}</div></div>`).join('');
+  list.querySelectorAll('.op-card').forEach(card=>card.addEventListener('click',()=>{
+    let item=markers.get(Number(card.dataset.id));
+    if(!item) return;
+    if(item.kind==='line') { map.fitBounds(item.bounds,{padding:[40,40], maxZoom:16}); item.line.openPopup(); }
+    else { map.setView(item.marker.getLatLng(),15); item.marker.openPopup(); }
+  }));
+  const d=ops.filter(o=>o.agency==='DFM').length, s=ops.filter(o=>o.agency==='DLNR').length;
+  const lines=ops.filter(o=>routePathFor(o)).length;
+  document.getElementById('summaryBox').innerHTML=`Showing <strong>${ops.length}</strong> operation-locations: <strong>${d}</strong> DFM and <strong>${s}</strong> DLNR. <strong>${lines}</strong> street/area items are shown as line segments where the source names a street, canal, promenade, bridge, road, or path; broader locations remain points.`;
+}
+function fitVisible() {
+  const bounds=[];
+  [...markers.values()].forEach(item=>{
+    if(item.kind==='line') bounds.push(item.bounds.getSouthWest(), item.bounds.getNorthEast());
+    else bounds.push(item.marker.getLatLng());
+  });
+  if(bounds.length) map.fitBounds(L.latLngBounds(bounds),{padding:[35,35]});
+}
+window.addEventListener('resize',()=>setTimeout(()=>map.invalidateSize(),150));
+initMap();
 </script>
 </body>
 </html>
