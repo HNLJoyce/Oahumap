@@ -1,531 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
+<meta charset="utf-8">
 <title>Homeless Resources on Oahu</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-  :root {
-    --bg: #f7f9fc;
-    --panel: #ffffff;
-    --ink: #172033;
-    --muted: #5f6b7a;
-    --line: #dbe3ef;
-    --blue: #1e40af;
-  }
-  html, body {
-    height: 100%;
-    margin: 0;
-    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    color: var(--ink);
-    background: var(--bg);
-  }
-
-  .mobile-panel-btn {
-    display: none;
-    border: 1px solid rgba(255,255,255,.32);
-    background: rgba(255,255,255,.14);
-    color: white;
-    border-radius: 999px;
-    padding: 8px 11px;
-    font-size: 12px;
-    font-weight: 800;
-  }
-  .panel-close { display: none; }
-  .panel-backdrop { display: none; }
-
-  .app {
-    height: 100%;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 380px;
-    grid-template-rows: auto 1fr;
-  }
-  header {
-    grid-column: 1 / -1;
-    padding: 18px 22px;
-    background: linear-gradient(90deg, #0f172a, #1e3a8a);
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    align-items: center;
-  }
-  h1 {
-    margin: 0;
-    font-size: clamp(22px, 3vw, 36px);
-    letter-spacing: -0.03em;
-  }
-  .subtitle {
-    color: rgba(255,255,255,.82);
-    font-size: 14px;
-    margin-top: 4px;
-  }
-  .header-actions {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-  }
-  .small-chip {
-    border: 1px solid rgba(255,255,255,.28);
-    background: rgba(255,255,255,.12);
-    border-radius: 999px;
-    padding: 7px 10px;
-    font-size: 12px;
-  }
-  #map {
-    min-height: 720px;
-    height: 100%;
-    width: 100%;
-    background: #dbeafe;
-  }
-  aside {
-    background: var(--panel);
-    border-left: 1px solid var(--line);
-    overflow: auto;
-    padding: 16px;
-  }
-  .panel-title {
-    margin: 0 0 8px 0;
-    font-size: 18px;
-  }
-  .search {
-    width: 100%;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 10px 12px;
-    font-size: 14px;
-    margin-bottom: 10px;
-  }
-  .filters {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-  select, button {
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    background: white;
-    padding: 9px 10px;
-    font-size: 13px;
-  }
-  button {
-    cursor: pointer;
-    font-weight: 700;
-  }
-  .legend {
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 12px;
-    background: #f8fafc;
-    margin-bottom: 12px;
-  }
-  .legend-row {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    font-size: 13px;
-    margin: 7px 0;
-  }
-  .swatch {
-    width: 13px;
-    height: 13px;
-    border-radius: 50%;
-    border: 2px solid white;
-    box-shadow: 0 0 0 1px rgba(15,23,42,.14);
-  }
-  .facility-list {
-    display: grid;
-    gap: 9px;
-  }
-  .facility-card {
-    border: 1px solid var(--line);
-    border-left: 7px solid #64748b;
-    border-radius: 14px;
-    padding: 10px 11px;
-    background: white;
-    cursor: pointer;
-    transition: .15s ease;
-  }
-  .facility-card:hover {
-    box-shadow: 0 8px 18px rgba(15,23,42,.09);
-    transform: translateY(-1px);
-  }
-  .facility-name {
-    font-weight: 800;
-    font-size: 14px;
-    line-height: 1.25;
-  }
-  .facility-meta {
-    color: var(--muted);
-    font-size: 12px;
-    line-height: 1.35;
-    margin-top: 4px;
-  }
-  .badges {
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
-    margin-top: 6px;
-  }
-  .badge {
-    border-radius: 999px;
-    background: #eef2ff;
-    color: #334155;
-    padding: 2px 7px;
-    font-size: 11px;
-    font-weight: 700;
-  }
-  .marker-dot {
-    width: 19px;
-    height: 19px;
-    border-radius: 50%;
-    border: 3px solid white;
-    box-shadow: 0 0 0 5px rgba(15,23,42,.08), 0 8px 18px rgba(15,23,42,.22);
-    position: relative;
-  }
-  .marker-fee {
-    position: absolute;
-    right: -9px;
-    top: -9px;
-    width: 15px;
-    height: 15px;
-    border-radius: 999px;
-    background: #111827;
-    color: #fff;
-    font-size: 10px;
-    line-height: 15px;
-    text-align: center;
-    border: 1px solid white;
-    font-weight: 900;
-  }
-  .marker-animal {
-    position: absolute;
-    left: -10px;
-    bottom: -10px;
-    width: 16px;
-    height: 16px;
-    border-radius: 999px;
-    background: #fff;
-    color: #111827;
-    font-size: 11px;
-    line-height: 16px;
-    text-align: center;
-    border: 1px solid #cbd5e1;
-  }
-
-  .hover-tooltip {
-    width: 440px;
-    max-width: 440px;
-    min-width: 360px;
-    white-space: normal;
-    background: #0f172a;
-    color: #fff;
-    border: 0;
-    border-radius: 13px;
-    padding: 12px 14px;
-    box-shadow: 0 12px 30px rgba(15,23,42,.30);
-    line-height: 1.35;
-  }
-  .hover-tooltip .hover-title {
-    font-weight: 900;
-    font-size: 15px;
-    margin-bottom: 7px;
-    letter-spacing: -0.01em;
-  }
-  .hover-tooltip .hover-grid {
-    display: grid;
-    grid-template-columns: 86px minmax(0, 1fr);
-    column-gap: 8px;
-    row-gap: 4px;
-    align-items: start;
-  }
-  .hover-tooltip .hover-label {
-    color: #cbd5e1;
-    font-weight: 800;
-    font-size: 12px;
-    white-space: nowrap;
-  }
-  .hover-tooltip .hover-value {
-    color: #ffffff;
-    font-size: 12px;
-    overflow-wrap: anywhere;
-  }
-
-  .leaflet-tile {
-    filter: saturate(1.18) contrast(1.06);
-  }
-
-  @media (max-width: 640px) {
-    .hover-tooltip {
-      width: 320px;
-      min-width: 280px;
-      max-width: 320px;
-    }
-    .hover-tooltip .hover-grid {
-      grid-template-columns: 76px minmax(0, 1fr);
-    }
-  }
-
-
-  .basic-mobile-popup .leaflet-popup-content-wrapper {
-    border-radius: 14px;
-  }
-  .basic-card-title {
-    font-weight: 900;
-    font-size: 15px;
-    margin-bottom: 5px;
-    color: #172033;
-  }
-  .basic-card-row {
-    font-size: 13px;
-    line-height: 1.35;
-    margin: 3px 0;
-  }
-  .basic-card-label {
-    font-weight: 800;
-    color: #5f6b7a;
-  }
-  .basic-card-more {
-    margin-top: 9px;
-    width: 100%;
-    border: 1px solid #cbd5e1;
-    background: #0f172a;
-    color: #ffffff;
-    border-radius: 10px;
-    padding: 8px 10px;
-    font-size: 13px;
-    font-weight: 800;
-  }
-
-  .leaflet-popup-content {
-    font-size: 13px;
-    line-height: 1.4;
-    min-width: 240px;
-  }
-  .popup-title {
-    font-weight: 900;
-    font-size: 15px;
-    margin-bottom: 5px;
-  }
-  .popup-row {
-    margin: 3px 0;
-  }
-  .popup-label {
-    color: var(--muted);
-    font-weight: 700;
-  }
-
-  @media (max-width: 980px) {
-    html, body {
-      height: 100%;
-      overflow: hidden;
-    }
-    .app {
-      height: 100dvh;
-      min-height: 100dvh;
-      display: grid;
-      grid-template-columns: 1fr;
-      grid-template-rows: auto minmax(0, 1fr);
-    }
-    header {
-      align-items: flex-start;
-      flex-direction: column;
-      padding: 12px 14px;
-      gap: 10px;
-    }
-    h1 {
-      font-size: 20px;
-      line-height: 1.15;
-    }
-    .subtitle {
-      font-size: 12px;
-    }
-    .header-actions {
-      width: 100%;
-      justify-content: flex-start;
-      gap: 6px;
-    }
-    .small-chip {
-      font-size: 11px;
-      padding: 6px 8px;
-    }
-    .mobile-panel-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 36px;
-    }
-    #map {
-      height: 100%;
-      min-height: 0;
-    }
-    aside {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 2000;
-      max-height: 78dvh;
-      min-height: 42dvh;
-      overflow: auto;
-      border-left: 0;
-      border-top: 1px solid var(--line);
-      border-radius: 18px 18px 0 0;
-      box-shadow: 0 -18px 44px rgba(15,23,42,.24);
-      transform: translateY(calc(100% - 62px));
-      transition: transform .22s ease;
-      padding: 14px;
-      -webkit-overflow-scrolling: touch;
-    }
-    aside.open {
-      transform: translateY(0);
-    }
-    .panel-close {
-      display: block;
-      float: right;
-      border: 1px solid var(--line);
-      background: #fff;
-      border-radius: 999px;
-      padding: 7px 10px;
-      font-size: 12px;
-      font-weight: 800;
-      margin: 0 0 8px 8px;
-      min-height: 36px;
-    }
-    .panel-backdrop {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 1999;
-      background: rgba(15,23,42,.28);
-    }
-    .panel-backdrop.open {
-      display: block;
-    }
-    .filters {
-      grid-template-columns: 1fr;
-      gap: 8px;
-    }
-    .search, select {
-      min-height: 44px;
-      font-size: 16px;
-    }
-    .filters button {
-      min-height: 44px;
-      font-size: 15px;
-    }
-    .facility-list {
-      padding-bottom: 18px;
-    }
-    .facility-card {
-      padding: 12px;
-    }
-    .facility-name {
-      font-size: 15px;
-    }
-    .facility-meta {
-      font-size: 13px;
-    }
-    .hover-tooltip {
-      width: 310px;
-      min-width: 280px;
-      max-width: 310px;
-      font-size: 12px;
-    }
-    .hover-tooltip .hover-grid {
-      grid-template-columns: 74px minmax(0, 1fr);
-    }
-
-    .leaflet-tooltip,
-    .hover-tooltip {
-      display: none !important;
-      visibility: hidden !important;
-      opacity: 0 !important;
-      pointer-events: none !important;
-    }
-
-    .leaflet-popup-content {
-      min-width: 220px;
-      max-width: 280px;
-    }
-    .leaflet-control-zoom a {
-      width: 38px !important;
-      height: 38px !important;
-      line-height: 38px !important;
-      font-size: 22px !important;
-    }
-  }
-
-
-  @media (min-width: 981px) {
-    .leaflet-tooltip.hover-tooltip {
-      display: block !important;
-      visibility: visible !important;
-      opacity: 0.96 !important;
-      pointer-events: none !important;
-    }
-  }
-
-
-  @media (min-width: 981px) {
-    .mobile-only {
-      display: none !important;
-    }
-  }
-
+:root{--bg:#f7f9fc;--panel:#fff;--ink:#172033;--muted:#5f6b7a;--line:#dbe3ef}
+*{box-sizing:border-box} html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg)}
+.app{height:100%;display:grid;grid-template-columns:minmax(0,1fr) 380px;grid-template-rows:auto 1fr}
+header{grid-column:1/-1;padding:18px 22px;background:linear-gradient(90deg,#0f172a,#1e3a8a);color:#fff;display:flex;justify-content:space-between;gap:20px;align-items:center}
+h1{margin:0;font-size:clamp(22px,3vw,36px);letter-spacing:-.03em} .subtitle{color:rgba(255,255,255,.82);font-size:14px;margin-top:4px}
+.header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end} .small-chip{border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.12);border-radius:999px;padding:7px 10px;font-size:12px}
+.mobile-panel-btn,.panel-close{display:none} #map{min-height:720px;height:100%;width:100%;background:#dbeafe}
+aside{background:#fff;border-left:1px solid var(--line);overflow:auto;padding:16px} .panel-title{margin:0 0 8px;font-size:18px}
+.search{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px;margin-bottom:10px}
+.filters{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:12px} select,button{border:1px solid var(--line);border-radius:12px;background:#fff;padding:9px 10px;font-size:13px} button{cursor:pointer;font-weight:700}
+.facility-list{display:grid;gap:9px} .facility-card{border:1px solid var(--line);border-left:7px solid #64748b;border-radius:14px;padding:10px 11px;background:#fff;cursor:pointer;transition:.15s ease}
+.facility-card:hover{box-shadow:0 8px 18px rgba(15,23,42,.09);transform:translateY(-1px)} .facility-name{font-weight:800;font-size:14px;line-height:1.25} .facility-meta{color:var(--muted);font-size:12px;line-height:1.35;margin-top:4px}
+.badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px} .badge{border-radius:999px;background:#eef2ff;color:#334155;padding:2px 7px;font-size:11px;font-weight:700}
+.marker-dot{width:19px;height:19px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 5px rgba(15,23,42,.08),0 8px 18px rgba(15,23,42,.22);position:relative}
+.marker-fee{position:absolute;right:-9px;top:-9px;width:15px;height:15px;border-radius:999px;background:#111827;color:#fff;font-size:10px;line-height:15px;text-align:center;border:1px solid #fff;font-weight:900}
+.marker-animal{position:absolute;left:-10px;bottom:-10px;width:16px;height:16px;border-radius:999px;background:#fff;color:#111827;font-size:11px;line-height:16px;text-align:center;border:1px solid #cbd5e1}
+.hover-tooltip{width:440px;max-width:440px;min-width:360px;white-space:normal;background:#0f172a;color:#fff;border:0;border-radius:13px;padding:12px 14px;box-shadow:0 12px 30px rgba(15,23,42,.30);line-height:1.35}
+.hover-title{font-weight:900;font-size:15px;margin-bottom:7px} .hover-grid{display:grid;grid-template-columns:86px minmax(0,1fr);column-gap:8px;row-gap:4px} .hover-label{color:#cbd5e1;font-weight:800;font-size:12px;white-space:nowrap} .hover-value{font-size:12px;overflow-wrap:anywhere}
+.leaflet-popup-content{font-size:13px;line-height:1.4;min-width:240px} .popup-title{font-weight:900;font-size:15px;margin-bottom:5px} .popup-row{margin:3px 0} .popup-label{color:var(--muted);font-weight:700}
+.leaflet-tile{filter:saturate(1.18) contrast(1.06)} .panel-backdrop{display:none}
+@media(max-width:980px){html,body{height:100%;overflow:hidden} .app{height:100dvh;min-height:100dvh;grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)} header{align-items:flex-start;flex-direction:column;padding:12px 14px;gap:10px} h1{font-size:20px} .subtitle{font-size:12px} .header-actions{width:100%;justify-content:flex-start;gap:6px} .small-chip{font-size:11px;padding:6px 8px} .mobile-panel-btn{display:inline-flex;align-items:center;justify-content:center;min-height:36px;color:#fff;background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.32)} #map{height:100%;min-height:0} aside{position:fixed;left:0;right:0;bottom:0;z-index:2000;max-height:78dvh;min-height:42dvh;overflow:auto;border-left:0;border-top:1px solid var(--line);border-radius:18px 18px 0 0;box-shadow:0 -18px 44px rgba(15,23,42,.24);transform:translateY(calc(100% - 62px));transition:transform .22s ease;padding:14px} aside.open{transform:translateY(0)} .panel-close{display:block;float:right;border-radius:999px;padding:7px 10px;font-size:12px;margin:0 0 8px 8px;min-height:36px} .panel-backdrop.open{display:block;position:fixed;inset:0;z-index:1999;background:rgba(15,23,42,.28)} .search,select{min-height:44px;font-size:16px} .filters button{min-height:44px;font-size:15px} .leaflet-tooltip,.hover-tooltip{display:none!important} .leaflet-popup-content{min-width:220px;max-width:280px}}
 </style>
 </head>
 <body>
 <div class="app">
-  <header>
-    <div>
-      <h1>Homeless Resources on Oahu</h1>
-      <div class="subtitle">Hover over a facility for key info. Click on it for more details.</div>
-    </div>
-    <div class="header-actions">
-      <span class="small-chip">$ = fee</span>
-      <span class="small-chip">🐕 = support/service animals</span>
-      <button class="mobile-panel-btn" id="mobilePanelBtn" type="button">Filters & List</button>
-    </div>
-  </header>
-
-  <main id="map"></main>
-
-  <div class="panel-backdrop" id="panelBackdrop"></div>
-  <aside id="sidePanel">
-    <button class="panel-close" id="panelCloseBtn" type="button">Close</button>
-    <h2 class="panel-title">Find a facility</h2>
-    <input class="search" id="searchBox" placeholder="Search by name, agency, address, type..." />
-    <div class="filters">
-      <select id="typeFilter"><option value="">All types</option></select>
-      <select id="serviceFilter"><option value="">All services for</option></select>
-      <select id="districtFilter"><option value="">All districts</option></select>
-      <button id="resetBtn">Reset</button>
-      <button id="fitBtn">Fit map</button>
-    </div>
-    <div class="facility-list" id="facilityList"></div>
-  </aside>
-</div>
-
+<header><div><h1>Homeless Resources on Oahu</h1><div class="subtitle">Hover or tap a facility for key info.</div></div>
+<div class="header-actions"><span class="small-chip">$ = fee</span><span class="small-chip">🐕 = support/service animals</span><button class="mobile-panel-btn" id="mobilePanelBtn">Filters & List</button></div></header>
+<main id="map"></main><div class="panel-backdrop" id="panelBackdrop"></div>
+<aside id="sidePanel"><button class="panel-close" id="panelCloseBtn">Close</button><h2 class="panel-title">Find a facility</h2>
+<input class="search" id="searchBox" placeholder="Search by name, agency, address, type...">
+<div class="filters"><select id="typeFilter"><option value="">All types</option></select><select id="serviceFilter"><option value="">All services for</option></select><select id="districtFilter"><option value="">All districts</option></select><button id="resetBtn">Reset</button><button id="fitBtn">Fit map</button></div>
+<div class="facility-list" id="facilityList"></div></aside></div>
 <script>
 const facilities = [
   {
     "Name": "Adventist Health Castle",
-    "Capacity": "29",
+    "Capacity": "29.0",
     "Support/Service Animals": "",
     "Fee": "varies",
     "City Council District": "3",
     "Agency": "Adventist Health",
     "Facility Type": "Hospital",
+    "Specialty": "Psychiatric services",
     "Address": "640 Ulukahiki St, Kailua, HI 96734",
     "Phone": "(808) 263-5500",
     "Services for": "everyone",
-    "Specialty": "Psychiatric services",
     "row": 2,
     "lat": 21.380979,
     "lng": -157.7578,
@@ -540,10 +67,10 @@ const facilities = [
     "City Council District": "6",
     "Agency": "IHS",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "",
     "Address": "357 N King St Honolulu HI 96817",
     "Phone": "808-589-7950",
     "Services for": "Adults, Couples",
-    "Specialty": "",
     "row": 3,
     "lat": 21.3152,
     "lng": -157.862,
@@ -558,10 +85,10 @@ const facilities = [
     "City Council District": "6",
     "Agency": "CARE Hawaii",
     "Facility Type": "Treatment Center",
+    "Specialty": "Stabilization",
     "Address": "806 Iwilei Road, Honolulu, HI 96817",
     "Phone": "808-699-8412",
     "Services for": "Adults",
-    "Specialty": "Stabilization",
     "row": 4,
     "lat": 21.316875,
     "lng": -157.86678,
@@ -576,10 +103,10 @@ const facilities = [
     "City Council District": "6",
     "Agency": "CARE Hawaii",
     "Facility Type": "Treatment Center",
+    "Specialty": "Stabilization",
     "Address": "806 Iwilei Road, Honolulu, HI 96817",
     "Phone": "808-699-8412",
     "Services for": "Adults",
-    "Specialty": "Stabilization",
     "row": 5,
     "lat": 21.316785,
     "lng": -157.86678,
@@ -594,10 +121,10 @@ const facilities = [
     "City Council District": "1",
     "Agency": "Catholic Charities",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "",
     "Address": "87-191 Maliona Street, Waianae, HI 96792",
     "Phone": "808-202-9133",
     "Services for": "Families",
-    "Specialty": "",
     "row": 6,
     "lat": 21.3985,
     "lng": -158.1555,
@@ -612,10 +139,10 @@ const facilities = [
     "City Council District": "",
     "Agency": "Family Promise of Hawaii",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "",
     "Address": "Nu'uanu",
     "Phone": "808-300-0560",
     "Services for": "Families",
-    "Specialty": "",
     "row": 7,
     "lat": 21.3353837,
     "lng": -157.84695529,
@@ -630,10 +157,10 @@ const facilities = [
     "City Council District": "",
     "Agency": "Family Promise of Hawaii",
     "Facility Type": "Transitional Housing",
+    "Specialty": "",
     "Address": "Pearl City",
     "Phone": "808-300-0560",
     "Services for": "Families",
-    "Specialty": "",
     "row": 8,
     "lat": 21.39854249,
     "lng": -157.97016245,
@@ -642,16 +169,16 @@ const facilities = [
   },
   {
     "Name": "Gregory House",
-    "Capacity": "11",
+    "Capacity": "11.0",
     "Support/Service Animals": "yes",
     "Fee": "30% of income",
     "City Council District": "",
     "Agency": "Gregory House Programs",
     "Facility Type": "Transitional Housing",
+    "Specialty": "living with HIV",
     "Address": "Upper Makiki",
     "Phone": "808-592-9022",
     "Services for": "Adults",
-    "Specialty": "living with HIV",
     "row": 9,
     "lat": 21.31435944,
     "lng": -157.83061837,
@@ -666,10 +193,10 @@ const facilities = [
     "City Council District": "5",
     "Agency": "Catholic Charities",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "",
     "Address": "2241 Kapiolani Blvd Honolulu HI 96826",
     "Phone": "808-897-5479",
     "Services for": "Families",
-    "Specialty": "",
     "row": 10,
     "lat": 21.291765,
     "lng": -157.82482,
@@ -684,10 +211,10 @@ const facilities = [
     "City Council District": "5",
     "Agency": "Catholic Charities",
     "Facility Type": "Transitional Housing",
+    "Specialty": "",
     "Address": "2241 Kapiolani Blvd Honolulu HI 96826",
     "Phone": "808-897-5479",
     "Services for": "Families",
-    "Specialty": "",
     "row": 11,
     "lat": 21.291675,
     "lng": -157.82482,
@@ -702,10 +229,46 @@ const facilities = [
     "City Council District": "",
     "Agency": "Hale Kipa",
     "Facility Type": "",
+    "Specialty": "",
     "Address": "91-2128 Old Fort Weaver Rd, Ewa Beach, HI 96706",
     "Phone": "(808) 589-1829",
     "Services for": "Youth",
+    "row": 12,
+    "lat": null,
+    "lng": null,
+    "hasFee": false,
+    "hasAnimal": false
+  },
+  {
+    "Name": "Hale Kipa A'awa (Females)",
+    "Capacity": "",
+    "Support/Service Animals": "",
+    "Fee": "",
+    "City Council District": "",
+    "Agency": "Hale Kipa",
+    "Facility Type": "",
     "Specialty": "",
+    "Address": "91-2128 Old Fort Weaver Rd, Ewa Beach, HI 96706",
+    "Phone": "(808) 589-1829",
+    "Services for": "Youth",
+    "row": 13,
+    "lat": null,
+    "lng": null,
+    "hasFee": false,
+    "hasAnimal": false
+  },
+  {
+    "Name": "Hale Kipa Maka'aloa (Males)",
+    "Capacity": "",
+    "Support/Service Animals": "",
+    "Fee": "",
+    "City Council District": "",
+    "Agency": "Hale Kipa",
+    "Facility Type": "",
+    "Specialty": "",
+    "Address": "91-2128 Old Fort Weaver Rd, Ewa Beach, HI 96706",
+    "Phone": "(808) 589-1829",
+    "Services for": "Youth",
     "row": 14,
     "lat": 21.324,
     "lng": -158.022,
@@ -714,16 +277,16 @@ const facilities = [
   },
   {
     "Name": "Hale Mauli'ola",
-    "Capacity": "65",
+    "Capacity": "65.0",
     "Support/Service Animals": "1 per HH <30lbs",
     "Fee": "max of $150 for singles, $200 for couples",
     "City Council District": "7",
     "Agency": "IHS",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "",
     "Address": "10 Sand Island Access Rd Honolulu HI 96819",
     "Phone": "808-319-5598",
     "Services for": "Adults, Couples",
-    "Specialty": "",
     "row": 15,
     "lat": 21.31195,
     "lng": -157.8878,
@@ -732,21 +295,21 @@ const facilities = [
   },
   {
     "Name": "Hale O Kumumamo",
-    "Capacity": "18",
-    "Support/Service Animals": "",
-    "Fee": "",
+    "Capacity": "51 beds",
+    "Support/Service Animals": "yes",
+    "Fee": "30%, $750 max",
     "City Council District": "",
     "Agency": "Kealahou West Oahu (KWO)",
     "Facility Type": "Permanent Housing",
+    "Specialty": "Native Hawaiian",
     "Address": "91-1078 Yorktown St., Kapolei, HI 96707",
-    "Phone": "",
+    "Phone": "(844) 651-8647",
     "Services for": "Adults",
-    "Specialty": "",
     "row": 16,
     "lat": 21.324,
     "lng": -158.07,
-    "hasFee": false,
-    "hasAnimal": false
+    "hasFee": true,
+    "hasAnimal": true
   },
   {
     "Name": "Hale Punawai",
@@ -756,10 +319,10 @@ const facilities = [
     "City Council District": "6",
     "Agency": "Steadfast Housing Development Corp",
     "Facility Type": "Permanent Supportive Housing",
+    "Specialty": "",
     "Address": "431 Kuwili St., Honolulu, HI 96817 (3rd floor)",
     "Phone": "",
     "Services for": "Adults",
-    "Specialty": "",
     "row": 17,
     "lat": 21.316945,
     "lng": -157.86693,
@@ -774,10 +337,10 @@ const facilities = [
     "City Council District": "1",
     "Agency": "Steadfast Housing Development Corp",
     "Facility Type": "Transitional Housing",
+    "Specialty": "",
     "Address": "91-1075 Shangrila St, Kapolei, HI 96707",
     "Phone": "(808) 682-4466",
     "Services for": "Adults",
-    "Specialty": "",
     "row": 18,
     "lat": 21.3269,
     "lng": -158.0869,
@@ -792,10 +355,10 @@ const facilities = [
     "City Council District": "2",
     "Agency": "Corazon Hawaii",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "",
     "Address": "8453A Hauula Homestead Rd Hauula HI 96717",
     "Phone": "808-293-0939",
     "Services for": "Families",
-    "Specialty": "",
     "row": 19,
     "lat": 21.6102,
     "lng": -157.9121,
@@ -804,16 +367,16 @@ const facilities = [
   },
   {
     "Name": "Hawaii Cedar Church",
-    "Capacity": "",
-    "Support/Service Animals": "",
+    "Capacity": "31 units",
+    "Support/Service Animals": "no",
     "Fee": "sliding scale",
     "City Council District": "6",
     "Agency": "Hawaii Cedar Church",
     "Facility Type": "Transitional Housing",
+    "Specialty": "faith focused",
     "Address": "1545 Kamehameha IV Rd, Honolulu, HI 96819",
     "Phone": "(808)255-1234",
     "Services for": "Adults",
-    "Specialty": "",
     "row": 20,
     "lat": 21.3445,
     "lng": -157.8768,
@@ -828,10 +391,10 @@ const facilities = [
     "City Council District": "6",
     "Agency": "H3RC",
     "Facility Type": "Treatment Center",
+    "Specialty": "Harm reduction",
     "Address": "677 Ala Moana Blvd #226, Honolulu, HI 96813",
     "Phone": "(808) 521-2437",
     "Services for": "Adults",
-    "Specialty": "Harm reduction",
     "row": 21,
     "lat": 21.2998,
     "lng": -157.8643,
@@ -846,10 +409,10 @@ const facilities = [
     "City Council District": "6",
     "Agency": "Premier Medical Group Hawaii",
     "Facility Type": "Medical Respite",
+    "Specialty": "",
     "Address": "431 Kuwili St., Honolulu, HI 96817",
     "Phone": "808-312-3913",
     "Services for": "Adults",
-    "Specialty": "",
     "row": 22,
     "lat": 21.3168775,
     "lng": -157.86689103,
@@ -864,10 +427,10 @@ const facilities = [
     "City Council District": "3",
     "Agency": "State of Hawaii DOH, Adult Mental Health Division",
     "Facility Type": "Hospital",
+    "Specialty": "Psychiatric services",
     "Address": "45-710 Keaahala Rd, Kāneʻohe, HI 96744",
     "Phone": "(808) 247-2191",
     "Services for": "Adults",
-    "Specialty": "Psychiatric services",
     "row": 23,
     "lat": 21.4050303,
     "lng": -157.8159967,
@@ -876,16 +439,16 @@ const facilities = [
   },
   {
     "Name": "Ho'okahi Leo Kauhale",
-    "Capacity": "22",
+    "Capacity": "22.0",
     "Support/Service Animals": "yes",
     "Fee": "varies",
     "City Council District": "6",
     "Agency": "H3RC",
     "Facility Type": "Transitional Housing",
+    "Specialty": "",
     "Address": "850 N King St, Honolulu, HI 96817",
     "Phone": "(808) 724-4972",
     "Services for": "Adults, Couples",
-    "Specialty": "",
     "row": 24,
     "lat": 21.3201,
     "lng": -157.865,
@@ -894,16 +457,16 @@ const facilities = [
   },
   {
     "Name": "Homes of Redemption: Halina",
-    "Capacity": "13",
+    "Capacity": "13 beds",
     "Support/Service Animals": "no",
     "Fee": "$700/mo",
     "City Council District": "6",
     "Agency": "IHS",
     "Facility Type": "Transitional Housing",
+    "Specialty": "Justice-involved",
     "Address": "2108 Halina St Honolulu HI 96819",
     "Phone": "808-744-0060",
     "Services for": "Adult men",
-    "Specialty": "Justice-involved",
     "row": 25,
     "lat": 21.34,
     "lng": -157.8795,
@@ -918,10 +481,10 @@ const facilities = [
     "City Council District": "1",
     "Agency": "CCH",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "",
     "Address": "471 Kamaaha Ave., Kapolei, HI 96707",
     "Phone": "808-768-4668",
     "Services for": "Adults, Couples, Families",
-    "Specialty": "",
     "row": 26,
     "lat": 21.329505,
     "lng": -158.079875,
@@ -930,16 +493,16 @@ const facilities = [
   },
   {
     "Name": "House of Redemption: Pearl City",
-    "Capacity": "18",
+    "Capacity": "18 beds",
     "Support/Service Animals": "no",
     "Fee": "$650/mo",
     "City Council District": "8",
     "Agency": "IHS",
     "Facility Type": "Transitional Housing",
+    "Specialty": "Justice-involved",
     "Address": "98-218 Kaluamoi Pl Aiea HI 96782",
     "Phone": "808-492-1868",
     "Services for": "Adult men",
-    "Specialty": "Justice-involved",
     "row": 27,
     "lat": 21.3904,
     "lng": -157.9415,
@@ -954,10 +517,10 @@ const facilities = [
     "City Council District": "3",
     "Agency": "Hui Mahi'ai Aina",
     "Facility Type": "Transitional Housing",
+    "Specialty": "",
     "Address": "41-902 Oluolu St, Waimanalo, HI 96795",
     "Phone": "(808) 482-5883",
     "Services for": "Adults, Families",
-    "Specialty": "",
     "row": 28,
     "lat": 21.3375,
     "lng": -157.7275,
@@ -966,16 +529,16 @@ const facilities = [
   },
   {
     "Name": "Imi Ola Piha",
-    "Capacity": "8",
+    "Capacity": "8.0",
     "Support/Service Animals": "no",
     "Fee": "varies",
     "City Council District": "6",
     "Agency": "IHS",
     "Facility Type": "Treatment Center",
+    "Specialty": "Detox",
     "Address": "551 Dillingham Blvd Honolulu HI 96817",
     "Phone": "808-782-8231",
     "Services for": "Adults",
-    "Specialty": "Detox",
     "row": 29,
     "lat": 21.31745,
     "lng": -157.86637,
@@ -984,16 +547,16 @@ const facilities = [
   },
   {
     "Name": "Joey's Place",
-    "Capacity": "14",
+    "Capacity": "14.0",
     "Support/Service Animals": "yes",
     "Fee": "30% of income",
     "City Council District": "",
     "Agency": "Gregory House Programs",
     "Facility Type": "Transitional Housing",
+    "Specialty": "living with HIV",
     "Address": "Lower Makiki",
     "Phone": "808-592-9022",
     "Services for": "Adults",
-    "Specialty": "living with HIV",
     "row": 30,
     "lat": 21.30277542,
     "lng": -157.84099557,
@@ -1002,16 +565,16 @@ const facilities = [
   },
   {
     "Name": "Ka Malu Ko'olau",
-    "Capacity": "32",
+    "Capacity": "32.0",
     "Support/Service Animals": "yes",
     "Fee": "0-6mo: no fee\n6-9 mo: $150\n9-12 mo: $300\n12+mo: $450",
     "City Council District": "3",
     "Agency": "Project Vision",
     "Facility Type": "Permanent Supportive Housing",
+    "Specialty": "",
     "Address": "45-889 Pookela St, Kaneohe, HI 96744",
     "Phone": "(808) 724-4972",
     "Services for": "Adults",
-    "Specialty": "",
     "row": 31,
     "lat": 21.4155,
     "lng": -157.8055,
@@ -1026,10 +589,10 @@ const facilities = [
     "City Council District": "6",
     "Agency": "IHS",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "",
     "Address": "546 Kaaahi St Honolulu HI 96817",
     "Phone": "808-447-2800",
     "Services for": "Adult Women & Families",
-    "Specialty": "",
     "row": 32,
     "lat": 21.31786,
     "lng": -157.86595,
@@ -1044,13 +607,13 @@ const facilities = [
     "City Council District": "7",
     "Agency": "IHS",
     "Facility Type": "Permanent Supportive Housing",
+    "Specialty": "community living",
     "Address": "2475 N Nimitz Hwy, Honolulu, HI 96819",
     "Phone": "808-238-7389",
     "Services for": "Adults & Families",
-    "Specialty": "community living",
     "row": 33,
-    "lat": 21.332187,
-    "lng": -157.891618,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": false
   },
@@ -1062,13 +625,13 @@ const facilities = [
     "City Council District": "1",
     "Agency": "The Queen's Health Systems",
     "Facility Type": "Hospital",
+    "Specialty": "Psychiatric & Behavioral services",
     "Address": "91-2301 Old Fort Weaver Rd, ʻEwa Beach, HI 96706",
     "Phone": "(808) 671-8511",
     "Services for": "Youth, Adults",
-    "Specialty": "Psychiatric & Behavioral services",
     "row": 34,
-    "lat": 21.37268,
-    "lng": -158.03305,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": false
   },
@@ -1080,13 +643,13 @@ const facilities = [
     "City Council District": "2",
     "Agency": "Kahuku Medical Center",
     "Facility Type": "Hospital",
+    "Specialty": "",
     "Address": "56-117 Pualalea St, Kahuku, HI 96731",
     "Phone": "(808) 293-9221",
     "Services for": "everyone",
-    "Specialty": "",
     "row": 35,
-    "lat": 21.6743,
-    "lng": -157.9527,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": false
   },
@@ -1098,13 +661,13 @@ const facilities = [
     "City Council District": "7",
     "Agency": "Kaiser Permanente Hawaii",
     "Facility Type": "Hospital",
+    "Specialty": "24 hour emergency",
     "Address": "3288 Moanalua Rd, Honolulu, HI 96819",
     "Phone": "(808) 432-0000",
     "Services for": "",
-    "Specialty": "24 hour emergency",
     "row": 36,
-    "lat": 21.3628,
-    "lng": -157.9012,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": false
   },
@@ -1116,13 +679,13 @@ const facilities = [
     "City Council District": "5",
     "Agency": "Hawaii Pacific Health",
     "Facility Type": "Hospital",
+    "Specialty": "maternity, newborn, pediatric",
     "Address": "1319 Punahou St. Honolulu, HI 96826",
     "Phone": "808-983-6000",
     "Services for": "Women & Children",
-    "Specialty": "maternity, newborn, pediatric",
     "row": 37,
-    "lat": 21.3002,
-    "lng": -157.834,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": false
   },
@@ -1134,13 +697,13 @@ const facilities = [
     "City Council District": "6",
     "Agency": "Mental Health Kokua",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "behavioral health",
     "Address": "505 Kaaahi St., Honolulu, HI 96817",
     "Phone": "808-807-2345",
     "Services for": "Adults",
-    "Specialty": "behavioral health",
     "row": 38,
-    "lat": 21.3167,
-    "lng": -157.8666,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": false
   },
@@ -1152,13 +715,13 @@ const facilities = [
     "City Council District": "6",
     "Agency": "Windward Urgent Care Services",
     "Facility Type": "Medical Respite",
+    "Specialty": "",
     "Address": "445 N King St Honolulu HI 96817",
     "Phone": "808-620-1991",
     "Services for": "Adults, Medical Respite",
-    "Specialty": "",
     "row": 39,
-    "lat": 21.31604,
-    "lng": -157.863117,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": false
   },
@@ -1170,13 +733,13 @@ const facilities = [
     "City Council District": "6",
     "Agency": "Windward Urgent Care Services",
     "Facility Type": "Transitional Housing",
+    "Specialty": "",
     "Address": "445 N King St Honolulu HI 96817",
     "Phone": "808-620-1991",
     "Services for": "Adults",
-    "Specialty": "",
     "row": 40,
-    "lat": 21.31595,
-    "lng": -157.863117,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": false
   },
@@ -1184,18 +747,18 @@ const facilities = [
     "Name": "Kauhale Kahana",
     "Capacity": "8 5BR units",
     "Support/Service Animals": "yes",
-    "Fee": "",
+    "Fee": "$2800, utilities cap of $750",
     "City Council District": "1",
     "Agency": "Kealahou West Oahu (KWO)",
     "Facility Type": "Transitional Housing",
+    "Specialty": "families of 6+",
     "Address": "84-788 Farrington Hwy, Waianae, HI 96792",
     "Phone": "(844) 651-8647",
     "Services for": "Families",
-    "Specialty": "",
     "row": 41,
-    "lat": 21.464,
-    "lng": -158.203,
-    "hasFee": false,
+    "lat": null,
+    "lng": null,
+    "hasFee": true,
     "hasAnimal": true
   },
   {
@@ -1206,13 +769,13 @@ const facilities = [
     "City Council District": "1",
     "Agency": "Housing Solutions Inc.",
     "Facility Type": "Permanent Supportive Housing",
+    "Specialty": "",
     "Address": "85-248 Farrington Hwy, Waiʻanae, HI 96792",
     "Phone": "(844) 651-8647",
     "Services for": "Families",
-    "Specialty": "",
     "row": 42,
-    "lat": 21.45,
-    "lng": -158.185,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": true
   },
@@ -1224,13 +787,13 @@ const facilities = [
     "City Council District": "5",
     "Agency": "Waikiki Health",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "",
     "Address": "1020 Isenberg St Honolulu HI 96826",
     "Phone": "808-537-8330",
     "Services for": "Adults, Couples",
-    "Specialty": "",
     "row": 43,
-    "lat": 21.293808,
-    "lng": -157.82559,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": true
   },
@@ -1242,13 +805,13 @@ const facilities = [
     "City Council District": "3",
     "Agency": "Kinai Eha",
     "Facility Type": "Transitional Housing",
+    "Specialty": "Youth 14-24",
     "Address": "42-470 Kalanianaole Hwy, Kailua (Bldg 8)",
     "Phone": "808-489-4003",
     "Services for": "Youth",
-    "Specialty": "",
     "row": 44,
-    "lat": 21.374226,
-    "lng": -157.751908,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": false
   },
@@ -1260,13 +823,13 @@ const facilities = [
     "City Council District": "6",
     "Agency": "Kuakini Health System",
     "Facility Type": "Hospital",
+    "Specialty": "",
     "Address": "347 N. Kuakini St, Honolulu, HI 96817",
     "Phone": "(808) 536-2236",
     "Services for": "everyone",
-    "Specialty": "",
     "row": 45,
-    "lat": 21.321117,
-    "lng": -157.8567,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": false
   },
@@ -1278,13 +841,13 @@ const facilities = [
     "City Council District": "5",
     "Agency": "Corazon Hawaii",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "Women",
     "Address": "1311 Ward Ave, Honolulu, HI 96814",
     "Phone": "808-599-5759",
     "Services for": "Adult women",
-    "Specialty": "Women",
     "row": 46,
-    "lat": 21.305045,
-    "lng": -157.846,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": false
   },
@@ -1296,49 +859,49 @@ const facilities = [
     "City Council District": "5",
     "Agency": "Corazon Hawaii",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "",
     "Address": "1311 Ward Ave, Honolulu, HI 96814",
     "Phone": "808-599-5759",
     "Services for": "Families",
-    "Specialty": "",
     "row": 47,
-    "lat": 21.304955,
-    "lng": -157.846,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": false
   },
   {
     "Name": "Kumu Ola Hou Phase I",
-    "Capacity": "",
+    "Capacity": "15 beds",
     "Support/Service Animals": "",
     "Fee": "",
     "City Council District": "6",
     "Agency": "IHS",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "behavioral health",
     "Address": "414 Kuwili St Honolulu HI 96817",
     "Phone": "808-447-2871",
     "Services for": "Adults, Couples",
-    "Specialty": "behavioral health",
     "row": 48,
-    "lat": 21.316655,
-    "lng": -157.86651,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": false
   },
   {
     "Name": "Kumu Ola Hou Phase II",
-    "Capacity": "37",
+    "Capacity": "37 beds",
     "Support/Service Animals": "no",
     "Fee": "$ 300 flat",
     "City Council District": "6",
     "Agency": "IHS",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "employed",
     "Address": "414 Kuwili St Honolulu HI 96817",
     "Phone": "808-447-2871",
     "Services for": "Adults, Couples",
-    "Specialty": "employed",
     "row": 49,
-    "lat": 21.316565,
-    "lng": -157.86651,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": false
   },
@@ -1350,49 +913,67 @@ const facilities = [
     "City Council District": "1",
     "Agency": "Honolulu Community Action Program (HCAP)",
     "Facility Type": "Transitional Housing",
+    "Specialty": "",
     "Address": "91-1096 Yorktown St., Building 36, Kapolei, HI 96707",
     "Phone": "808-682-5494",
     "Services for": "Adults, Couples",
-    "Specialty": "",
     "row": 50,
-    "lat": 21.3244,
-    "lng": -158.0704,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": false
   },
   {
     "Name": "Leahi Behavioral & Medical Respite",
-    "Capacity": "24",
+    "Capacity": "24 beds",
     "Support/Service Animals": "no",
     "Fee": "none",
     "City Council District": "4",
     "Agency": "North Shore Mental Health",
     "Facility Type": "Behaviorial/Medical Respite",
+    "Specialty": "behavioral or medical health",
     "Address": "3650 Maunalei Ave., Honolulu, HI 96816",
     "Phone": "808-562-5630",
     "Services for": "Adults",
-    "Specialty": "behavioral or medical health",
     "row": 51,
-    "lat": 21.272967,
-    "lng": -157.80251,
+    "lat": null,
+    "lng": null,
+    "hasFee": false,
+    "hasAnimal": false
+  },
+  {
+    "Name": "Licensed Crisis Residential Services (LCRS) Pearl City",
+    "Capacity": "12.0",
+    "Support/Service Animals": "",
+    "Fee": "",
+    "City Council District": "",
+    "Agency": "CARE Hawaii",
+    "Facility Type": "",
+    "Specialty": "",
+    "Address": "",
+    "Phone": "",
+    "Services for": "",
+    "row": 52,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": false
   },
   {
     "Name": "Licensed Crisis Residential Services (LCRS) Salt Lake",
-    "Capacity": "",
+    "Capacity": "16.0",
     "Support/Service Animals": "",
     "Fee": "",
     "City Council District": "",
     "Agency": "CARE Hawaii",
     "Facility Type": "Treatment Center",
+    "Specialty": "Stabilization",
     "Address": "5165 Likini St, Honolulu, HI 96818",
     "Phone": "",
     "Services for": "Adults",
-    "Specialty": "Stabilization",
     "row": 53,
-    "lat": 21.356,
-    "lng": -157.917,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": false
   },
@@ -1404,13 +985,13 @@ const facilities = [
     "City Council District": "5",
     "Agency": "Family Promise of Hawaii",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "",
     "Address": "2106 Young St Honolulu HI 96826",
     "Phone": "808-300-0560",
     "Services for": "Adults, Couples",
-    "Specialty": "",
     "row": 54,
-    "lat": 21.2952381,
-    "lng": -157.8278496,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": true
   },
@@ -1422,13 +1003,13 @@ const facilities = [
     "City Council District": "2",
     "Agency": "Family Promise of Hawaii",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "",
     "Address": "360 California Ave Wahiawa HI 96786",
     "Phone": "808-300-0560",
     "Services for": "Families",
-    "Specialty": "",
     "row": 55,
-    "lat": 21.5005,
-    "lng": -158.023,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": true
   },
@@ -1440,13 +1021,13 @@ const facilities = [
     "City Council District": "1",
     "Agency": "Alternative Structures International (ASI) dba Kahumana",
     "Facility Type": "Transitional Housing",
+    "Specialty": "",
     "Address": "86-704 Lualualei Homestead Rd, Waianae, HI 96792",
     "Phone": "808-696-4095",
     "Services for": "Families",
-    "Specialty": "",
     "row": 56,
-    "lat": 21.444045,
-    "lng": -158.175,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": true
   },
@@ -1458,67 +1039,67 @@ const facilities = [
     "City Council District": "1",
     "Agency": "Alternative Structures International (ASI) dba Kahumana",
     "Facility Type": "Transitional Housing",
+    "Specialty": "",
     "Address": "86-704 Lualualei Homestead Rd, Waianae, HI 96792",
     "Phone": "808-696-4095",
     "Services for": "Families",
-    "Specialty": "",
     "row": 57,
-    "lat": 21.443955,
-    "lng": -158.175,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": true
   },
   {
     "Name": "Onelau'ena",
-    "Capacity": "",
-    "Support/Service Animals": "",
-    "Fee": "",
+    "Capacity": "~214",
+    "Support/Service Animals": "yes",
+    "Fee": "$0 to $500 max",
     "City Council District": "1",
     "Agency": "Kealahou West Oahu (KWO)",
     "Facility Type": "Emergency Shelter",
-    "Address": "50 Belleau Woods St. Kapolei, HI 96707",
-    "Phone": "808-782-4342",
-    "Services for": "Families",
     "Specialty": "",
+    "Address": "50 Belleau Woods St. Kapolei, HI 96707",
+    "Phone": "808-371-5461",
+    "Services for": "Families",
     "row": 58,
-    "lat": 21.3277,
-    "lng": -158.0857,
-    "hasFee": false,
-    "hasAnimal": false
+    "lat": null,
+    "lng": null,
+    "hasFee": true,
+    "hasAnimal": true
   },
   {
     "Name": "Onemalu",
-    "Capacity": "",
-    "Support/Service Animals": "",
-    "Fee": "",
+    "Capacity": "~180",
+    "Support/Service Animals": "yes",
+    "Fee": "30%, $750 max",
     "City Council District": "1",
     "Agency": "Kealahou West Oahu (KWO)",
     "Facility Type": "Transitional Housing",
-    "Address": "48 Belleau Woods St., Kapolei, HI 96707",
-    "Phone": "808-682-3869",
-    "Services for": "Adults, Families",
     "Specialty": "",
+    "Address": "48 Belleau Woods St., Kapolei, HI 96707",
+    "Phone": "808-371-5461",
+    "Services for": "Adults, Families",
     "row": 59,
-    "lat": 21.3281,
-    "lng": -158.0848,
-    "hasFee": false,
-    "hasAnimal": false
+    "lat": null,
+    "lng": null,
+    "hasFee": true,
+    "hasAnimal": true
   },
   {
     "Name": "Paepae Hou",
-    "Capacity": "12",
+    "Capacity": "12.0",
     "Support/Service Animals": "no",
     "Fee": "$650/mo",
     "City Council District": "6",
     "Agency": "IHS",
     "Facility Type": "Transitional Housing",
+    "Specialty": "Sobriety home",
     "Address": "2352 Wilson Street., Honolulu, HI 96819",
     "Phone": "808-260-1808",
     "Services for": "Adult men",
-    "Specialty": "Sobriety home",
     "row": 60,
-    "lat": 21.34,
-    "lng": -157.8785,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": false
   },
@@ -1530,13 +1111,13 @@ const facilities = [
     "City Council District": "7",
     "Agency": "Hawaii Pacific Health",
     "Facility Type": "Hospital",
+    "Specialty": "cancer, bariatric",
     "Address": "98-1079 Moanalua Rd, ʻAiea, HI 96701",
     "Phone": "(808) 486-6000",
     "Services for": "everyone",
-    "Specialty": "cancer, bariatric",
     "row": 61,
-    "lat": 21.3848,
-    "lng": -157.9443,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": false
   },
@@ -1548,13 +1129,13 @@ const facilities = [
     "City Council District": "6",
     "Agency": "Mental Health Kokua",
     "Facility Type": "Drop-in Center",
+    "Specialty": "",
     "Address": "431 Kuwili St., Honolulu, HI 96817",
     "Phone": "808-599-9750",
     "Services for": "Houseless individuals",
-    "Specialty": "",
     "row": 62,
-    "lat": 21.3168775,
-    "lng": -157.86696897,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": true
   },
@@ -1566,31 +1147,31 @@ const facilities = [
     "City Council District": "3",
     "Agency": "RYSE",
     "Facility Type": "Drop-in Center",
+    "Specialty": "",
     "Address": "42-470 Kalanianaʻole Highway #6\nKailua, HI 96734",
     "Phone": "808-498-5180",
     "Services for": "Young Adults (18-24)",
-    "Specialty": "",
     "row": 63,
-    "lat": 21.374305,
-    "lng": -157.751965,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": false
   },
   {
     "Name": "RYSE",
-    "Capacity": "20",
+    "Capacity": "20.0",
     "Support/Service Animals": "accepts",
     "Fee": "none",
     "City Council District": "3",
     "Agency": "RYSE",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "",
     "Address": "42-470 Kalanianaʻole Highway #6\nKailua, HI 96734",
     "Phone": "808-498-5180",
     "Services for": "Young Adults (18-24)",
-    "Specialty": "",
     "row": 64,
-    "lat": 21.374215,
-    "lng": -157.751965,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": true
   },
@@ -1602,13 +1183,13 @@ const facilities = [
     "City Council District": "6",
     "Agency": "Kline Welsh Behavioral Health Foundation",
     "Facility Type": "Treatment Center",
+    "Specialty": "Substance abuse disorder",
     "Address": "524 Kaaahi St., Honolulu HI 96817",
     "Phone": "808-841-2319",
     "Services for": "Adults",
-    "Specialty": "Substance abuse disorder",
     "row": 65,
-    "lat": 21.31748,
-    "lng": -157.865979,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": false
   },
@@ -1620,13 +1201,13 @@ const facilities = [
     "City Council District": "",
     "Agency": "Shelter of Wisdom",
     "Facility Type": "Transitional Housing",
+    "Specialty": "",
     "Address": "n/a",
     "Phone": "(808) 383 - 9498",
     "Services for": "Adults",
-    "Specialty": "",
     "row": 66,
-    "lat": 21.31564802,
-    "lng": -157.85969969,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": false
   },
@@ -1638,31 +1219,31 @@ const facilities = [
     "City Council District": "6",
     "Agency": "Hawaii Pacific Health",
     "Facility Type": "Hospital",
+    "Specialty": "multi-specialty",
     "Address": "888 S. King St, Honolulu, HI 96813",
     "Phone": "(808) 522-4000",
     "Services for": "everyone",
-    "Specialty": "multi-specialty",
     "row": 67,
-    "lat": 21.3025,
-    "lng": -157.8495,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": false
   },
   {
     "Name": "Sumner Men's Shelter",
-    "Capacity": "148",
+    "Capacity": "148 beds",
     "Support/Service Animals": "1 max pp",
     "Fee": "max of $150/mo, proration avail",
     "City Council District": "6",
     "Agency": "IHS",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "Men",
     "Address": "350 Sumner St Honolulu HI 96817",
     "Phone": "808-447-2900",
     "Services for": "Adult men",
-    "Specialty": "",
     "row": 68,
-    "lat": 21.31652,
-    "lng": -157.86718,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": true
   },
@@ -1674,13 +1255,13 @@ const facilities = [
     "City Council District": "6",
     "Agency": "The Queen's Health Systems & Kuakini Medical Center",
     "Facility Type": "Hospital",
+    "Specialty": "acute care",
     "Address": "347 N. Kuakini St, 7th Floor, Honolulu, HI 96817",
     "Phone": "(808) 691-8731",
     "Services for": "everyone",
-    "Specialty": "acute care",
     "row": 69,
-    "lat": 21.321185,
-    "lng": -157.856755,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": false
   },
@@ -1692,13 +1273,13 @@ const facilities = [
     "City Council District": "6",
     "Agency": "The Queen's Health Systems",
     "Facility Type": "Hospital",
+    "Specialty": "Psychiatric services",
     "Address": "1301 Punchbowl St, Honolulu, HI 96813",
     "Phone": "808-691-1000",
     "Services for": "everyone",
-    "Specialty": "Psychiatric services",
     "row": 70,
-    "lat": 21.3089,
-    "lng": -157.8544,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": false
   },
@@ -1710,13 +1291,13 @@ const facilities = [
     "City Council District": "2",
     "Agency": "The Queen's Health Systems",
     "Facility Type": "Hospital",
+    "Specialty": "",
     "Address": "128 Lehua St, Wahiawā, HI 96786",
     "Phone": "(808) 691-6800",
     "Services for": "everyone",
-    "Specialty": "",
     "row": 71,
-    "lat": 21.5028,
-    "lng": -158.0238,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": false
   },
@@ -1728,13 +1309,13 @@ const facilities = [
     "City Council District": "1",
     "Agency": "The Queen's Health Systems",
     "Facility Type": "Hospital",
+    "Specialty": "",
     "Address": "91-2141 Fort Weaver Rd, ʻEwa Beach, HI 96706",
     "Phone": "(808) 691-3000",
     "Services for": "everyone",
-    "Specialty": "",
     "row": 72,
-    "lat": 21.336,
-    "lng": -158.0267,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": false
   },
@@ -1746,31 +1327,31 @@ const facilities = [
     "City Council District": "3",
     "Agency": "First Assembly of God",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "Single mothers",
     "Address": "47-323 Ahuimanu Rd, Kaneohe, HI 96744",
     "Phone": "808-468-1810",
     "Services for": "Families",
-    "Specialty": "Single mothers",
     "row": 73,
-    "lat": 21.4490018,
-    "lng": -157.8338549,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": true
   },
   {
     "Name": "Tutu Bert's Medical Respite: Haumana (1st fl)",
-    "Capacity": "12 beds",
+    "Capacity": "6 beds",
     "Support/Service Animals": "no",
     "Fee": "none",
     "City Council District": "6",
     "Agency": "IHS",
     "Facility Type": "Medical Respite",
+    "Specialty": "",
     "Address": "2360 Haumana Pl Honolulu HI 96819",
     "Phone": "808-260-9615",
     "Services for": "Adults",
-    "Specialty": "",
     "row": 74,
-    "lat": 21.337745,
-    "lng": -157.8789,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": false
   },
@@ -1782,13 +1363,13 @@ const facilities = [
     "City Council District": "7",
     "Agency": "IHS",
     "Facility Type": "Medical Respite",
+    "Specialty": "",
     "Address": "1922 Kahai St. Honolulu, HI 96819",
     "Phone": "808-447-2849",
     "Services for": "Adults, Couples",
-    "Specialty": "",
     "row": 75,
-    "lat": 21.336,
-    "lng": -157.8752,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": false
   },
@@ -1800,13 +1381,13 @@ const facilities = [
     "City Council District": "6",
     "Agency": "IHS",
     "Facility Type": "Medical Respite",
+    "Specialty": "",
     "Address": "1600 Kilohana St Honolulu HI 96819",
     "Phone": "808-845-3850",
     "Services for": "Adult men",
-    "Specialty": "",
     "row": 76,
-    "lat": 21.3327,
-    "lng": -157.879,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": false
   },
@@ -1818,13 +1399,13 @@ const facilities = [
     "City Council District": "5",
     "Agency": "IHS",
     "Facility Type": "Medical Respite",
+    "Specialty": "",
     "Address": "1330 Dominis St Honolulu HI 96822",
     "Phone": "808-845-3850",
     "Services for": "Adults",
-    "Specialty": "",
     "row": 77,
-    "lat": 21.308,
-    "lng": -157.834,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": false
   },
@@ -1836,13 +1417,13 @@ const facilities = [
     "City Council District": "1",
     "Agency": "US VETS Barber's Point",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "Veterans",
     "Address": "91-1039 Shangrila St, Kapolei, HI 96707",
     "Phone": "808-953-5477",
     "Services for": "Adults",
-    "Specialty": "Veterans",
     "row": 78,
-    "lat": 21.3266,
-    "lng": -158.0877,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": false
   },
@@ -1854,49 +1435,49 @@ const facilities = [
     "City Council District": "1",
     "Agency": "US VETS Barber's Point",
     "Facility Type": "Permanent Housing",
+    "Specialty": "Veterans",
     "Address": "",
     "Phone": "",
     "Services for": "",
-    "Specialty": "",
     "row": 79,
-    "lat": 21.32275,
-    "lng": -158.0723,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": false
   },
   {
     "Name": "Veterans Engaged in Transition (VET House) (2nd fl)",
-    "Capacity": "12",
+    "Capacity": "6 beds",
     "Support/Service Animals": "no",
     "Fee": "none",
     "City Council District": "6",
     "Agency": "IHS",
     "Facility Type": "Transitional Housing",
+    "Specialty": "Veterans",
     "Address": "2360 Haumana Pl Honolulu HI 96819",
     "Phone": "808-260-9615",
     "Services for": "Adults",
-    "Specialty": "Veterans",
     "row": 80,
-    "lat": 21.337655,
-    "lng": -157.8789,
+    "lat": null,
+    "lng": null,
     "hasFee": false,
     "hasAnimal": false
   },
   {
     "Name": "Villages of Redemption",
-    "Capacity": "19",
+    "Capacity": "19 beds",
     "Support/Service Animals": "no",
     "Fee": "$650/mo",
     "City Council District": "6",
     "Agency": "IHS",
     "Facility Type": "Transitional Housing",
+    "Specialty": "Justice-involved",
     "Address": "2007 Kalihi St Honolulu HI 96819",
     "Phone": "808-843-1349",
     "Services for": "Adults",
-    "Specialty": "Justice-involved",
     "row": 81,
-    "lat": 21.3427,
-    "lng": -157.88,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": false
   },
@@ -1908,49 +1489,49 @@ const facilities = [
     "City Council District": "3",
     "Agency": "Alternative Structures International (ASI) dba Kahumana",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "",
     "Address": "41-490 Saddle City Rd.Waiamanalo, HI 96795",
     "Phone": "(808) 204-0982",
     "Services for": "Adults, Couples, Families",
-    "Specialty": "",
     "row": 82,
-    "lat": 21.341,
-    "lng": -157.7335,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": true
   },
   {
     "Name": "Waianae Civic Center: Kulia I Ka Nuu",
-    "Capacity": "19",
+    "Capacity": "19.0",
     "Support/Service Animals": "2 per HH",
     "Fee": "max of $250/mo",
     "City Council District": "1",
     "Agency": "U.S. Vets Waianae",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "",
     "Address": "85-296 Ala Hema St. Waianae, HI 96792",
     "Phone": "808-462-0280",
     "Services for": "Adults",
-    "Specialty": "",
     "row": 83,
-    "lat": 21.4534,
-    "lng": -158.1902,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": true
   },
   {
     "Name": "Waianae Civic Center: Pai’olu Kaiaulu",
-    "Capacity": "102",
+    "Capacity": "102.0",
     "Support/Service Animals": "2 per HH",
     "Fee": "max of $250/mo",
     "City Council District": "1",
     "Agency": "U.S. Vets Waianae",
     "Facility Type": "Emergency Shelter",
+    "Specialty": "",
     "Address": "85-638 Farrington Hwy Waianae HI 96792 (B Wing)",
     "Phone": "808-462-0280",
     "Services for": "Adults, Couples, Families",
-    "Specialty": "",
     "row": 84,
-    "lat": 21.4504786,
-    "lng": -158.191193,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": true
   },
@@ -1962,465 +1543,30 @@ const facilities = [
     "City Council District": "8",
     "Agency": "Women in Need",
     "Facility Type": "Transitional Housing",
+    "Specialty": "Women, sober living",
     "Address": "98-1238 Kaahumanu St., Ste. #403 Pearl City, HI 96782",
     "Phone": "(808)486-1996",
     "Services for": "Adults, Families",
-    "Specialty": "Women, sober living",
     "row": 85,
-    "lat": 21.394,
-    "lng": -157.973,
+    "lat": null,
+    "lng": null,
     "hasFee": true,
     "hasAnimal": false
   }
 ];
-const categoryColors = {
-  "Emergency Shelter": "#dc2626",
-  "Transitional Housing": "#2563eb",
-  "Medical Respite": "#16a34a",
-  "Behaviorial/Medical Respite": "#0f766e",
-  "Behavioral/Medical Respite": "#0f766e",
-  "Treatment Center": "#7c3aed",
-  "Hospital": "#0284c7",
-  "Drop-in Center": "#f59e0b",
-  "Permanent Supportive Housing": "#9333ea",
-  "Permanent Housing": "#a855f7"
-};
-const defaultColor = "#64748b";
-let map;
-let markerLayer;
-let markers = new Map();
-
-function escapeHtml(value) {
-  return String(value ?? "").replace(/[&<>"']/g, ch => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
-  }[ch]));
-}
-
-function colorFor(type) {
-  return categoryColors[type] || defaultColor;
-}
-
-const SERVICE_FILTER_OPTIONS = ["Young Adults", "Adults", "Adult Men", "Adult Women", "Couples", "Families"];
-
-function normalizedServiceText(facility) {
-  return String(facility["Services for"] || "")
-    .toLowerCase()
-    .replace(/\([^)]*\)/g, " ")
-    .replace(/&/g, ",")
-    .replace(/\band\b/g, ",")
-    .replace(/[^a-z,\s-]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function serviceCategoriesFor(facility) {
-  const text = normalizedServiceText(facility);
-  const categories = new Set();
-
-  // Exact explicit category matching only.
-  // This intentionally does NOT convert "everyone", "houseless individuals",
-  // "Youth", or "Women & Children" into one of these shelter audience filters.
-  if (/\byoung\s+adults?\b/.test(text)) {
-    categories.add("Young Adults");
-  }
-
-  if (/\badult\s+men\b/.test(text)) {
-    categories.add("Adult Men");
-  }
-
-  if (/\badult\s+women\b/.test(text)) {
-    categories.add("Adult Women");
-  }
-
-  if (/\bcouples?\b/.test(text)) {
-    categories.add("Couples");
-  }
-
-  if (/\bfamilies\b/.test(text) || /\bfamily\b/.test(text)) {
-    categories.add("Families");
-  }
-
-  // "Adults" is only the standalone/general Adults category.
-  // It excludes Adult Men, Adult Women, and Young Adults unless the row separately says Adults.
-  const withoutSpecificAdults = text
-    .replace(/\byoung\s+adults?\b/g, " ")
-    .replace(/\badult\s+men\b/g, " ")
-    .replace(/\badult\s+women\b/g, " ");
-  if (/\badults?\b/.test(withoutSpecificAdults)) {
-    categories.add("Adults");
-  }
-
-  return [...categories];
-}
-
-function matchesServiceFilter(facility, selectedService) {
-  if (!selectedService) return true;
-  return serviceCategoriesFor(facility).includes(selectedService);
-}
-
-
-function markerIcon(facility) {
-  const color = colorFor(facility["Facility Type"]);
-  const fee = facility.hasFee ? '<span class="marker-fee">$</span>' : '';
-  const animal = facility.hasAnimal ? '<span class="marker-animal">🐕</span>' : '';
-  return L.divIcon({
-    className: "",
-    html: `<div class="marker-dot" style="background:${color};">${fee}${animal}</div>`,
-    iconSize: [26, 26],
-    iconAnchor: [13, 13],
-    popupAnchor: [0, -10]
-  });
-}
-
-function popupHtml(f) {
-  const type = escapeHtml(f["Facility Type"] || "Not listed");
-  const capacity = escapeHtml(f["Capacity"] || "Not listed");
-  const animal = escapeHtml(f["Support/Service Animals"] || "Not listed");
-  const fee = escapeHtml(f["Fee"] || "Not listed");
-  const district = escapeHtml(f["City Council District"] || "Not listed");
-  const rawSpecialty = f["Specialty"] || f["Specialty "] || "";
-  const specialtyRow = rawSpecialty
-    ? `<div class="popup-row"><span class="popup-label">Specialty:</span> ${escapeHtml(rawSpecialty)}</div>`
-    : "";
-  const services = SERVICE_FILTER_OPTIONS;
-  const agency = escapeHtml(f["Agency"] || "Not listed");
-  const phone = escapeHtml(f["Phone"] || "Not listed");
-  const address = escapeHtml(f["Address"] || "Not listed");
-
-  return `
-    <div class="popup-title">${escapeHtml(f.Name)}</div>
-    <div class="popup-row"><span class="popup-label">Agency:</span> ${agency}</div>
-    <div class="popup-row"><span class="popup-label">Type:</span> ${type}</div>
-    ${specialtyRow}
-    <div class="popup-row"><span class="popup-label">Capacity:</span> ${capacity}</div>
-    <div class="popup-row"><span class="popup-label">Services for:</span> ${services}</div>
-    <div class="popup-row"><span class="popup-label">Council District:</span> ${district}</div>
-    <div class="popup-row"><span class="popup-label">Fee:</span> ${fee}</div>
-    <div class="popup-row"><span class="popup-label">Support/service animals:</span> ${animal}</div>
-    <div class="popup-row"><span class="popup-label">Phone:</span> ${phone}</div>
-    <div class="popup-row"><span class="popup-label">Address:</span> ${address}</div>
-  `;
-}
-
-
-function tooltipHtml(f) {
-  const name = escapeHtml(f.Name || "");
-  const agency = escapeHtml(f.Agency || "");
-  const type = escapeHtml(f["Facility Type"] || "");
-  const address = escapeHtml(f.Address || "");
-  const phone = escapeHtml(f.Phone || "");
-  const services = escapeHtml(f["Services for"] || "");
-
-  return `
-    <div class="hover-title">${name}</div>
-    <div class="hover-grid">
-      ${agency ? `<div class="hover-label">Agency</div><div class="hover-value">${agency}</div>` : ""}
-      ${type ? `<div class="hover-label">Type</div><div class="hover-value">${type}</div>` : ""}
-      ${address ? `<div class="hover-label">Address</div><div class="hover-value">${address}</div>` : ""}
-      ${phone ? `<div class="hover-label">Phone</div><div class="hover-value">${phone}</div>` : ""}
-      ${services ? `<div class="hover-label">Services</div><div class="hover-value">${services}</div>` : ""}
-    </div>
-  `;
-}
-
-function initMap() {
-  map = L.map("map", {
-    center: [21.4389, -157.9950],
-    zoom: 10,
-    scrollWheelZoom: true
-  });
-
-  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(map);
-
-  markerLayer = L.layerGroup().addTo(map);
-  renderControls();
-  renderFacilities();
-  setTimeout(() => map.invalidateSize(), 250);
-  setTimeout(() => map.invalidateSize(), 900);
-}
-
-function renderControls() {
-  const types = [...new Set(facilities.map(f => f["Facility Type"]).filter(Boolean))].sort();
-  const services = SERVICE_FILTER_OPTIONS;
-  const districts = [...new Set(facilities.map(f => f["City Council District"]).filter(Boolean))].sort((a,b) => Number(a)-Number(b));
-
-  const typeFilter = document.getElementById("typeFilter");
-  types.forEach(type => {
-    const opt = document.createElement("option");
-    opt.value = type;
-    opt.textContent = type;
-    typeFilter.appendChild(opt);
-  });
-
-  const serviceFilter = document.getElementById("serviceFilter");
-  serviceFilter.innerHTML = '<option value="">All services for</option>';
-  services.forEach(service => {
-    const opt = document.createElement("option");
-    opt.value = service;
-    opt.textContent = service;
-    serviceFilter.appendChild(opt);
-  });
-
-  const districtFilter = document.getElementById("districtFilter");
-  districts.forEach(d => {
-    const opt = document.createElement("option");
-    opt.value = d;
-    opt.textContent = "District " + d;
-    districtFilter.appendChild(opt);
-  });
-
-  document.getElementById("searchBox").addEventListener("input", renderFacilities);
-  typeFilter.addEventListener("change", renderFacilities);
-  serviceFilter.addEventListener("change", renderFacilities);
-  districtFilter.addEventListener("change", renderFacilities);
-  document.getElementById("resetBtn").addEventListener("click", () => {
-    document.getElementById("searchBox").value = "";
-    typeFilter.value = "";
-    serviceFilter.value = "";
-    districtFilter.value = "";
-    renderFacilities();
-  });
-  document.getElementById("fitBtn").addEventListener("click", () => fitVisible());
-}
-
-function renderLegend() {
-  const legend = document.getElementById("legend");
-  const types = [...new Set(facilities.map(f => f["Facility Type"]).filter(Boolean))].sort();
-  legend.innerHTML = types.map(type => `
-    <div class="legend-row">
-      <span class="swatch" style="background:${colorFor(type)}"></span>
-      <span>${escapeHtml(type)}</span>
-    </div>
-  `).join("");
-}
-
-function currentFiltered() {
-  const q = document.getElementById("searchBox").value.toLowerCase().trim();
-  const type = document.getElementById("typeFilter").value;
-  const service = document.getElementById("serviceFilter").value;
-  const district = document.getElementById("districtFilter").value;
-
-  return facilities.filter(f => {
-    if (type && f["Facility Type"] !== type) return false;
-    if (service && !matchesServiceFilter(f, service)) return false;
-    if (district && String(f["City Council District"] || "") !== district) return false;
-
-    const text = [
-      f.Name,
-      f.Agency,
-      f["Facility Type"],
-      f["Specialty"],
-      f["Specialty "],
-      f.Address,
-      f.Phone,
-      f["Services for"],
-      f.Fee,
-      f["Support/Service Animals"],
-      f.Capacity
-    ].join(" ").toLowerCase();
-
-    if (q && !text.includes(q)) return false;
-    return true;
-  });
-}
-
-
-function isMobileView() {
-  return window.matchMedia("(max-width: 980px)").matches;
-}
-
-function basicPopupHtml(f) {
-  const name = escapeHtml(f.Name || "");
-  const agency = escapeHtml(f.Agency || "");
-  const type = escapeHtml(f["Facility Type"] || "");
-  const address = escapeHtml(f.Address || "");
-  const phone = escapeHtml(f.Phone || "");
-  const services = escapeHtml(f["Services for"] || "");
-
-  return `
-    <div class="basic-card-title">${name}</div>
-    ${agency ? `<div class="basic-card-row"><span class="basic-card-label">Agency:</span> ${agency}</div>` : ""}
-    ${type ? `<div class="basic-card-row"><span class="basic-card-label">Type:</span> ${type}</div>` : ""}
-    ${address ? `<div class="basic-card-row"><span class="basic-card-label">Address:</span> ${address}</div>` : ""}
-    ${phone ? `<div class="basic-card-row"><span class="basic-card-label">Phone:</span> ${phone}</div>` : ""}
-    ${services ? `<div class="basic-card-row"><span class="basic-card-label">Services for:</span> ${services}</div>` : ""}
-    <button class="basic-card-more mobile-only" type="button" data-row="${f.row}">More details</button>
-  `;
-}
-
-function popupContentForDevice(f) {
-  return isMobileView() ? basicPopupHtml(f) : popupHtml(f);
-}
-
-function openFullFacilityPopup(row) {
-  const facility = facilities.find(f => Number(f.row) === Number(row));
-  const marker = markers.get(Number(row));
-  if (facility && marker) {
-    marker.setPopupContent(popupHtml(facility));
-    marker.openPopup();
-  }
-}
-
-
-function filteredFacilities() {
-  const q = document.getElementById("searchBox").value.toLowerCase().trim();
-  const type = document.getElementById("typeFilter").value;
-  const service = document.getElementById("serviceFilter").value;
-  const district = document.getElementById("districtFilter").value;
-
-  return facilities.filter(f => {
-    if (type && f["Facility Type"] !== type) return false;
-    if (service && !matchesServiceFilter(f, service)) return false;
-    if (district && String(f["City Council District"] || "") !== district) return false;
-
-    const text = [
-      f.Name,
-      f.Agency,
-      f.Address,
-      f.Phone,
-      f["Facility Type"],
-      f["City Council District"],
-      f["Services for"],
-      f.Specialty,
-      f.Capacity,
-      f.Fee,
-      f["Support/Service Animals"]
-    ].join(" ").toLowerCase();
-
-    if (q && !text.includes(q)) return false;
-    return true;
-  });
-}
-
-function renderFacilities() {
-  const filtered = filteredFacilities();
-  markerLayer.clearLayers();
-  markers.clear();
-
-  filtered.forEach((f, idx) => {
-    const marker = L.marker([f.lat, f.lng], { icon: markerIcon(f) });
-
-    marker.bindPopup(popupContentForDevice(f), {
-      className: isMobileView() ? "basic-mobile-popup" : ""
-    });
-
-    marker.bindTooltip(tooltipHtml(f), {
-      direction: "top",
-      offset: [0, -12],
-      className: "hover-tooltip",
-      opacity: 0.96
-    });
-
-    marker.on("click", () => {
-      marker.setPopupContent(popupContentForDevice(f));
-    });
-
-    marker.on("popupopen", () => {
-      marker.setPopupContent(popupContentForDevice(f));
-    });
-    marker.addTo(markerLayer);
-    markers.set(f.row, marker);
-  });
-
-  const list = document.getElementById("facilityList");
-  list.innerHTML = filtered.map(f => `
-    <div class="facility-card" data-row="${f.row}" style="border-left-color:${colorFor(f["Facility Type"])}">
-      <div class="facility-name">${escapeHtml(f.Name)}</div>
-      <div class="facility-meta">${escapeHtml(f["Facility Type"] || "Not listed")} · District ${escapeHtml(f["City Council District"] || "N/A")}</div>
-      <div class="facility-meta">${escapeHtml(f.Address || "")}</div>
-      <div class="badges">
-        ${f.hasFee ? '<span class="badge">$ fee</span>' : ''}
-        ${f.hasAnimal ? '<span class="badge">🐕 support/service animals</span>' : ''}
-        ${f["Services for"] ? `<span class="badge">${escapeHtml(f["Services for"])}</span>` : ''}
-      </div>
-    </div>
-  `).join("");
-
-  list.querySelectorAll(".facility-card").forEach(card => {
-    card.addEventListener("click", () => {
-      const row = Number(card.dataset.row);
-      const marker = markers.get(row);
-      const f = filtered.find(item => item.row === row);
-      if (marker && f) {
-        map.setView([f.lat, f.lng], 15);
-        marker.setPopupContent(popupHtml(f));
-        marker.openPopup();
-      }
-    });
-  });
-
-  fitVisible();
-}
-
-function fitVisible() {
-  const filtered = currentFiltered();
-  if (!filtered.length) return;
-  const bounds = L.latLngBounds(filtered.map(f => [f.lat, f.lng]));
-  map.fitBounds(bounds, { padding: [40, 40], maxZoom: 12 });
-}
-
-
-function initMobilePanel() {
-  const panel = document.getElementById("sidePanel");
-  const btn = document.getElementById("mobilePanelBtn");
-  const closeBtn = document.getElementById("panelCloseBtn");
-  const backdrop = document.getElementById("panelBackdrop");
-
-  function openPanel() {
-    if (!panel) return;
-    panel.classList.add("open");
-    if (backdrop) backdrop.classList.add("open");
-    setTimeout(() => {
-      if (map) map.invalidateSize();
-    }, 250);
-  }
-
-  function closePanel() {
-    if (!panel) return;
-    panel.classList.remove("open");
-    if (backdrop) backdrop.classList.remove("open");
-    setTimeout(() => {
-      if (map) map.invalidateSize();
-    }, 250);
-  }
-
-  if (btn) btn.addEventListener("click", openPanel);
-  if (closeBtn) closeBtn.addEventListener("click", closePanel);
-  if (backdrop) backdrop.addEventListener("click", closePanel);
-
-  document.addEventListener("click", event => {
-    const card = event.target.closest(".facility-card");
-    if (card && window.matchMedia("(max-width: 980px)").matches) {
-      setTimeout(closePanel, 250);
-    }
-  });
-}
-
-window.addEventListener("resize", () => {
-  if (map) setTimeout(() => map.invalidateSize(), 150);
-});
-window.addEventListener("orientationchange", () => {
-  if (map) setTimeout(() => map.invalidateSize(), 350);
-});
-
-
-
-document.addEventListener("click", event => {
-  const moreBtn = event.target.closest(".basic-card-more");
-  if (!moreBtn) return;
-  event.preventDefault();
-  event.stopPropagation();
-  openFullFacilityPopup(moreBtn.dataset.row);
-});
-
-
-document.addEventListener("DOMContentLoaded", () => {
-  initMap();
-  initMobilePanel();
-});
-</script>
-</body>
-</html>
+const colors={"Emergency Shelter":"#dc2626","Transitional Housing":"#2563eb","Medical Respite":"#16a34a","Behaviorial/Medical Respite":"#0f766e","Behavioral/Medical Respite":"#0f766e","Treatment Center":"#7c3aed","Hospital":"#0284c7","Drop-in Center":"#f59e0b","Permanent Supportive Housing":"#9333ea","Permanent Housing":"#a855f7"};
+const defaultColor="#64748b"; let map,markerLayer; const markers=new Map(); const cacheKey="oahuFacilityGeocodesV2";
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+function colorFor(t){return colors[t]||defaultColor}
+function serviceCategories(f){const t=String(f["Services for"]||"").toLowerCase().replace(/\([^)]*\)/g," ").replace(/&/g,",").replace(/\band\b/g,",");const s=new Set();if(/\byoung\s+adults?\b/.test(t))s.add("Young Adults");if(/\badult\s+men\b/.test(t))s.add("Adult Men");if(/\badult\s+women\b/.test(t))s.add("Adult Women");if(/\bcouples?\b/.test(t))s.add("Couples");if(/\bfamil(?:y|ies)\b/.test(t))s.add("Families");const g=t.replace(/\byoung\s+adults?\b/g," ").replace(/\badult\s+men\b/g," ").replace(/\badult\s+women\b/g," ");if(/\badults?\b/.test(g))s.add("Adults");return [...s]}
+function markerIcon(f){const fee=f.hasFee?'<span class="marker-fee">$</span>':"",animal=f.hasAnimal?'<span class="marker-animal">🐕</span>':"";return L.divIcon({className:"",html:`<div class="marker-dot" style="background:${colorFor(f["Facility Type"])}">${fee}${animal}</div>`,iconSize:[26,26],iconAnchor:[13,13],popupAnchor:[0,-10]})}
+function popupHtml(f){const rows=[["Agency",f.Agency],["Facility Type",f["Facility Type"]],["Specialty",f.Specialty],["Capacity",f.Capacity],["Services for",f["Services for"]],["Council District",f["City Council District"]],["Fee",f.Fee],["Support/service animals",f["Support/Service Animals"]],["Phone",f.Phone],["Address",f.Address]];return `<div class="popup-title">${esc(f.Name)}</div>`+rows.filter(x=>x[1]).map(x=>`<div class="popup-row"><span class="popup-label">${esc(x[0])}:</span> ${esc(x[1])}</div>`).join("")}
+function tooltipHtml(f){const rows=[["Agency",f.Agency],["Type",f["Facility Type"]],["Address",f.Address],["Phone",f.Phone],["Services",f["Services for"]]];return `<div class="hover-title">${esc(f.Name)}</div><div class="hover-grid">`+rows.filter(x=>x[1]).map(x=>`<div class="hover-label">${esc(x[0])}</div><div class="hover-value">${esc(x[1])}</div>`).join("")+`</div>`}
+function filters(){return {q:document.getElementById("searchBox").value.toLowerCase(),type:document.getElementById("typeFilter").value,service:document.getElementById("serviceFilter").value,district:document.getElementById("districtFilter").value}}
+function matches(f,x){const hay=[f.Name,f.Agency,f.Address,f["Facility Type"],f["Services for"]].join(" ").toLowerCase();return (!x.q||hay.includes(x.q))&&(!x.type||f["Facility Type"]===x.type)&&(!x.service||serviceCategories(f).includes(x.service))&&(!x.district||f["City Council District"]===x.district)}
+function render(){markerLayer.clearLayers();markers.clear();const list=document.getElementById("facilityList"),x=filters();list.innerHTML="";const visible=facilities.filter(f=>matches(f,x));for(const f of visible){if(Number.isFinite(f.lat)&&Number.isFinite(f.lng)){const m=L.marker([f.lat,f.lng],{icon:markerIcon(f)}).bindPopup(popupHtml(f)).bindTooltip(tooltipHtml(f),{className:"hover-tooltip",direction:"top",offset:[0,-12],opacity:.96}).addTo(markerLayer);markers.set(f.row,m)}const card=document.createElement("div");card.className="facility-card";card.style.borderLeftColor=colorFor(f["Facility Type"]);card.innerHTML=`<div class="facility-name">${esc(f.Name)}</div><div class="facility-meta">${esc(f.Agency||"")}${f.Agency&&f["Facility Type"]?" · ":""}${esc(f["Facility Type"]||"")}</div><div class="badges">${f["Services for"]?`<span class="badge">${esc(f["Services for"])}</span>`:""}${f.hasFee?'<span class="badge">$ fee</span>':""}${f.hasAnimal?'<span class="badge">🐕 support/service animals</span>':""}</div>`;card.onclick=()=>{const m=markers.get(f.row);if(m){map.setView(m.getLatLng(),15);m.openPopup()}};list.appendChild(card)}}
+function fitVisible(){const pts=[...markers.values()].map(m=>m.getLatLng());if(pts.length)map.fitBounds(L.latLngBounds(pts).pad(.12))}
+function initControls(){[...new Set(facilities.map(f=>f["Facility Type"]).filter(Boolean))].sort().forEach(v=>typeFilter.add(new Option(v,v)));["Young Adults","Adults","Adult Men","Adult Women","Couples","Families"].forEach(v=>serviceFilter.add(new Option(v,v)));[...new Set(facilities.map(f=>f["City Council District"]).filter(Boolean))].sort((a,b)=>+a-+b).forEach(v=>districtFilter.add(new Option("District "+v,v)));[searchBox,typeFilter,serviceFilter,districtFilter].forEach(e=>e.addEventListener(e===searchBox?"input":"change",render));resetBtn.onclick=()=>{searchBox.value="";typeFilter.value="";serviceFilter.value="";districtFilter.value="";render()};fitBtn.onclick=fitVisible}
+async function geocodeMissing(){let cache={};try{cache=JSON.parse(localStorage.getItem(cacheKey)||"{}")}catch{};let changed=false;const missing=facilities.filter(f=>!Number.isFinite(f.lat)||!Number.isFinite(f.lng));for(const f of missing){const key=(f.Address||f.Name).trim();if(!key)continue;if(cache[key]){[f.lat,f.lng]=cache[key];continue}try{const q=encodeURIComponent(key+", Oahu, Hawaii");const u=`https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?SingleLine=${q}&f=json&maxLocations=1&outFields=Match_addr`;const r=await fetch(u);const j=await r.json();const c=j.candidates&&j.candidates[0];if(c&&c.location){f.lat=c.location.y;f.lng=c.location.x;cache[key]=[f.lat,f.lng];changed=true}}catch(e){console.warn("Geocode failed",key,e)}await new Promise(r=>setTimeout(r,180))}if(changed)localStorage.setItem(cacheKey,JSON.stringify(cache));render();fitVisible()}
+function init(){map=L.map("map",{center:[21.4389,-157.995],zoom:10,scrollWheelZoom:true});L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap contributors"}).addTo(map);markerLayer=L.layerGroup().addTo(map);initControls();render();fitVisible();geocodeMissing();mobilePanelBtn.onclick=()=>{sidePanel.classList.add("open");panelBackdrop.classList.add("open")};const close=()=>{sidePanel.classList.remove("open");panelBackdrop.classList.remove("open")};panelCloseBtn.onclick=close;panelBackdrop.onclick=close;setTimeout(()=>map.invalidateSize(),250)} init();
+</script></body></html>
