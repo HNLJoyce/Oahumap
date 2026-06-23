@@ -1428,24 +1428,6 @@ const facilities = [
     "hasAnimal": false
   },
   {
-    "Name": "US VETS Barber's Point Kama'oku Kauhale",
-    "Capacity": "",
-    "Support/Service Animals": "",
-    "Fee": "",
-    "City Council District": "1",
-    "Agency": "US VETS Barber's Point",
-    "Facility Type": "Permanent Housing",
-    "Specialty": "Veterans",
-    "Address": "",
-    "Phone": "",
-    "Services for": "",
-    "row": 79,
-    "lat": null,
-    "lng": null,
-    "hasFee": false,
-    "hasAnimal": false
-  },
-  {
     "Name": "Veterans Engaged in Transition (VET House) (2nd fl)",
     "Capacity": "6 beds",
     "Support/Service Animals": "no",
@@ -1565,8 +1547,11 @@ function tooltipHtml(f){const rows=[["Agency",f.Agency],["Type",f["Facility Type
 function filters(){return {q:document.getElementById("searchBox").value.toLowerCase(),type:document.getElementById("typeFilter").value,service:document.getElementById("serviceFilter").value,district:document.getElementById("districtFilter").value}}
 function matches(f,x){const hay=[f.Name,f.Agency,f.Address,f["Facility Type"],f["Services for"]].join(" ").toLowerCase();return (!x.q||hay.includes(x.q))&&(!x.type||f["Facility Type"]===x.type)&&(!x.service||serviceCategories(f).includes(x.service))&&(!x.district||f["City Council District"]===x.district)}
 function render(){markerLayer.clearLayers();markers.clear();const list=document.getElementById("facilityList"),x=filters();list.innerHTML="";const visible=facilities.filter(f=>matches(f,x));for(const f of visible){if(Number.isFinite(f.lat)&&Number.isFinite(f.lng)){const m=L.marker([f.lat,f.lng],{icon:markerIcon(f)}).bindPopup(popupHtml(f)).bindTooltip(tooltipHtml(f),{className:"hover-tooltip",direction:"top",offset:[0,-12],opacity:.96}).addTo(markerLayer);markers.set(f.row,m)}const card=document.createElement("div");card.className="facility-card";card.style.borderLeftColor=colorFor(f["Facility Type"]);card.innerHTML=`<div class="facility-name">${esc(f.Name)}</div><div class="facility-meta">${esc(f.Agency||"")}${f.Agency&&f["Facility Type"]?" · ":""}${esc(f["Facility Type"]||"")}</div><div class="badges">${f["Services for"]?`<span class="badge">${esc(f["Services for"])}</span>`:""}${f.hasFee?'<span class="badge">$ fee</span>':""}${f.hasAnimal?'<span class="badge">🐕 support/service animals</span>':""}</div>`;card.onclick=()=>{const m=markers.get(f.row);if(m){map.setView(m.getLatLng(),15);m.openPopup()}};list.appendChild(card)}}
-function fitVisible(){const pts=[...markers.values()].map(m=>m.getLatLng());if(pts.length)map.fitBounds(L.latLngBounds(pts).pad(.12))}
-function initControls(){[...new Set(facilities.map(f=>f["Facility Type"]).filter(Boolean))].sort().forEach(v=>typeFilter.add(new Option(v,v)));["Young Adults","Adults","Adult Men","Adult Women","Couples","Families"].forEach(v=>serviceFilter.add(new Option(v,v)));[...new Set(facilities.map(f=>f["City Council District"]).filter(Boolean))].sort((a,b)=>+a-+b).forEach(v=>districtFilter.add(new Option("District "+v,v)));[searchBox,typeFilter,serviceFilter,districtFilter].forEach(e=>e.addEventListener(e===searchBox?"input":"change",render));resetBtn.onclick=()=>{searchBox.value="";typeFilter.value="";serviceFilter.value="";districtFilter.value="";render()};fitBtn.onclick=fitVisible}
+function fitVisible(){const pts=[...markers.values()].map(m=>m.getLatLng()).filter(p=>oahuBounds.contains(p));if(pts.length)map.fitBounds(L.latLngBounds(pts).pad(.12));else map.setView(oahuCenter,oahuZoom)}
+const oahuCenter=[21.4389,-157.995];
+const oahuZoom=10;
+const oahuBounds=L.latLngBounds([21.20,-158.33],[21.75,-157.62]);
+function initControls(){[...new Set(facilities.map(f=>f["Facility Type"]).filter(Boolean))].sort().forEach(v=>typeFilter.add(new Option(v,v)));["Young Adults","Adults","Adult Men","Adult Women","Couples","Families"].forEach(v=>serviceFilter.add(new Option(v,v)));[...new Set(facilities.map(f=>f["City Council District"]).filter(Boolean))].sort((a,b)=>+a-+b).forEach(v=>districtFilter.add(new Option("District "+v,v)));[searchBox,typeFilter,serviceFilter,districtFilter].forEach(e=>e.addEventListener(e===searchBox?"input":"change",render));resetBtn.onclick=()=>{searchBox.value="";typeFilter.value="";serviceFilter.value="";districtFilter.value="";render();map.setView(oahuCenter,oahuZoom)};fitBtn.onclick=fitVisible}
 async function geocodeMissing(){let cache={};try{cache=JSON.parse(localStorage.getItem(cacheKey)||"{}")}catch{};let changed=false;const missing=facilities.filter(f=>!Number.isFinite(f.lat)||!Number.isFinite(f.lng));for(const f of missing){const key=(f.Address||f.Name).trim();if(!key)continue;if(cache[key]){[f.lat,f.lng]=cache[key];continue}try{const q=encodeURIComponent(key+", Oahu, Hawaii");const u=`https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?SingleLine=${q}&f=json&maxLocations=1&outFields=Match_addr`;const r=await fetch(u);const j=await r.json();const c=j.candidates&&j.candidates[0];if(c&&c.location){f.lat=c.location.y;f.lng=c.location.x;cache[key]=[f.lat,f.lng];changed=true}}catch(e){console.warn("Geocode failed",key,e)}await new Promise(r=>setTimeout(r,180))}if(changed)localStorage.setItem(cacheKey,JSON.stringify(cache));render();fitVisible()}
-function init(){map=L.map("map",{center:[21.4389,-157.995],zoom:10,scrollWheelZoom:true});L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap contributors"}).addTo(map);markerLayer=L.layerGroup().addTo(map);initControls();render();fitVisible();geocodeMissing();mobilePanelBtn.onclick=()=>{sidePanel.classList.add("open");panelBackdrop.classList.add("open")};const close=()=>{sidePanel.classList.remove("open");panelBackdrop.classList.remove("open")};panelCloseBtn.onclick=close;panelBackdrop.onclick=close;setTimeout(()=>map.invalidateSize(),250)} init();
+function init(){map=L.map("map",{center:oahuCenter,zoom:oahuZoom,scrollWheelZoom:true});L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap contributors"}).addTo(map);markerLayer=L.layerGroup().addTo(map);initControls();render();fitVisible();geocodeMissing();mobilePanelBtn.onclick=()=>{sidePanel.classList.add("open");panelBackdrop.classList.add("open")};const close=()=>{sidePanel.classList.remove("open");panelBackdrop.classList.remove("open")};panelCloseBtn.onclick=close;panelBackdrop.onclick=close;setTimeout(()=>map.invalidateSize(),250)} init();
 </script></body></html>
