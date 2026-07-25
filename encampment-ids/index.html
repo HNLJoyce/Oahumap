@@ -58,14 +58,14 @@
     
     
 <div style="position:fixed;z-index:9999;top:14px;left:54px;width:390px;
-background:rgba(15,18,28,.94);color:#f5f7ff;padding:14px 16px;border:1px solid #594a88;
+background:rgba(255,255,255,.93);color:#1f2340;padding:14px 16px;border:1px solid #8a7dd1;
 border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0,.35)">
   <div style="font-size:21px;font-weight:700;margin-bottom:5px;">Encampment IDs</div>
-  <div style="font-size:13px;line-height:1.4;color:#d8d9e8">
+  <div style="font-size:13px;line-height:1.4;color:#2f355f">
     Heat intensity reflects the reported number of people at each identified location.
     Larger circles represent higher reported counts. Click a circle for the spreadsheet entry.
   </div>
-  <div style="margin-top:10px;font-size:12px;color:#b9bbcf">
+  <div style="margin-top:10px;font-size:12px;color:#505a84">
     Cyan → violet → pink → gold indicates increasing concentration.
     “UNK” entries appear as markers but do not add numeric heat.
   </div>
@@ -97,7 +97,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
         
     
             var tile_layer_76e0db62cc8ea95e8f1295a663a3543f = L.tileLayer(
-                "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+                "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
                 {
   "minZoom": 0,
   "maxZoom": 20,
@@ -148,7 +148,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_2e5bd026ca6117517573a11bcdcc0dbb = L.circleMarker(
                 [21.3348, -158.0815],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.024922359499623, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.024922359499623, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -158,7 +158,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_62579037e31275b102dddcee4b5fd553 = $(`<div id="html_62579037e31275b102dddcee4b5fd553" style="width: 100.0%; height: 100.0%;"><b>Kapolei PKWY, Kapolei</b><br>Reported people: ~5<br>Combined numeric estimate: 5<br>Spreadsheet records: 1</div>`)[0];
+                var html_62579037e31275b102dddcee4b5fd553 = $(`<div id="html_62579037e31275b102dddcee4b5fd553" style="width: 100.0%; height: 100.0%;"><b>Kapolei PKWY, Kapolei</b><br>Reported people: ~5</div>`)[0];
                 popup_ecb4917f156be18bb7ca9a7d234557ee.setContent(html_62579037e31275b102dddcee4b5fd553);
             
         
@@ -181,7 +181,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_7a17624aee3b3f12ab5185eb24780a80 = L.circleMarker(
                 [21.3359, -158.079],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.024922359499623, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.024922359499623, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -191,7 +191,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_8b11073949eeca05e8ebf57acc17217c = $(`<div id="html_8b11073949eeca05e8ebf57acc17217c" style="width: 100.0%; height: 100.0%;"><b>563-565 Farrington HWY, Kapolei</b><br>Reported people: 5+<br>Combined numeric estimate: 5<br>Spreadsheet records: 1</div>`)[0];
+                var html_8b11073949eeca05e8ebf57acc17217c = $(`<div id="html_8b11073949eeca05e8ebf57acc17217c" style="width: 100.0%; height: 100.0%;"><b>563-565 Farrington HWY, Kapolei</b><br>Reported people: 5+</div>`)[0];
                 popup_76aafd0cd2acf5f919a1a7f141eecd81.setContent(html_8b11073949eeca05e8ebf57acc17217c);
             
         
@@ -214,7 +214,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_265f67dd333fd1784458eb500716d87d = L.circleMarker(
                 [21.3428, -158.0788],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.049844718999244, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.049844718999244, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -224,7 +224,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_d0d97f4d34d142c81297d0bfde9b80c1 = $(`<div id="html_d0d97f4d34d142c81297d0bfde9b80c1" style="width: 100.0%; height: 100.0%;"><b>Kapowai PL + Farrington HWY</b><br>Reported people: ~20<br>Combined numeric estimate: 20<br>Spreadsheet records: 1</div>`)[0];
+                var html_d0d97f4d34d142c81297d0bfde9b80c1 = $(`<div id="html_d0d97f4d34d142c81297d0bfde9b80c1" style="width: 100.0%; height: 100.0%;"><b>Kapowai PL + Farrington HWY</b><br>Reported people: ~20</div>`)[0];
                 popup_57c0fd79c2657c166ba4f0552077e92f.setContent(html_d0d97f4d34d142c81297d0bfde9b80c1);
             
         
@@ -247,7 +247,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_03f86c88c2a17c48427508d032dfd3d3 = L.circleMarker(
                 [21.356, -158.126],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.97137002317335, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.97137002317335, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -257,7 +257,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_d6e3d42333e87afbe4fd5c035dbde125 = $(`<div id="html_d6e3d42333e87afbe4fd5c035dbde125" style="width: 100.0%; height: 100.0%;"><b>Coral Sea Road</b><br>Reported people: ~15<br>Combined numeric estimate: 15<br>Spreadsheet records: 1</div>`)[0];
+                var html_d6e3d42333e87afbe4fd5c035dbde125 = $(`<div id="html_d6e3d42333e87afbe4fd5c035dbde125" style="width: 100.0%; height: 100.0%;"><b>Coral Sea Road</b><br>Reported people: ~15</div>`)[0];
                 popup_78258c93c6b75dce020d70eda5b8717a.setContent(html_d6e3d42333e87afbe4fd5c035dbde125);
             
         
@@ -280,7 +280,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_78fc363d652135e55c4a7f4a81908f19 = L.circleMarker(
                 [21.3352, -158.0798],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -290,7 +290,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_aeb0c1e17b34aedf59bfb994d62f0508 = $(`<div id="html_aeb0c1e17b34aedf59bfb994d62f0508" style="width: 100.0%; height: 100.0%;"><b>724 Kakala St</b><br>Reported people: 0<br>Combined numeric estimate: 0<br>Spreadsheet records: 1</div>`)[0];
+                var html_aeb0c1e17b34aedf59bfb994d62f0508 = $(`<div id="html_aeb0c1e17b34aedf59bfb994d62f0508" style="width: 100.0%; height: 100.0%;"><b>724 Kakala St</b><br>Reported people: 0</div>`)[0];
                 popup_54e2f9d89bf21519d31ccf7a8370887f.setContent(html_aeb0c1e17b34aedf59bfb994d62f0508);
             
         
@@ -313,7 +313,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_0156cfd2b357f9b522f663acd14fab6b = L.circleMarker(
                 [21.5795, -158.181],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.692099788303082, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.692099788303082, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -323,7 +323,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_85dfeeebaa31ec6df4f03298874b293b = $(`<div id="html_85dfeeebaa31ec6df4f03298874b293b" style="width: 100.0%; height: 100.0%;"><b>Mokuleia Beach</b><br>Reported people: 10<br>Combined numeric estimate: 10<br>Spreadsheet records: 1</div>`)[0];
+                var html_85dfeeebaa31ec6df4f03298874b293b = $(`<div id="html_85dfeeebaa31ec6df4f03298874b293b" style="width: 100.0%; height: 100.0%;"><b>Mokuleia Beach</b><br>Reported people: 10</div>`)[0];
                 popup_0d44adb9ab884294b11c81c612ba8957.setContent(html_85dfeeebaa31ec6df4f03298874b293b);
             
         
@@ -346,7 +346,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_60b522c4df2192dc9d430a36d7e95c0a = L.circleMarker(
                 [21.42, -158.005],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -356,7 +356,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_fc4d62ec989d0013f39ee7995a51462f = $(`<div id="html_fc4d62ec989d0013f39ee7995a51462f" style="width: 100.0%; height: 100.0%;"><b>Lihiwai Road</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                var html_fc4d62ec989d0013f39ee7995a51462f = $(`<div id="html_fc4d62ec989d0013f39ee7995a51462f" style="width: 100.0%; height: 100.0%;"><b>Lihiwai Road</b><br>Reported people: 2</div>`)[0];
                 popup_6eac8aafab07ce700c54d98eb3322c5b.setContent(html_fc4d62ec989d0013f39ee7995a51462f);
             
         
@@ -379,7 +379,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_a2eac02cffdddf43cfe4bd60412ce24d = L.circleMarker(
                 [21.3972, -157.7272],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.024922359499623, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.024922359499623, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -389,7 +389,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_d8e075074691946cb5381a628db24125 = $(`<div id="html_d8e075074691946cb5381a628db24125" style="width: 100.0%; height: 100.0%;"><b>Kailua Beach Park</b><br>Reported people: 3, 2<br>Combined numeric estimate: 5<br>Spreadsheet records: 2</div>`)[0];
+                var html_d8e075074691946cb5381a628db24125 = $(`<div id="html_d8e075074691946cb5381a628db24125" style="width: 100.0%; height: 100.0%;"><b>Kailua Beach Park</b><br>Reported people: 3, 2</div>`)[0];
                 popup_7ac99ee04143a47f0b378bdf01bccd80.setContent(html_d8e075074691946cb5381a628db24125);
             
         
@@ -412,7 +412,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_71ed3ef1cb2c8780298d25078b28a4fb = L.circleMarker(
                 [21.3978, -157.9873],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.97137002317335, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.97137002317335, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -422,7 +422,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_e6f8c8f8300b24a14fc71cc76b69a6bd = $(`<div id="html_e6f8c8f8300b24a14fc71cc76b69a6bd" style="width: 100.0%; height: 100.0%;"><b>Waiawa Station - H1/H2 On Ramp</b><br>Reported people: 15+<br>Combined numeric estimate: 15<br>Spreadsheet records: 1</div>`)[0];
+                var html_e6f8c8f8300b24a14fc71cc76b69a6bd = $(`<div id="html_e6f8c8f8300b24a14fc71cc76b69a6bd" style="width: 100.0%; height: 100.0%;"><b>Waiawa Station - H1/H2 On Ramp</b><br>Reported people: 15+</div>`)[0];
                 popup_e825820df4c4d47b3f65b95ff8a22177.setContent(html_e6f8c8f8300b24a14fc71cc76b69a6bd);
             
         
@@ -445,7 +445,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_25716a248d9b402acd217c84bd368770 = L.circleMarker(
                 [21.2582, -157.802],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.024922359499623, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.024922359499623, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -455,7 +455,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_8550b3cad20fb06cf8354223cbd15eda = $(`<div id="html_8550b3cad20fb06cf8354223cbd15eda" style="width: 100.0%; height: 100.0%;"><b>3399 Diamond Head Rd</b><br>Reported people: 5<br>Combined numeric estimate: 5<br>Spreadsheet records: 1</div>`)[0];
+                var html_8550b3cad20fb06cf8354223cbd15eda = $(`<div id="html_8550b3cad20fb06cf8354223cbd15eda" style="width: 100.0%; height: 100.0%;"><b>3399 Diamond Head Rd</b><br>Reported people: 5</div>`)[0];
                 popup_3a276185f76adc2a5712dfab6f2b8d0e.setContent(html_8550b3cad20fb06cf8354223cbd15eda);
             
         
@@ -478,7 +478,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_cd1b0f36720f8d757bf2d41822c982ec = L.circleMarker(
                 [21.2827, -157.8143],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.091168824543143, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.091168824543143, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -488,7 +488,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_1a27fee555d6067eee42617e8f032cfa = $(`<div id="html_1a27fee555d6067eee42617e8f032cfa" style="width: 100.0%; height: 100.0%;"><b>402 Kapahulu Ave</b><br>Reported people: 4, 4<br>Combined numeric estimate: 8<br>Spreadsheet records: 2</div>`)[0];
+                var html_1a27fee555d6067eee42617e8f032cfa = $(`<div id="html_1a27fee555d6067eee42617e8f032cfa" style="width: 100.0%; height: 100.0%;"><b>402 Kapahulu Ave</b><br>Reported people: 4, 4</div>`)[0];
                 popup_a7ecd6c726f815bbb83277947e0356fe.setContent(html_1a27fee555d6067eee42617e8f032cfa);
             
         
@@ -511,7 +511,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_aee680e2104da882f6e89481f0536fcb = L.circleMarker(
                 [21.281, -157.7131],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -521,7 +521,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_6838fbe204c2d871c7f5685af566323c = $(`<div id="html_6838fbe204c2d871c7f5685af566323c" style="width: 100.0%; height: 100.0%;"><b>Maunalua Bay Beach Park</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                var html_6838fbe204c2d871c7f5685af566323c = $(`<div id="html_6838fbe204c2d871c7f5685af566323c" style="width: 100.0%; height: 100.0%;"><b>Maunalua Bay Beach Park</b><br>Reported people: 2</div>`)[0];
                 popup_ce1ba1ba14db8554af5fb0b73d620ad7.setContent(html_6838fbe204c2d871c7f5685af566323c);
             
         
@@ -544,7 +544,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_7e696759ad309261470b1d95962af5e2 = L.circleMarker(
                 [21.2766, -157.7792],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.091168824543143, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.091168824543143, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -554,7 +554,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_1884f854306380116ac8eb9adf270b25 = $(`<div id="html_1884f854306380116ac8eb9adf270b25" style="width: 100.0%; height: 100.0%;"><b>4400 Kalanianaole</b><br>Reported people: 8<br>Combined numeric estimate: 8<br>Spreadsheet records: 1</div>`)[0];
+                var html_1884f854306380116ac8eb9adf270b25 = $(`<div id="html_1884f854306380116ac8eb9adf270b25" style="width: 100.0%; height: 100.0%;"><b>4400 Kalanianaole</b><br>Reported people: 8</div>`)[0];
                 popup_05bc16485cff8cb7e54dafaedf123136.setContent(html_1884f854306380116ac8eb9adf270b25);
             
         
@@ -577,7 +577,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_9a1fa6ec55d9537868ee814dba47907c = L.circleMarker(
                 [21.2578, -157.8052],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.091168824543143, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.091168824543143, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -587,7 +587,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_8505be259356983244d7463e1f52d8f5 = $(`<div id="html_8505be259356983244d7463e1f52d8f5" style="width: 100.0%; height: 100.0%;"><b>Diamond head Beach Rd</b><br>Reported people: 8+<br>Combined numeric estimate: 8<br>Spreadsheet records: 1</div>`)[0];
+                var html_8505be259356983244d7463e1f52d8f5 = $(`<div id="html_8505be259356983244d7463e1f52d8f5" style="width: 100.0%; height: 100.0%;"><b>Diamond head Beach Rd</b><br>Reported people: 8+</div>`)[0];
                 popup_83a5d1f2eccd6d40db7a6252392c92ec.setContent(html_8505be259356983244d7463e1f52d8f5);
             
         
@@ -610,7 +610,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_0c06e7c78232fffa97c0fe09e94971e7 = L.circleMarker(
                 [21.2855, -157.8418],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -620,7 +620,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_a35a3aeaa36b259cdd48795edd6e9df5 = $(`<div id="html_a35a3aeaa36b259cdd48795edd6e9df5" style="width: 100.0%; height: 100.0%;"><b>Illikai Marina</b><br>Reported people: 1<br>Combined numeric estimate: 1<br>Spreadsheet records: 1</div>`)[0];
+                var html_a35a3aeaa36b259cdd48795edd6e9df5 = $(`<div id="html_a35a3aeaa36b259cdd48795edd6e9df5" style="width: 100.0%; height: 100.0%;"><b>Illikai Marina</b><br>Reported people: 1</div>`)[0];
                 popup_04224316c1a850197c5833e4c6e8cc5d.setContent(html_a35a3aeaa36b259cdd48795edd6e9df5);
             
         
@@ -643,7 +643,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_fe1fdaa519647c77199f05fbbcc2a2da = L.circleMarker(
                 [21.2865, -157.8128],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -653,7 +653,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_6e7127bb1c8a30fe16c1a44e65bbb75b = $(`<div id="html_6e7127bb1c8a30fe16c1a44e65bbb75b" style="width: 100.0%; height: 100.0%;"><b>3040 Waialae Ave</b><br>Reported people: 1+<br>Combined numeric estimate: 1<br>Spreadsheet records: 1</div>`)[0];
+                var html_6e7127bb1c8a30fe16c1a44e65bbb75b = $(`<div id="html_6e7127bb1c8a30fe16c1a44e65bbb75b" style="width: 100.0%; height: 100.0%;"><b>3040 Waialae Ave</b><br>Reported people: 1+</div>`)[0];
                 popup_23badc9fe95435b9a218820c6087ae0e.setContent(html_6e7127bb1c8a30fe16c1a44e65bbb75b);
             
         
@@ -676,7 +676,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_95d7f16eb749f9195d10b23b7e7a1aaa = L.circleMarker(
                 [21.2915, -157.8245],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -686,7 +686,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_71d3857c05f67b0a3180f45bdf4d0c9d = $(`<div id="html_71d3857c05f67b0a3180f45bdf4d0c9d" style="width: 100.0%; height: 100.0%;"><b>1855 Kapiolani Blvd, Honolulu</b><br>Reported people: 1+<br>Combined numeric estimate: 1<br>Spreadsheet records: 1</div>`)[0];
+                var html_71d3857c05f67b0a3180f45bdf4d0c9d = $(`<div id="html_71d3857c05f67b0a3180f45bdf4d0c9d" style="width: 100.0%; height: 100.0%;"><b>1855 Kapiolani Blvd, Honolulu</b><br>Reported people: 1+</div>`)[0];
                 popup_4dea8af27721735cad5e4f401ba4dcfe.setContent(html_71d3857c05f67b0a3180f45bdf4d0c9d);
             
         
@@ -709,7 +709,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_28b0e77b3642af5605cb267057577c29 = L.circleMarker(
                 [21.2823, -157.8149],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -719,7 +719,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_34df8a8d7b9a7952b4c50874e02d4e3a = $(`<div id="html_34df8a8d7b9a7952b4c50874e02d4e3a" style="width: 100.0%; height: 100.0%;"><b>540 Kapahulu Ave</b><br>Reported people: 4+<br>Combined numeric estimate: 4<br>Spreadsheet records: 1</div>`)[0];
+                var html_34df8a8d7b9a7952b4c50874e02d4e3a = $(`<div id="html_34df8a8d7b9a7952b4c50874e02d4e3a" style="width: 100.0%; height: 100.0%;"><b>540 Kapahulu Ave</b><br>Reported people: 4+</div>`)[0];
                 popup_f92a1eed568474c189789df51ee9cb86.setContent(html_34df8a8d7b9a7952b4c50874e02d4e3a);
             
         
@@ -742,7 +742,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_d2183033ff11711c565a392022780f05 = L.circleMarker(
                 [21.289, -157.71],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -752,7 +752,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_87f9e1137d25ce04efd1ee9dc834240a = $(`<div id="html_87f9e1137d25ce04efd1ee9dc834240a" style="width: 100.0%; height: 100.0%;"><b>Keahole HK Park & Ride</b><br>Reported people: 3<br>Combined numeric estimate: 3<br>Spreadsheet records: 1</div>`)[0];
+                var html_87f9e1137d25ce04efd1ee9dc834240a = $(`<div id="html_87f9e1137d25ce04efd1ee9dc834240a" style="width: 100.0%; height: 100.0%;"><b>Keahole HK Park & Ride</b><br>Reported people: 3</div>`)[0];
                 popup_0bdf358d889b88f5ad7a2c2d3ac70f61.setContent(html_87f9e1137d25ce04efd1ee9dc834240a);
             
         
@@ -775,7 +775,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_136664479aafafb9165bbb2e00b82dcc = L.circleMarker(
                 [21.2718, -157.7788],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -785,7 +785,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_dddd00aff38fda46467365d9a24ecf69 = $(`<div id="html_dddd00aff38fda46467365d9a24ecf69" style="width: 100.0%; height: 100.0%;"><b>Kahala Beach park</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                var html_dddd00aff38fda46467365d9a24ecf69 = $(`<div id="html_dddd00aff38fda46467365d9a24ecf69" style="width: 100.0%; height: 100.0%;"><b>Kahala Beach park</b><br>Reported people: 2</div>`)[0];
                 popup_92a0576a4ac552eb2a3294476def0e55.setContent(html_dddd00aff38fda46467365d9a24ecf69);
             
         
@@ -808,7 +808,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_975604678ce74c6e4645d3f9c09e0ee7 = L.circleMarker(
                 [21.2785, -157.7885],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -818,7 +818,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_07f143b83fd95bfae03662299d0381ff = $(`<div id="html_07f143b83fd95bfae03662299d0381ff" style="width: 100.0%; height: 100.0%;"><b>4339 Waialae Ave</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                var html_07f143b83fd95bfae03662299d0381ff = $(`<div id="html_07f143b83fd95bfae03662299d0381ff" style="width: 100.0%; height: 100.0%;"><b>4339 Waialae Ave</b><br>Reported people: 2</div>`)[0];
                 popup_2f665ba3535f615c406323083d7625af.setContent(html_07f143b83fd95bfae03662299d0381ff);
             
         
@@ -841,7 +841,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_9c1f8de2a60906a7ba360b3b84937f8c = L.circleMarker(
                 [21.2766, -157.7792],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.762352359916264, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.762352359916264, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -851,7 +851,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_201977fa6b1ba50eea382f231c445a45 = $(`<div id="html_201977fa6b1ba50eea382f231c445a45" style="width: 100.0%; height: 100.0%;"><b>4400 Kalanianaole Hwy</b><br>Reported people: 7<br>Combined numeric estimate: 7<br>Spreadsheet records: 1</div>`)[0];
+                var html_201977fa6b1ba50eea382f231c445a45 = $(`<div id="html_201977fa6b1ba50eea382f231c445a45" style="width: 100.0%; height: 100.0%;"><b>4400 Kalanianaole Hwy</b><br>Reported people: 7</div>`)[0];
                 popup_a46a9a1511433f17e685b254f7235661.setContent(html_201977fa6b1ba50eea382f231c445a45);
             
         
@@ -874,7 +874,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_7b9f9986f8d9207c6a106b40f213eb87 = L.circleMarker(
                 [21.2792, -157.79],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -884,7 +884,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_fc80c81782d9781d63ae3b471029bbd1 = $(`<div id="html_fc80c81782d9781d63ae3b471029bbd1" style="width: 100.0%; height: 100.0%;"><b>4300 Waialae Ave</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                var html_fc80c81782d9781d63ae3b471029bbd1 = $(`<div id="html_fc80c81782d9781d63ae3b471029bbd1" style="width: 100.0%; height: 100.0%;"><b>4300 Waialae Ave</b><br>Reported people: 2</div>`)[0];
                 popup_53479eb3aa539f78c4a057c9c12e8c7d.setContent(html_fc80c81782d9781d63ae3b471029bbd1);
             
         
@@ -907,7 +907,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_4e1fdee0361ab35b98998187960813e6 = L.circleMarker(
                 [21.2774, -157.786],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -917,7 +917,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_aaaa5f2708e33154310307baf6c87d6e = $(`<div id="html_aaaa5f2708e33154310307baf6c87d6e" style="width: 100.0%; height: 100.0%;"><b>4916 Kilauea Ave</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                var html_aaaa5f2708e33154310307baf6c87d6e = $(`<div id="html_aaaa5f2708e33154310307baf6c87d6e" style="width: 100.0%; height: 100.0%;"><b>4916 Kilauea Ave</b><br>Reported people: 2</div>`)[0];
                 popup_a4bfc909a25d5ba320b3447ae58f7567.setContent(html_aaaa5f2708e33154310307baf6c87d6e);
             
         
@@ -940,7 +940,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_933eb59657c8ecf42518fc3c8d45f181 = L.circleMarker(
                 [21.2782, -157.7301],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -950,7 +950,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_35d70853c2c75b989eda7be4716620f4 = $(`<div id="html_35d70853c2c75b989eda7be4716620f4" style="width: 100.0%; height: 100.0%;"><b>5475 Kalanianaole Hwy</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                var html_35d70853c2c75b989eda7be4716620f4 = $(`<div id="html_35d70853c2c75b989eda7be4716620f4" style="width: 100.0%; height: 100.0%;"><b>5475 Kalanianaole Hwy</b><br>Reported people: 2</div>`)[0];
                 popup_4a64bdf1c29cfdc60bc1a12923bce8c0.setContent(html_35d70853c2c75b989eda7be4716620f4);
             
         
@@ -973,7 +973,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_23289fd8ae76c26f36876b14e56762d1 = L.circleMarker(
                 [21.281, -157.7131],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -983,7 +983,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_5823b1b32a06d66161a73495086778a8 = $(`<div id="html_5823b1b32a06d66161a73495086778a8" style="width: 100.0%; height: 100.0%;"><b>Maunalua Beach Park</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                var html_5823b1b32a06d66161a73495086778a8 = $(`<div id="html_5823b1b32a06d66161a73495086778a8" style="width: 100.0%; height: 100.0%;"><b>Maunalua Beach Park</b><br>Reported people: 2</div>`)[0];
                 popup_3530418dca076ad72f96252c12040ef5.setContent(html_5823b1b32a06d66161a73495086778a8);
             
         
@@ -1006,7 +1006,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_5dcc0c2f033720ce52e2aa0d86787302 = L.circleMarker(
                 [21.294, -157.6595],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1016,7 +1016,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_5dc2e4348e580bbc257e11ae2b9fe673 = $(`<div id="html_5dc2e4348e580bbc257e11ae2b9fe673" style="width: 100.0%; height: 100.0%;"><b>Queens Gate 2(Hawaii Kai)</b><br>Reported people: UNK<br>Combined numeric estimate: 0<br>Spreadsheet records: 1</div>`)[0];
+                var html_5dc2e4348e580bbc257e11ae2b9fe673 = $(`<div id="html_5dc2e4348e580bbc257e11ae2b9fe673" style="width: 100.0%; height: 100.0%;"><b>Queens Gate 2(Hawaii Kai)</b><br>Reported people: UNK</div>`)[0];
                 popup_1b1a95e6751f781784a8ef99220e30d3.setContent(html_5dc2e4348e580bbc257e11ae2b9fe673);
             
         
@@ -1039,7 +1039,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_c8b641f5971598a91d4d250345fef53c = L.circleMarker(
                 [21.26, -157.806],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1049,7 +1049,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_3cd7827844190e7790f70195381c6981 = $(`<div id="html_3cd7827844190e7790f70195381c6981" style="width: 100.0%; height: 100.0%;"><b>Diamond Head Road</b><br>Reported people: 0<br>Combined numeric estimate: 0<br>Spreadsheet records: 1</div>`)[0];
+                var html_3cd7827844190e7790f70195381c6981 = $(`<div id="html_3cd7827844190e7790f70195381c6981" style="width: 100.0%; height: 100.0%;"><b>Diamond Head Road</b><br>Reported people: 0</div>`)[0];
                 popup_8a301acbab34a517777cd71b1c267809.setContent(html_3cd7827844190e7790f70195381c6981);
             
         
@@ -1072,7 +1072,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_10275f1304373022c321d8b36053fbc9 = L.circleMarker(
                 [21.3008, -157.842],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.40908153700972, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.40908153700972, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1082,7 +1082,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_0d86f7c69c3221af8cec82fcd796f335 = $(`<div id="html_0d86f7c69c3221af8cec82fcd796f335" style="width: 100.0%; height: 100.0%;"><b>Thomas Square Pk, Makiki</b><br>Reported people: 6<br>Combined numeric estimate: 6<br>Spreadsheet records: 1</div>`)[0];
+                var html_0d86f7c69c3221af8cec82fcd796f335 = $(`<div id="html_0d86f7c69c3221af8cec82fcd796f335" style="width: 100.0%; height: 100.0%;"><b>Thomas Square Pk, Makiki</b><br>Reported people: 6</div>`)[0];
                 popup_c99db985a74af1ae2faf6858d49ebfb5.setContent(html_0d86f7c69c3221af8cec82fcd796f335);
             
         
@@ -1105,7 +1105,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_2ab231f7cca2beda6c2d20ccedcbd762 = L.circleMarker(
                 [21.3028, -157.837],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.762352359916264, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.762352359916264, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1115,7 +1115,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_dea1590287f85d450c976e2e3c6075fc = $(`<div id="html_dea1590287f85d450c976e2e3c6075fc" style="width: 100.0%; height: 100.0%;"><b>1414 Young Street</b><br>Reported people: 7<br>Combined numeric estimate: 7<br>Spreadsheet records: 1</div>`)[0];
+                var html_dea1590287f85d450c976e2e3c6075fc = $(`<div id="html_dea1590287f85d450c976e2e3c6075fc" style="width: 100.0%; height: 100.0%;"><b>1414 Young Street</b><br>Reported people: 7</div>`)[0];
                 popup_31d462ea02920e7aa99f7e47571462b7.setContent(html_dea1590287f85d450c976e2e3c6075fc);
             
         
@@ -1138,7 +1138,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_08950ee7d98cb1989e06b42a4c7fcb38 = L.circleMarker(
                 [21.2915, -157.8475],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.049844718999244, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.049844718999244, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1148,7 +1148,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_508ae3c64a3d3a31ffda5f45c7e74dc0 = $(`<div id="html_508ae3c64a3d3a31ffda5f45c7e74dc0" style="width: 100.0%; height: 100.0%;"><b>1201 Ala Moana Blvd</b><br>Reported people: 20<br>Combined numeric estimate: 20<br>Spreadsheet records: 1</div>`)[0];
+                var html_508ae3c64a3d3a31ffda5f45c7e74dc0 = $(`<div id="html_508ae3c64a3d3a31ffda5f45c7e74dc0" style="width: 100.0%; height: 100.0%;"><b>1201 Ala Moana Blvd</b><br>Reported people: 20</div>`)[0];
                 popup_c4878c40911dfce10667797745285bbd.setContent(html_508ae3c64a3d3a31ffda5f45c7e74dc0);
             
         
@@ -1171,7 +1171,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_cbf92e9ee162edfc51541a367170cf22 = L.circleMarker(
                 [21.2898, -157.8217],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1181,7 +1181,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_d0e3afcded772ba4b628a85600c21cbc = $(`<div id="html_d0e3afcded772ba4b628a85600c21cbc" style="width: 100.0%; height: 100.0%;"><b>Moilili Ball Park</b><br>Reported people: 3<br>Combined numeric estimate: 3<br>Spreadsheet records: 1</div>`)[0];
+                var html_d0e3afcded772ba4b628a85600c21cbc = $(`<div id="html_d0e3afcded772ba4b628a85600c21cbc" style="width: 100.0%; height: 100.0%;"><b>Moilili Ball Park</b><br>Reported people: 3</div>`)[0];
                 popup_b5b04cf8f12623ff69797e991ee27af8.setContent(html_d0e3afcded772ba4b628a85600c21cbc);
             
         
@@ -1204,7 +1204,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_a65942159c107cae35cd3b165ea2181f = L.circleMarker(
                 [21.2894, -157.8268],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.235382907247958, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.235382907247958, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1214,7 +1214,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_a793e6c83c0c9ef3c45f08bcb429c638 = $(`<div id="html_a793e6c83c0c9ef3c45f08bcb429c638" style="width: 100.0%; height: 100.0%;"><b>Old Stadium Park</b><br>Reported people: 12<br>Combined numeric estimate: 12<br>Spreadsheet records: 1</div>`)[0];
+                var html_a793e6c83c0c9ef3c45f08bcb429c638 = $(`<div id="html_a793e6c83c0c9ef3c45f08bcb429c638" style="width: 100.0%; height: 100.0%;"><b>Old Stadium Park</b><br>Reported people: 12</div>`)[0];
                 popup_eeb4667bbc5acf31df0c70c7403e96fb.setContent(html_a793e6c83c0c9ef3c45f08bcb429c638);
             
         
@@ -1237,7 +1237,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_b910323f05137bcd65058f273e9815ad = L.circleMarker(
                 [21.2855, -157.8418],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1247,7 +1247,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_276f33b9ee9552234bc9787889f7bdb6 = $(`<div id="html_276f33b9ee9552234bc9787889f7bdb6" style="width: 100.0%; height: 100.0%;"><b>Illikai Parking Lot</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                var html_276f33b9ee9552234bc9787889f7bdb6 = $(`<div id="html_276f33b9ee9552234bc9787889f7bdb6" style="width: 100.0%; height: 100.0%;"><b>Illikai Parking Lot</b><br>Reported people: 2</div>`)[0];
                 popup_b0fcba787814de24f0c746571385cae2.setContent(html_276f33b9ee9552234bc9787889f7bdb6);
             
         
@@ -1270,7 +1270,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_c4340f49e5e8ae0cd8f2b108cdc24624 = L.circleMarker(
                 [21.3032, -157.8415],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1280,7 +1280,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_7cc1feb74ffc3545fbbf2c19b44ebcfb = $(`<div id="html_7cc1feb74ffc3545fbbf2c19b44ebcfb" style="width: 100.0%; height: 100.0%;"><b>1290 S. Beretania St</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                var html_7cc1feb74ffc3545fbbf2c19b44ebcfb = $(`<div id="html_7cc1feb74ffc3545fbbf2c19b44ebcfb" style="width: 100.0%; height: 100.0%;"><b>1290 S. Beretania St</b><br>Reported people: 2</div>`)[0];
                 popup_131545c47ebd04c93040e76f59fdc79d.setContent(html_7cc1feb74ffc3545fbbf2c19b44ebcfb);
             
         
@@ -1303,7 +1303,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_5eae6158c15c7e5b143890ff58f2b22f = L.circleMarker(
                 [21.365, -157.924],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1313,7 +1313,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_0920face4236e293fc3308aa14756aa3 = $(`<div id="html_0920face4236e293fc3308aa14756aa3" style="width: 100.0%; height: 100.0%;"><b>2900 Moanalua Rd</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                var html_0920face4236e293fc3308aa14756aa3 = $(`<div id="html_0920face4236e293fc3308aa14756aa3" style="width: 100.0%; height: 100.0%;"><b>2900 Moanalua Rd</b><br>Reported people: 2</div>`)[0];
                 popup_158aa6d868fae74dc17b4fb28d5c6f60.setContent(html_0920face4236e293fc3308aa14756aa3);
             
         
@@ -1336,7 +1336,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_d442e5b9190ae18adbaeb396239c78da = L.circleMarker(
                 [21.2909, -157.8225],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1346,7 +1346,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_7fbe099dffe75bc5cff30037069e44fc = $(`<div id="html_7fbe099dffe75bc5cff30037069e44fc" style="width: 100.0%; height: 100.0%;"><b>2015 Kapiolani Blvd</b><br>Reported people: 4+<br>Combined numeric estimate: 4<br>Spreadsheet records: 1</div>`)[0];
+                var html_7fbe099dffe75bc5cff30037069e44fc = $(`<div id="html_7fbe099dffe75bc5cff30037069e44fc" style="width: 100.0%; height: 100.0%;"><b>2015 Kapiolani Blvd</b><br>Reported people: 4+</div>`)[0];
                 popup_696123a2a07e4875fc8999952c7b1889.setContent(html_7fbe099dffe75bc5cff30037069e44fc);
             
         
@@ -1369,7 +1369,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_ae41b53ae6d65954b3c5d09180a24678 = L.circleMarker(
                 [21.2891, -157.821],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1379,7 +1379,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_931f08f39dbdb28c07281c39da309686 = $(`<div id="html_931f08f39dbdb28c07281c39da309686" style="width: 100.0%; height: 100.0%;"><b>1026 Kalo Pl</b><br>Reported people: 1<br>Combined numeric estimate: 1<br>Spreadsheet records: 1</div>`)[0];
+                var html_931f08f39dbdb28c07281c39da309686 = $(`<div id="html_931f08f39dbdb28c07281c39da309686" style="width: 100.0%; height: 100.0%;"><b>1026 Kalo Pl</b><br>Reported people: 1</div>`)[0];
                 popup_ad8af69c3e1ce71f309ff8cab505d0cb.setContent(html_931f08f39dbdb28c07281c39da309686);
             
         
@@ -1402,7 +1402,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_6eada123d24d056a8b3e05119c6ad1c8 = L.circleMarker(
                 [21.2938, -157.8158],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1412,7 +1412,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_b60bb3ff2225c17afd08cb2951b1cf36 = $(`<div id="html_b60bb3ff2225c17afd08cb2951b1cf36" style="width: 100.0%; height: 100.0%;"><b>103 Varsity Pl</b><br>Reported people: 3+<br>Combined numeric estimate: 3<br>Spreadsheet records: 1</div>`)[0];
+                var html_b60bb3ff2225c17afd08cb2951b1cf36 = $(`<div id="html_b60bb3ff2225c17afd08cb2951b1cf36" style="width: 100.0%; height: 100.0%;"><b>103 Varsity Pl</b><br>Reported people: 3+</div>`)[0];
                 popup_2f529be21e00bedb5d48fb5874e6cf5a.setContent(html_b60bb3ff2225c17afd08cb2951b1cf36);
             
         
@@ -1435,7 +1435,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_dfdf2e27dc5fcd91741b6e5ad89b6b0f = L.circleMarker(
                 [21.2898, -157.8355],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.40908153700972, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.40908153700972, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1445,7 +1445,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_bc62cbd11f8e3679d5d72f7e6bb84975 = $(`<div id="html_bc62cbd11f8e3679d5d72f7e6bb84975" style="width: 100.0%; height: 100.0%;"><b>1670 Kalakaua Ave</b><br>Reported people: 3+, 3<br>Combined numeric estimate: 6<br>Spreadsheet records: 2</div>`)[0];
+                var html_bc62cbd11f8e3679d5d72f7e6bb84975 = $(`<div id="html_bc62cbd11f8e3679d5d72f7e6bb84975" style="width: 100.0%; height: 100.0%;"><b>1670 Kalakaua Ave</b><br>Reported people: 3+, 3</div>`)[0];
                 popup_1258161a8565c82b69493a79a9126d82.setContent(html_bc62cbd11f8e3679d5d72f7e6bb84975);
             
         
@@ -1468,7 +1468,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_b7e43ea8bef68749f86dc8be400b1f68 = L.circleMarker(
                 [21.3064, -157.8298],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1478,7 +1478,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_eb649a760a1de04196c9cf9d2372c51c = $(`<div id="html_eb649a760a1de04196c9cf9d2372c51c" style="width: 100.0%; height: 100.0%;"><b>1516 Nehoa St</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                var html_eb649a760a1de04196c9cf9d2372c51c = $(`<div id="html_eb649a760a1de04196c9cf9d2372c51c" style="width: 100.0%; height: 100.0%;"><b>1516 Nehoa St</b><br>Reported people: 2</div>`)[0];
                 popup_eeff4d3de55b723c5031c397e9e60274.setContent(html_eb649a760a1de04196c9cf9d2372c51c);
             
         
@@ -1501,7 +1501,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_8b00e730abe4dc41b925bcc26dc2d22b = L.circleMarker(
                 [21.2927, -157.85],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1511,7 +1511,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_7275d114a29169342979b12438463829 = $(`<div id="html_7275d114a29169342979b12438463829" style="width: 100.0%; height: 100.0%;"><b>1125F Ala Moana Blvd</b><br>Reported people: 3+<br>Combined numeric estimate: 3<br>Spreadsheet records: 1</div>`)[0];
+                var html_7275d114a29169342979b12438463829 = $(`<div id="html_7275d114a29169342979b12438463829" style="width: 100.0%; height: 100.0%;"><b>1125F Ala Moana Blvd</b><br>Reported people: 3+</div>`)[0];
                 popup_58cbe74581e6662b5a18cf31e360a3ba.setContent(html_7275d114a29169342979b12438463829);
             
         
@@ -1534,7 +1534,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_7fd8c593cb7084f31f16b3ed7265ef59 = L.circleMarker(
                 [21.292, -157.8365],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.762352359916264, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.762352359916264, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1544,7 +1544,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_c63b6bd338bc70c191c926e29f08add3 = $(`<div id="html_c63b6bd338bc70c191c926e29f08add3" style="width: 100.0%; height: 100.0%;"><b>1515 Kapiolani Blvd</b><br>Reported people: 7+<br>Combined numeric estimate: 7<br>Spreadsheet records: 1</div>`)[0];
+                var html_c63b6bd338bc70c191c926e29f08add3 = $(`<div id="html_c63b6bd338bc70c191c926e29f08add3" style="width: 100.0%; height: 100.0%;"><b>1515 Kapiolani Blvd</b><br>Reported people: 7+</div>`)[0];
                 popup_98beffd3a78366b5a32795b2f333ded5.setContent(html_c63b6bd338bc70c191c926e29f08add3);
             
         
@@ -1567,7 +1567,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_3645e7ac723e9fe2ac0d7cb448d106e4 = L.circleMarker(
                 [21.2949, -157.824],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.091168824543143, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.091168824543143, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1577,7 +1577,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_451436434d1a6300d795f300d56efffb = $(`<div id="html_451436434d1a6300d795f300d56efffb" style="width: 100.0%; height: 100.0%;"><b>2357 S. Beretania St</b><br>Reported people: 8+<br>Combined numeric estimate: 8<br>Spreadsheet records: 1</div>`)[0];
+                var html_451436434d1a6300d795f300d56efffb = $(`<div id="html_451436434d1a6300d795f300d56efffb" style="width: 100.0%; height: 100.0%;"><b>2357 S. Beretania St</b><br>Reported people: 8+</div>`)[0];
                 popup_501ef96c6092bc2adbf9730fb6c1d384.setContent(html_451436434d1a6300d795f300d56efffb);
             
         
@@ -1600,7 +1600,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_6a1c84dd8f7290637b795a8683202c3b = L.circleMarker(
                 [21.302, -157.843],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.96992462263972, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.96992462263972, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1610,7 +1610,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_4470833ed014e72f84f4784e78a61e4d = $(`<div id="html_4470833ed014e72f84f4784e78a61e4d" style="width: 100.0%; height: 100.0%;"><b>Victoria Street and Young st</b><br>Reported people: 5, 3, 3<br>Combined numeric estimate: 11<br>Spreadsheet records: 3</div>`)[0];
+                var html_4470833ed014e72f84f4784e78a61e4d = $(`<div id="html_4470833ed014e72f84f4784e78a61e4d" style="width: 100.0%; height: 100.0%;"><b>Victoria Street and Young st</b><br>Reported people: 5, 3, 3</div>`)[0];
                 popup_8e98acc3f0a645f94126d9646c942496.setContent(html_4470833ed014e72f84f4784e78a61e4d);
             
         
@@ -1633,7 +1633,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_47ebe60bb1a44a1abc5af4379cfade37 = L.circleMarker(
                 [21.3023, -157.8375],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.024922359499623, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.024922359499623, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1643,7 +1643,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_4339674d7a65ef81ade82171baeb4fc6 = $(`<div id="html_4339674d7a65ef81ade82171baeb4fc6" style="width: 100.0%; height: 100.0%;"><b>Makiki Street / Beretania st</b><br>Reported people: 5<br>Combined numeric estimate: 5<br>Spreadsheet records: 1</div>`)[0];
+                var html_4339674d7a65ef81ade82171baeb4fc6 = $(`<div id="html_4339674d7a65ef81ade82171baeb4fc6" style="width: 100.0%; height: 100.0%;"><b>Makiki Street / Beretania st</b><br>Reported people: 5</div>`)[0];
                 popup_c35488c4a7aa1a4ee98f88a838c62fd7.setContent(html_4339674d7a65ef81ade82171baeb4fc6);
             
         
@@ -1666,7 +1666,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_b2ce237e6e1a9005b26f7ba01a3d8375 = L.circleMarker(
                 [21.3027, -157.836],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.024922359499623, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.024922359499623, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1676,7 +1676,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_f6145bee289eb23b907fd84d00056689 = $(`<div id="html_f6145bee289eb23b907fd84d00056689" style="width: 100.0%; height: 100.0%;"><b>1460 Beretania st</b><br>Reported people: 5<br>Combined numeric estimate: 5<br>Spreadsheet records: 1</div>`)[0];
+                var html_f6145bee289eb23b907fd84d00056689 = $(`<div id="html_f6145bee289eb23b907fd84d00056689" style="width: 100.0%; height: 100.0%;"><b>1460 Beretania st</b><br>Reported people: 5</div>`)[0];
                 popup_bea7436527d094f9b0bc7dff4ee2f194.setContent(html_f6145bee289eb23b907fd84d00056689);
             
         
@@ -1699,7 +1699,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_9fa6dbfb97dfeb4b742dbd229653589d = L.circleMarker(
                 [21.3025, -157.835],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1709,7 +1709,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_c219832f8dd0cc29a1bb1638c523d2d2 = $(`<div id="html_c219832f8dd0cc29a1bb1638c523d2d2" style="width: 100.0%; height: 100.0%;"><b>1500 S Beretania St</b><br>Reported people: 3<br>Combined numeric estimate: 3<br>Spreadsheet records: 1</div>`)[0];
+                var html_c219832f8dd0cc29a1bb1638c523d2d2 = $(`<div id="html_c219832f8dd0cc29a1bb1638c523d2d2" style="width: 100.0%; height: 100.0%;"><b>1500 S Beretania St</b><br>Reported people: 3</div>`)[0];
                 popup_714289fea0258c8f8558b9f06f8b1dd2.setContent(html_c219832f8dd0cc29a1bb1638c523d2d2);
             
         
@@ -1732,7 +1732,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_a4ae204bb1c5d8299e347ba5678c58eb = L.circleMarker(
                 [21.2922, -157.838],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1742,7 +1742,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_a0b9c6a131a23049d15accf503ed394d = $(`<div id="html_a0b9c6a131a23049d15accf503ed394d" style="width: 100.0%; height: 100.0%;"><b>1500 Kapiolani Ave</b><br>Reported people: 3<br>Combined numeric estimate: 3<br>Spreadsheet records: 1</div>`)[0];
+                var html_a0b9c6a131a23049d15accf503ed394d = $(`<div id="html_a0b9c6a131a23049d15accf503ed394d" style="width: 100.0%; height: 100.0%;"><b>1500 Kapiolani Ave</b><br>Reported people: 3</div>`)[0];
                 popup_d1464d0abde4d4fdccfaa1218fae763f.setContent(html_a0b9c6a131a23049d15accf503ed394d);
             
         
@@ -1765,7 +1765,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_f3ef379c3461390ad620c79214641f26 = L.circleMarker(
                 [21.2819, -157.8029],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.40908153700972, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.40908153700972, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1775,7 +1775,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_e987def2f826987f9fbdcee6b2e08dd3 = $(`<div id="html_e987def2f826987f9fbdcee6b2e08dd3" style="width: 100.0%; height: 100.0%;"><b>Harding and 1st Ave</b><br>Reported people: 6<br>Combined numeric estimate: 6<br>Spreadsheet records: 1</div>`)[0];
+                var html_e987def2f826987f9fbdcee6b2e08dd3 = $(`<div id="html_e987def2f826987f9fbdcee6b2e08dd3" style="width: 100.0%; height: 100.0%;"><b>Harding and 1st Ave</b><br>Reported people: 6</div>`)[0];
                 popup_01303c35fa32d76d5394b57fb60eef19.setContent(html_e987def2f826987f9fbdcee6b2e08dd3);
             
         
@@ -1798,7 +1798,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_b1ff3f08a333bb62ffbc3ac87600bd00 = L.circleMarker(
                 [21.3038, -157.8378],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1808,7 +1808,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_8f42d145c156905b11327224cfdabe0d = $(`<div id="html_8f42d145c156905b11327224cfdabe0d" style="width: 100.0%; height: 100.0%;"><b>1314 Makiki Street</b><br>Reported people: 3<br>Combined numeric estimate: 3<br>Spreadsheet records: 1</div>`)[0];
+                var html_8f42d145c156905b11327224cfdabe0d = $(`<div id="html_8f42d145c156905b11327224cfdabe0d" style="width: 100.0%; height: 100.0%;"><b>1314 Makiki Street</b><br>Reported people: 3</div>`)[0];
                 popup_57b227447fbfe2f85f70c5e5e9c693e8.setContent(html_8f42d145c156905b11327224cfdabe0d);
             
         
@@ -1831,7 +1831,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_609a09f72994dbddfe6ad0ef7f0e6f9e = L.circleMarker(
                 [21.293, -157.819],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1841,7 +1841,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_5364956a751f0961f65d58b80a004d8e = $(`<div id="html_5364956a751f0961f65d58b80a004d8e" style="width: 100.0%; height: 100.0%;"><b>Lokahi St</b><br>Reported people: 1, 1<br>Combined numeric estimate: 2<br>Spreadsheet records: 2</div>`)[0];
+                var html_5364956a751f0961f65d58b80a004d8e = $(`<div id="html_5364956a751f0961f65d58b80a004d8e" style="width: 100.0%; height: 100.0%;"><b>Lokahi St</b><br>Reported people: 1, 1</div>`)[0];
                 popup_c6ae3c0701828fcb7dd878bbc75cf25e.setContent(html_5364956a751f0961f65d58b80a004d8e);
             
         
@@ -1864,7 +1864,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_1bd7d314da810ed6043f2b74cb3916b8 = L.circleMarker(
                 [21.2915, -157.818],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1874,7 +1874,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_3c88a6886c7f74adcf7fa879c02dfac1 = $(`<div id="html_3c88a6886c7f74adcf7fa879c02dfac1" style="width: 100.0%; height: 100.0%;"><b>2646 S. King St</b><br>Reported people: 1<br>Combined numeric estimate: 1<br>Spreadsheet records: 1</div>`)[0];
+                var html_3c88a6886c7f74adcf7fa879c02dfac1 = $(`<div id="html_3c88a6886c7f74adcf7fa879c02dfac1" style="width: 100.0%; height: 100.0%;"><b>2646 S. King St</b><br>Reported people: 1</div>`)[0];
                 popup_e1e654b7bde9e65d527eab4cfed005a7.setContent(html_3c88a6886c7f74adcf7fa879c02dfac1);
             
         
@@ -1897,7 +1897,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_05c8439eb88bab5b73b615f9c4139ef6 = L.circleMarker(
                 [21.3015, -157.84],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1907,7 +1907,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_26c96775ee20357e6e0af8a79b6d69fd = $(`<div id="html_26c96775ee20357e6e0af8a79b6d69fd" style="width: 100.0%; height: 100.0%;"><b>920 Cedar</b><br>Reported people: 0<br>Combined numeric estimate: 0<br>Spreadsheet records: 1</div>`)[0];
+                var html_26c96775ee20357e6e0af8a79b6d69fd = $(`<div id="html_26c96775ee20357e6e0af8a79b6d69fd" style="width: 100.0%; height: 100.0%;"><b>920 Cedar</b><br>Reported people: 0</div>`)[0];
                 popup_dc05703f6e34cfaa272658c5129be45a.setContent(html_26c96775ee20357e6e0af8a79b6d69fd);
             
         
@@ -1930,7 +1930,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_b63ece6a4b1652fa4f81565601597938 = L.circleMarker(
                 [21.305, -157.849],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1940,7 +1940,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_10b70a02b59d6beac8633db911dd6db2 = $(`<div id="html_10b70a02b59d6beac8633db911dd6db2" style="width: 100.0%; height: 100.0%;"><b>1039 S. King Street</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                var html_10b70a02b59d6beac8633db911dd6db2 = $(`<div id="html_10b70a02b59d6beac8633db911dd6db2" style="width: 100.0%; height: 100.0%;"><b>1039 S. King Street</b><br>Reported people: 2</div>`)[0];
                 popup_2bcdbb4e9ebd483df7fd1479bb3d6b31.setContent(html_10b70a02b59d6beac8633db911dd6db2);
             
         
@@ -1963,7 +1963,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_c0400cf4e99b16b01f7d1ba1e0403120 = L.circleMarker(
                 [21.3229, -157.8804],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -1973,7 +1973,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_0d083dfa979b12a1deb3b0d4ee9319df = $(`<div id="html_0d083dfa979b12a1deb3b0d4ee9319df" style="width: 100.0%; height: 100.0%;"><b>Akepo Lane & N. King street</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                var html_0d083dfa979b12a1deb3b0d4ee9319df = $(`<div id="html_0d083dfa979b12a1deb3b0d4ee9319df" style="width: 100.0%; height: 100.0%;"><b>Akepo Lane & N. King street</b><br>Reported people: 2</div>`)[0];
                 popup_194620e6b89cab491a50c99ede16076b.setContent(html_0d083dfa979b12a1deb3b0d4ee9319df);
             
         
@@ -1996,7 +1996,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_691a8ce6f6859d03396e0fed898a484c = L.circleMarker(
                 [21.3034, -157.843],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2006,7 +2006,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_791217dcfb3d48a4ea0b72b5b9584312 = $(`<div id="html_791217dcfb3d48a4ea0b72b5b9584312" style="width: 100.0%; height: 100.0%;"><b>1234 S Beretania street</b><br>Reported people: 3<br>Combined numeric estimate: 3<br>Spreadsheet records: 1</div>`)[0];
+                var html_791217dcfb3d48a4ea0b72b5b9584312 = $(`<div id="html_791217dcfb3d48a4ea0b72b5b9584312" style="width: 100.0%; height: 100.0%;"><b>1234 S Beretania street</b><br>Reported people: 3</div>`)[0];
                 popup_22e392559d2d3f59dfa95a8c769ef156.setContent(html_791217dcfb3d48a4ea0b72b5b9584312);
             
         
@@ -2029,7 +2029,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_29ddd1f8005b1753246dbd51b7bd7886 = L.circleMarker(
                 [21.3035, -157.844],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2039,7 +2039,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_c32772c09a3be232e48027e8794929c8 = $(`<div id="html_c32772c09a3be232e48027e8794929c8" style="width: 100.0%; height: 100.0%;"><b>1215 S Beretania street</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                var html_c32772c09a3be232e48027e8794929c8 = $(`<div id="html_c32772c09a3be232e48027e8794929c8" style="width: 100.0%; height: 100.0%;"><b>1215 S Beretania street</b><br>Reported people: 2</div>`)[0];
                 popup_787fad8b744fba682ed82dd922c4faaa.setContent(html_c32772c09a3be232e48027e8794929c8);
             
         
@@ -2062,7 +2062,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_e89ac1571f744a9549bb02fe33039f8d = L.circleMarker(
                 [21.299, -157.8374],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2072,7 +2072,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_bf11c6fff67b4d3e4dd20fc78f1b6155 = $(`<div id="html_bf11c6fff67b4d3e4dd20fc78f1b6155" style="width: 100.0%; height: 100.0%;"><b>1727 Makiki Street</b><br>Reported people: 4<br>Combined numeric estimate: 4<br>Spreadsheet records: 1</div>`)[0];
+                var html_bf11c6fff67b4d3e4dd20fc78f1b6155 = $(`<div id="html_bf11c6fff67b4d3e4dd20fc78f1b6155" style="width: 100.0%; height: 100.0%;"><b>1727 Makiki Street</b><br>Reported people: 4</div>`)[0];
                 popup_de2d669369cd1de5c707d80a334f9f76.setContent(html_bf11c6fff67b4d3e4dd20fc78f1b6155);
             
         
@@ -2095,7 +2095,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_5bf37266c799488eba6f45119c6f794c = L.circleMarker(
                 [21.297, -157.8606],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2105,7 +2105,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_534202dad0998c59dc0be59fa76ca758 = $(`<div id="html_534202dad0998c59dc0be59fa76ca758" style="width: 100.0%; height: 100.0%;"><b>531 Cooke St</b><br>Reported people: 4+<br>Combined numeric estimate: 4<br>Spreadsheet records: 1</div>`)[0];
+                var html_534202dad0998c59dc0be59fa76ca758 = $(`<div id="html_534202dad0998c59dc0be59fa76ca758" style="width: 100.0%; height: 100.0%;"><b>531 Cooke St</b><br>Reported people: 4+</div>`)[0];
                 popup_9b1d3dd61020d2ae5c529e110f4785cd.setContent(html_534202dad0998c59dc0be59fa76ca758);
             
         
@@ -2128,7 +2128,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_7afc2f8a71adccfc78d7c92e8ef84d54 = L.circleMarker(
                 [21.297, -157.846],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2138,7 +2138,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_af2c8a9eb601516566a83f89bb3e2abb = $(`<div id="html_af2c8a9eb601516566a83f89bb3e2abb" style="width: 100.0%; height: 100.0%;"><b>610 Ward Ave</b><br>Reported people: 4+<br>Combined numeric estimate: 4<br>Spreadsheet records: 1</div>`)[0];
+                var html_af2c8a9eb601516566a83f89bb3e2abb = $(`<div id="html_af2c8a9eb601516566a83f89bb3e2abb" style="width: 100.0%; height: 100.0%;"><b>610 Ward Ave</b><br>Reported people: 4+</div>`)[0];
                 popup_05f8d8e213f03ad86b379266382a2eba.setContent(html_af2c8a9eb601516566a83f89bb3e2abb);
             
         
@@ -2161,7 +2161,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_29f22e4b72c0e9d060fe41dff7085e36 = L.circleMarker(
                 [21.2955, -157.858],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2171,7 +2171,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_ba29224f84421502d067ba25eaeb3c74 = $(`<div id="html_ba29224f84421502d067ba25eaeb3c74" style="width: 100.0%; height: 100.0%;"><b>537 Coral St</b><br>Reported people: 1+<br>Combined numeric estimate: 1<br>Spreadsheet records: 1</div>`)[0];
+                var html_ba29224f84421502d067ba25eaeb3c74 = $(`<div id="html_ba29224f84421502d067ba25eaeb3c74" style="width: 100.0%; height: 100.0%;"><b>537 Coral St</b><br>Reported people: 1+</div>`)[0];
                 popup_22cd6368d31a105c62aceda2ac0eb0d7.setContent(html_ba29224f84421502d067ba25eaeb3c74);
             
         
@@ -2194,7 +2194,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_801bdd305e06244467d29b051a31fd2a = L.circleMarker(
                 [21.312, -157.8608],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2204,7 +2204,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_74ce7c3311a8f0b9af381360ad7e32aa = $(`<div id="html_74ce7c3311a8f0b9af381360ad7e32aa" style="width: 100.0%; height: 100.0%;"><b>1055 River Street</b><br>Reported people: 4<br>Combined numeric estimate: 4<br>Spreadsheet records: 1</div>`)[0];
+                var html_74ce7c3311a8f0b9af381360ad7e32aa = $(`<div id="html_74ce7c3311a8f0b9af381360ad7e32aa" style="width: 100.0%; height: 100.0%;"><b>1055 River Street</b><br>Reported people: 4</div>`)[0];
                 popup_e459eaf2b404e7b8dbeef7294a4b17ce.setContent(html_74ce7c3311a8f0b9af381360ad7e32aa);
             
         
@@ -2227,7 +2227,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_bc21f427025489521fb832141837d035 = L.circleMarker(
                 [21.299, -157.858],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2237,7 +2237,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_2808d4dee7556b56a5e90994633f3df4 = $(`<div id="html_2808d4dee7556b56a5e90994633f3df4" style="width: 100.0%; height: 100.0%;"><b>Halekawila and Keawe Construction</b><br>Reported people: 2+<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                var html_2808d4dee7556b56a5e90994633f3df4 = $(`<div id="html_2808d4dee7556b56a5e90994633f3df4" style="width: 100.0%; height: 100.0%;"><b>Halekawila and Keawe Construction</b><br>Reported people: 2+</div>`)[0];
                 popup_a6930ab1512370a39f580aef5fab377e.setContent(html_2808d4dee7556b56a5e90994633f3df4);
             
         
@@ -2260,7 +2260,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_7745daaf88266e301bbee1720efbbceb = L.circleMarker(
                 [21.3143, -157.869],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2270,7 +2270,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_ec11366871ddfc6763476405ec66dc9a = $(`<div id="html_ec11366871ddfc6763476405ec66dc9a" style="width: 100.0%; height: 100.0%;"><b>N Nimitz and Kekaulike Street</b><br>Reported people: 4+<br>Combined numeric estimate: 4<br>Spreadsheet records: 1</div>`)[0];
+                var html_ec11366871ddfc6763476405ec66dc9a = $(`<div id="html_ec11366871ddfc6763476405ec66dc9a" style="width: 100.0%; height: 100.0%;"><b>N Nimitz and Kekaulike Street</b><br>Reported people: 4+</div>`)[0];
                 popup_eba359b053e4aad3a0cbd3a165534726.setContent(html_ec11366871ddfc6763476405ec66dc9a);
             
         
@@ -2293,7 +2293,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_b85a5b5766c00359e53d391c0a605a1b = L.circleMarker(
                 [21.3078, -157.8587],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.235382907247958, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.235382907247958, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2303,7 +2303,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_9965a4fac0ad5483b54f6597de6e8bf9 = $(`<div id="html_9965a4fac0ad5483b54f6597de6e8bf9" style="width: 100.0%; height: 100.0%;"><b>478 S King Street (HI State Library)</b><br>Reported people: 12<br>Combined numeric estimate: 12<br>Spreadsheet records: 1</div>`)[0];
+                var html_9965a4fac0ad5483b54f6597de6e8bf9 = $(`<div id="html_9965a4fac0ad5483b54f6597de6e8bf9" style="width: 100.0%; height: 100.0%;"><b>478 S King Street (HI State Library)</b><br>Reported people: 12</div>`)[0];
                 popup_c7a126e150d2f1454db23ecf5c87307f.setContent(html_9965a4fac0ad5483b54f6597de6e8bf9);
             
         
@@ -2326,7 +2326,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_c828af360271d0c2408f9bbda6d09f41 = L.circleMarker(
                 [21.321, -157.858],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2336,7 +2336,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_d57e6266c9cf176d9396de90e3588ea3 = $(`<div id="html_d57e6266c9cf176d9396de90e3588ea3" style="width: 100.0%; height: 100.0%;"><b>64 N Kuakini St, Honolulu</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                var html_d57e6266c9cf176d9396de90e3588ea3 = $(`<div id="html_d57e6266c9cf176d9396de90e3588ea3" style="width: 100.0%; height: 100.0%;"><b>64 N Kuakini St, Honolulu</b><br>Reported people: 2</div>`)[0];
                 popup_6e9a3e33a51e87bd2e8821d25fba1df3.setContent(html_d57e6266c9cf176d9396de90e3588ea3);
             
         
@@ -2359,7 +2359,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_3c545125386bb9d0784c4a014f7a5684 = L.circleMarker(
                 [21.3004, -157.8528],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2369,7 +2369,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_e3aef18500e7f9f8d744ef5179bda41b = $(`<div id="html_e3aef18500e7f9f8d744ef5179bda41b" style="width: 100.0%; height: 100.0%;"><b>609 South St</b><br>Reported people: 1<br>Combined numeric estimate: 1<br>Spreadsheet records: 1</div>`)[0];
+                var html_e3aef18500e7f9f8d744ef5179bda41b = $(`<div id="html_e3aef18500e7f9f8d744ef5179bda41b" style="width: 100.0%; height: 100.0%;"><b>609 South St</b><br>Reported people: 1</div>`)[0];
                 popup_4b0beeeaa2970e509bbada34142c6a3e.setContent(html_e3aef18500e7f9f8d744ef5179bda41b);
             
         
@@ -2392,7 +2392,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_2e6475deed3c3def2f2e5250fbdeef67 = L.circleMarker(
                 [21.33, -157.872],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2402,7 +2402,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_319e74de05ed5a5b70819c0f6a96c1a4 = $(`<div id="html_319e74de05ed5a5b70819c0f6a96c1a4" style="width: 100.0%; height: 100.0%;"><b>1527 Kapalama Ave</b><br>Reported people: 2+<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                var html_319e74de05ed5a5b70819c0f6a96c1a4 = $(`<div id="html_319e74de05ed5a5b70819c0f6a96c1a4" style="width: 100.0%; height: 100.0%;"><b>1527 Kapalama Ave</b><br>Reported people: 2+</div>`)[0];
                 popup_8344706d45f2d7c4547c18981ca2d19a.setContent(html_319e74de05ed5a5b70819c0f6a96c1a4);
             
         
@@ -2425,7 +2425,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_7ec4a5f883de9d6478b8725aa4719342 = L.circleMarker(
                 [21.2948, -157.858],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.024922359499623, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.024922359499623, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2435,7 +2435,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_61d16c1bf6583c369273e932d1f9d5d5 = $(`<div id="html_61d16c1bf6583c369273e932d1f9d5d5" style="width: 100.0%; height: 100.0%;"><b>Mother Waldron Park</b><br>Reported people: 5<br>Combined numeric estimate: 5<br>Spreadsheet records: 1</div>`)[0];
+                var html_61d16c1bf6583c369273e932d1f9d5d5 = $(`<div id="html_61d16c1bf6583c369273e932d1f9d5d5" style="width: 100.0%; height: 100.0%;"><b>Mother Waldron Park</b><br>Reported people: 5</div>`)[0];
                 popup_7b6e4d7c4d0f70546e668709cd5b35f3.setContent(html_61d16c1bf6583c369273e932d1f9d5d5);
             
         
@@ -2458,7 +2458,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_5fdeb9165ffbc199c2a0e3ed5ccc0af4 = L.circleMarker(
                 [21.3333, -157.905],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.85900603509299, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.85900603509299, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2468,7 +2468,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_c8d848471cf9ab812d589e5cd45a08d8 = $(`<div id="html_c8d848471cf9ab812d589e5cd45a08d8" style="width: 100.0%; height: 100.0%;"><b>2475 N Nimitz Hwy</b><br>Reported people: 30<br>Combined numeric estimate: 30<br>Spreadsheet records: 1</div>`)[0];
+                var html_c8d848471cf9ab812d589e5cd45a08d8 = $(`<div id="html_c8d848471cf9ab812d589e5cd45a08d8" style="width: 100.0%; height: 100.0%;"><b>2475 N Nimitz Hwy</b><br>Reported people: 30</div>`)[0];
                 popup_14116f79966114d93a3f45ecd62c7172.setContent(html_c8d848471cf9ab812d589e5cd45a08d8);
             
         
@@ -2491,7 +2491,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_0a6620083510226413cb0bf294f76b27 = L.circleMarker(
                 [21.3262, -157.8882],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.40908153700972, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.40908153700972, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2501,7 +2501,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_84481ecf14e49a2e5ac8e64493e62d1c = $(`<div id="html_84481ecf14e49a2e5ac8e64493e62d1c" style="width: 100.0%; height: 100.0%;"><b>2611 Kilihau Street</b><br>Reported people: 6+<br>Combined numeric estimate: 6<br>Spreadsheet records: 1</div>`)[0];
+                var html_84481ecf14e49a2e5ac8e64493e62d1c = $(`<div id="html_84481ecf14e49a2e5ac8e64493e62d1c" style="width: 100.0%; height: 100.0%;"><b>2611 Kilihau Street</b><br>Reported people: 6+</div>`)[0];
                 popup_8c4fe060978f96b080dd991dabdee298.setContent(html_84481ecf14e49a2e5ac8e64493e62d1c);
             
         
@@ -2524,7 +2524,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_e249a0fa4c2a1d473c018cdd3aa88667 = L.circleMarker(
                 [21.3985, -157.956],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2534,7 +2534,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_12805555f9af854ce15fe793308202e4 = $(`<div id="html_12805555f9af854ce15fe793308202e4" style="width: 100.0%; height: 100.0%;"><b>99-740 Apela St</b><br>Reported people: 4+<br>Combined numeric estimate: 4<br>Spreadsheet records: 1</div>`)[0];
+                var html_12805555f9af854ce15fe793308202e4 = $(`<div id="html_12805555f9af854ce15fe793308202e4" style="width: 100.0%; height: 100.0%;"><b>99-740 Apela St</b><br>Reported people: 4+</div>`)[0];
                 popup_dad76473d39ac65ef14469a7a3c27e0f.setContent(html_12805555f9af854ce15fe793308202e4);
             
         
@@ -2557,7 +2557,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_757faed7dc6c9e4cf7bace0c4c75026e = L.circleMarker(
                 [21.3229, -157.8804],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2567,7 +2567,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_b646adb66018b9c039c3b9c475fccf3f = $(`<div id="html_b646adb66018b9c039c3b9c475fccf3f" style="width: 100.0%; height: 100.0%;"><b>954A Akepo Ln</b><br>Reported people: 2+<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                var html_b646adb66018b9c039c3b9c475fccf3f = $(`<div id="html_b646adb66018b9c039c3b9c475fccf3f" style="width: 100.0%; height: 100.0%;"><b>954A Akepo Ln</b><br>Reported people: 2+</div>`)[0];
                 popup_c63eceaa005bf0e1186e89a0587b3d42.setContent(html_b646adb66018b9c039c3b9c475fccf3f);
             
         
@@ -2590,7 +2590,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_b358c3087b65718cd51567cf930180a7 = L.circleMarker(
                 [21.386, -157.93],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2600,7 +2600,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_c6a4a108dfbfa6d515bd3840f4e4e24a = $(`<div id="html_c6a4a108dfbfa6d515bd3840f4e4e24a" style="width: 100.0%; height: 100.0%;"><b>98 1059 Moanalua Rd, Aiea</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                var html_c6a4a108dfbfa6d515bd3840f4e4e24a = $(`<div id="html_c6a4a108dfbfa6d515bd3840f4e4e24a" style="width: 100.0%; height: 100.0%;"><b>98 1059 Moanalua Rd, Aiea</b><br>Reported people: 2</div>`)[0];
                 popup_a8a95df64942673804e4ff0f3434f79e.setContent(html_c6a4a108dfbfa6d515bd3840f4e4e24a);
             
         
@@ -2623,7 +2623,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_da104cedad885baae05aee4ca33d602b = L.circleMarker(
                 [21.3229, -157.8804],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2633,7 +2633,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_7487b8201e465a282bde7a0153d76555 = $(`<div id="html_7487b8201e465a282bde7a0153d76555" style="width: 100.0%; height: 100.0%;"><b>954a Akepo Ln, Honolulu</b><br>Reported people: 1<br>Combined numeric estimate: 1<br>Spreadsheet records: 1</div>`)[0];
+                var html_7487b8201e465a282bde7a0153d76555 = $(`<div id="html_7487b8201e465a282bde7a0153d76555" style="width: 100.0%; height: 100.0%;"><b>954a Akepo Ln, Honolulu</b><br>Reported people: 1</div>`)[0];
                 popup_db19fa1e625df370bf81b2b3f021e5dd.setContent(html_7487b8201e465a282bde7a0153d76555);
             
         
@@ -2656,7 +2656,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_199f3dedc7492bd28d995ca438bc1555 = L.circleMarker(
                 [21.3064, -157.8918],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.40908153700972, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.40908153700972, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2666,7 +2666,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_83d2f6663077d4168bbb3e73ce8a35e7 = $(`<div id="html_83d2f6663077d4168bbb3e73ce8a35e7" style="width: 100.0%; height: 100.0%;"><b>Sand Island SRA park</b><br>Reported people: 6+<br>Combined numeric estimate: 6<br>Spreadsheet records: 1</div>`)[0];
+                var html_83d2f6663077d4168bbb3e73ce8a35e7 = $(`<div id="html_83d2f6663077d4168bbb3e73ce8a35e7" style="width: 100.0%; height: 100.0%;"><b>Sand Island SRA park</b><br>Reported people: 6+</div>`)[0];
                 popup_4deceea41bd9a527a22946436e90a061.setContent(html_83d2f6663077d4168bbb3e73ce8a35e7);
             
         
@@ -2689,7 +2689,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_74f1dfcea24d64033af41d2915117bb5 = L.circleMarker(
                 [21.2914, -157.847],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2699,7 +2699,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_bd5d93cd0dc255cb3c0209f3725f65e8 = $(`<div id="html_bd5d93cd0dc255cb3c0209f3725f65e8" style="width: 100.0%; height: 100.0%;"><b>Ala Moana Beach Park</b><br>Reported people: 46315<br>Combined numeric estimate: 0<br>Spreadsheet records: 1</div>`)[0];
+                var html_bd5d93cd0dc255cb3c0209f3725f65e8 = $(`<div id="html_bd5d93cd0dc255cb3c0209f3725f65e8" style="width: 100.0%; height: 100.0%;"><b>Ala Moana Beach Park</b><br>Reported people: 46315</div>`)[0];
                 popup_ab43fa57977de363d3eb28231c8f20c2.setContent(html_bd5d93cd0dc255cb3c0209f3725f65e8);
             
         
@@ -2722,7 +2722,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_eed01aeee6887a6a7c407caea79e572d = L.circleMarker(
                 [21.3187, -157.8886],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2732,7 +2732,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_9827998e4ed42f47b40381dc01eb1965 = $(`<div id="html_9827998e4ed42f47b40381dc01eb1965" style="width: 100.0%; height: 100.0%;"><b>Auiki St</b><br>Reported people: 3+<br>Combined numeric estimate: 3<br>Spreadsheet records: 1</div>`)[0];
+                var html_9827998e4ed42f47b40381dc01eb1965 = $(`<div id="html_9827998e4ed42f47b40381dc01eb1965" style="width: 100.0%; height: 100.0%;"><b>Auiki St</b><br>Reported people: 3+</div>`)[0];
                 popup_e31528f4c1625f043d51e465eb1747e2.setContent(html_9827998e4ed42f47b40381dc01eb1965);
             
         
@@ -2755,7 +2755,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_ce160665b622634b91ae2b0fd2184581 = L.circleMarker(
                 [21.3875, -157.945],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2765,7 +2765,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_84b039cbf2928f30453128682fd26412 = $(`<div id="html_84b039cbf2928f30453128682fd26412" style="width: 100.0%; height: 100.0%;"><b>98-201 Kamehameha Hwy</b><br>Reported people: 1<br>Combined numeric estimate: 1<br>Spreadsheet records: 1</div>`)[0];
+                var html_84b039cbf2928f30453128682fd26412 = $(`<div id="html_84b039cbf2928f30453128682fd26412" style="width: 100.0%; height: 100.0%;"><b>98-201 Kamehameha Hwy</b><br>Reported people: 1</div>`)[0];
                 popup_f4b3bf8c703f9c39bda6de0d36e51dab.setContent(html_84b039cbf2928f30453128682fd26412);
             
         
@@ -2788,7 +2788,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_a481bd17b0a5406230a7eb6462cfdc31 = L.circleMarker(
                 [21.3875, -157.93],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2798,7 +2798,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_9bac1fef8ec314d9d1173542661a6029 = $(`<div id="html_9bac1fef8ec314d9d1173542661a6029" style="width: 100.0%; height: 100.0%;"><b>Aiea Heights Drive</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                var html_9bac1fef8ec314d9d1173542661a6029 = $(`<div id="html_9bac1fef8ec314d9d1173542661a6029" style="width: 100.0%; height: 100.0%;"><b>Aiea Heights Drive</b><br>Reported people: 2</div>`)[0];
                 popup_573d12b93567a501beca71c8c4b8028f.setContent(html_9bac1fef8ec314d9d1173542661a6029);
             
         
@@ -2821,7 +2821,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_51d0e2cc5dfc9f21189620a931b17e77 = L.circleMarker(
                 [21.3355, -157.889],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2831,7 +2831,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_47cec122ae57fca718d73eed044362d5 = $(`<div id="html_47cec122ae57fca718d73eed044362d5" style="width: 100.0%; height: 100.0%;"><b>2312 Kam Hwy</b><br>Reported people: UNK<br>Combined numeric estimate: 0<br>Spreadsheet records: 1</div>`)[0];
+                var html_47cec122ae57fca718d73eed044362d5 = $(`<div id="html_47cec122ae57fca718d73eed044362d5" style="width: 100.0%; height: 100.0%;"><b>2312 Kam Hwy</b><br>Reported people: UNK</div>`)[0];
                 popup_a3594b704b8d1b0bb97bca5d36ef5e37.setContent(html_47cec122ae57fca718d73eed044362d5);
             
         
@@ -2854,7 +2854,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_a14a4b2113933f8cbacfea8b09697247 = L.circleMarker(
                 [21.449, -157.997],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2864,7 +2864,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_c174e7b9488a1a19a9cf54a70fb20874 = $(`<div id="html_c174e7b9488a1a19a9cf54a70fb20874" style="width: 100.0%; height: 100.0%;"><b>10 Acres Park</b><br>Reported people: 0<br>Combined numeric estimate: 0<br>Spreadsheet records: 1</div>`)[0];
+                var html_c174e7b9488a1a19a9cf54a70fb20874 = $(`<div id="html_c174e7b9488a1a19a9cf54a70fb20874" style="width: 100.0%; height: 100.0%;"><b>10 Acres Park</b><br>Reported people: 0</div>`)[0];
                 popup_766a1a368fb2c3f8f93c70d1f331f6cb.setContent(html_c174e7b9488a1a19a9cf54a70fb20874);
             
         
@@ -2887,7 +2887,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
     
             var circle_marker_4f76b427a8f149debdbb056c645a021b = L.circleMarker(
                 [21.3865, -158.0095],
-                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 18, "stroke": true, "weight": 1.5}
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.72, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 18, "stroke": true, "weight": 2}
             ).addTo(map_39991549346a6512b235b4521c852eec);
         
     
@@ -2897,7 +2897,7 @@ border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0
 
         
             
-                var html_4d45ba7c2091d6675034eebc5767ea3c = $(`<div id="html_4d45ba7c2091d6675034eebc5767ea3c" style="width: 100.0%; height: 100.0%;"><b>94-695 Waipahu St</b><br>Reported people: 55+<br>Combined numeric estimate: 55<br>Spreadsheet records: 1</div>`)[0];
+                var html_4d45ba7c2091d6675034eebc5767ea3c = $(`<div id="html_4d45ba7c2091d6675034eebc5767ea3c" style="width: 100.0%; height: 100.0%;"><b>94-695 Waipahu St</b><br>Reported people: 55+</div>`)[0];
                 popup_56fb6d5a889290ce41b5c0dfa69eceb6.setContent(html_4d45ba7c2091d6675034eebc5767ea3c);
             
         
