@@ -1,0 +1,2921 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_39991549346a6512b235b4521c852eec {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.css"/>
+    <script src="https://cdn.jsdelivr.net/gh/python-visualization/folium@main/folium/templates/leaflet_heat.min.js"></script>
+</head>
+<body>
+    
+    
+<div style="position:fixed;z-index:9999;top:14px;left:54px;width:390px;
+background:rgba(15,18,28,.94);color:#f5f7ff;padding:14px 16px;border:1px solid #594a88;
+border-radius:14px;font-family:Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0,.35)">
+  <div style="font-size:21px;font-weight:700;margin-bottom:5px;">Encampment IDs</div>
+  <div style="font-size:13px;line-height:1.4;color:#d8d9e8">
+    Heat intensity reflects the reported number of people at each identified location.
+    Larger circles represent higher reported counts. Click a circle for the spreadsheet entry.
+  </div>
+  <div style="margin-top:10px;font-size:12px;color:#b9bbcf">
+    Cyan → violet → pink → gold indicates increasing concentration.
+    “UNK” entries appear as markers but do not add numeric heat.
+  </div>
+</div>
+    
+            <div class="folium-map" id="map_39991549346a6512b235b4521c852eec" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_39991549346a6512b235b4521c852eec = L.map(
+                "map_39991549346a6512b235b4521c852eec",
+                {
+                    center: [21.42, -157.96],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_39991549346a6512b235b4521c852eec);
+
+            
+
+        
+    
+            var tile_layer_76e0db62cc8ea95e8f1295a663a3543f = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_76e0db62cc8ea95e8f1295a663a3543f.addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+            L.control.fullscreen(
+                {
+  "position": "topleft",
+  "title": "Full Screen",
+  "titleCancel": "Exit Full Screen",
+  "forceSeparateButton": false,
+}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+            var heat_map_6230858f6197443c8c914042611d1e98 = L.heatLayer(
+                [[21.3348, -158.0815, 5.0], [21.3359, -158.079, 5.0], [21.3428, -158.0788, 20.0], [21.356, -158.126, 15.0], [21.3352, -158.0798, 1], [21.5795, -158.181, 10.0], [21.42, -158.005, 2.0], [21.3972, -157.7272, 5.0], [21.3978, -157.9873, 15.0], [21.2582, -157.802, 5.0], [21.2827, -157.8143, 8.0], [21.281, -157.7131, 2.0], [21.2766, -157.7792, 8.0], [21.2578, -157.8052, 8.0], [21.2855, -157.8418, 1], [21.2865, -157.8128, 1], [21.2915, -157.8245, 1], [21.2823, -157.8149, 4.0], [21.289, -157.71, 3.0], [21.2718, -157.7788, 2.0], [21.2785, -157.7885, 2.0], [21.2766, -157.7792, 7.0], [21.2792, -157.79, 2.0], [21.2774, -157.786, 2.0], [21.2782, -157.7301, 2.0], [21.281, -157.7131, 2.0], [21.294, -157.6595, 1], [21.26, -157.806, 1], [21.3008, -157.842, 6.0], [21.3028, -157.837, 7.0], [21.2915, -157.8475, 20.0], [21.2898, -157.8217, 3.0], [21.2894, -157.8268, 12.0], [21.2855, -157.8418, 2.0], [21.3032, -157.8415, 2.0], [21.365, -157.924, 2.0], [21.2909, -157.8225, 4.0], [21.2891, -157.821, 1], [21.2938, -157.8158, 3.0], [21.2898, -157.8355, 6.0], [21.3064, -157.8298, 2.0], [21.2927, -157.85, 3.0], [21.292, -157.8365, 7.0], [21.2949, -157.824, 8.0], [21.302, -157.843, 11.0], [21.3023, -157.8375, 5.0], [21.3027, -157.836, 5.0], [21.3025, -157.835, 3.0], [21.2922, -157.838, 3.0], [21.2819, -157.8029, 6.0], [21.3038, -157.8378, 3.0], [21.293, -157.819, 2.0], [21.2915, -157.818, 1], [21.3015, -157.84, 1], [21.305, -157.849, 2.0], [21.3229, -157.8804, 2.0], [21.3034, -157.843, 3.0], [21.3035, -157.844, 2.0], [21.299, -157.8374, 4.0], [21.297, -157.8606, 4.0], [21.297, -157.846, 4.0], [21.2955, -157.858, 1], [21.312, -157.8608, 4.0], [21.299, -157.858, 2.0], [21.3143, -157.869, 4.0], [21.3078, -157.8587, 12.0], [21.321, -157.858, 2.0], [21.3004, -157.8528, 1], [21.33, -157.872, 2.0], [21.2948, -157.858, 5.0], [21.3333, -157.905, 30.0], [21.3262, -157.8882, 6.0], [21.3985, -157.956, 4.0], [21.3229, -157.8804, 2.0], [21.386, -157.93, 2.0], [21.3229, -157.8804, 1], [21.3064, -157.8918, 6.0], [21.2914, -157.847, 1], [21.3187, -157.8886, 3.0], [21.3875, -157.945, 1], [21.3875, -157.93, 2.0], [21.3355, -157.889, 1], [21.449, -157.997, 1], [21.3865, -158.0095, 55.0]],
+                {
+  "minOpacity": 0.3,
+  "maxZoom": 18,
+  "radius": 28,
+  "blur": 22,
+  "gradient": {
+  0.15: "#2de2e6",
+  0.45: "#7b61ff",
+  0.72: "#ff4ecd",
+  1.0: "#ffd166",
+},
+}
+            );
+        
+    
+            heat_map_6230858f6197443c8c914042611d1e98.addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+            var circle_marker_2e5bd026ca6117517573a11bcdcc0dbb = L.circleMarker(
+                [21.3348, -158.0815],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.024922359499623, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_ecb4917f156be18bb7ca9a7d234557ee = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_62579037e31275b102dddcee4b5fd553 = $(`<div id="html_62579037e31275b102dddcee4b5fd553" style="width: 100.0%; height: 100.0%;"><b>Kapolei PKWY, Kapolei</b><br>Reported people: ~5<br>Combined numeric estimate: 5<br>Spreadsheet records: 1</div>`)[0];
+                popup_ecb4917f156be18bb7ca9a7d234557ee.setContent(html_62579037e31275b102dddcee4b5fd553);
+            
+        
+
+        circle_marker_2e5bd026ca6117517573a11bcdcc0dbb.bindPopup(popup_ecb4917f156be18bb7ca9a7d234557ee)
+        ;
+
+        
+    
+    
+            circle_marker_2e5bd026ca6117517573a11bcdcc0dbb.bindTooltip(
+                `<div>
+                     Kapolei PKWY, Kapolei · ~5
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7a17624aee3b3f12ab5185eb24780a80 = L.circleMarker(
+                [21.3359, -158.079],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.024922359499623, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_76aafd0cd2acf5f919a1a7f141eecd81 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_8b11073949eeca05e8ebf57acc17217c = $(`<div id="html_8b11073949eeca05e8ebf57acc17217c" style="width: 100.0%; height: 100.0%;"><b>563-565 Farrington HWY, Kapolei</b><br>Reported people: 5+<br>Combined numeric estimate: 5<br>Spreadsheet records: 1</div>`)[0];
+                popup_76aafd0cd2acf5f919a1a7f141eecd81.setContent(html_8b11073949eeca05e8ebf57acc17217c);
+            
+        
+
+        circle_marker_7a17624aee3b3f12ab5185eb24780a80.bindPopup(popup_76aafd0cd2acf5f919a1a7f141eecd81)
+        ;
+
+        
+    
+    
+            circle_marker_7a17624aee3b3f12ab5185eb24780a80.bindTooltip(
+                `<div>
+                     563-565 Farrington HWY, Kapolei · 5+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_265f67dd333fd1784458eb500716d87d = L.circleMarker(
+                [21.3428, -158.0788],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.049844718999244, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_57c0fd79c2657c166ba4f0552077e92f = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_d0d97f4d34d142c81297d0bfde9b80c1 = $(`<div id="html_d0d97f4d34d142c81297d0bfde9b80c1" style="width: 100.0%; height: 100.0%;"><b>Kapowai PL + Farrington HWY</b><br>Reported people: ~20<br>Combined numeric estimate: 20<br>Spreadsheet records: 1</div>`)[0];
+                popup_57c0fd79c2657c166ba4f0552077e92f.setContent(html_d0d97f4d34d142c81297d0bfde9b80c1);
+            
+        
+
+        circle_marker_265f67dd333fd1784458eb500716d87d.bindPopup(popup_57c0fd79c2657c166ba4f0552077e92f)
+        ;
+
+        
+    
+    
+            circle_marker_265f67dd333fd1784458eb500716d87d.bindTooltip(
+                `<div>
+                     Kapowai PL + Farrington HWY · ~20
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_03f86c88c2a17c48427508d032dfd3d3 = L.circleMarker(
+                [21.356, -158.126],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.97137002317335, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_78258c93c6b75dce020d70eda5b8717a = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_d6e3d42333e87afbe4fd5c035dbde125 = $(`<div id="html_d6e3d42333e87afbe4fd5c035dbde125" style="width: 100.0%; height: 100.0%;"><b>Coral Sea Road</b><br>Reported people: ~15<br>Combined numeric estimate: 15<br>Spreadsheet records: 1</div>`)[0];
+                popup_78258c93c6b75dce020d70eda5b8717a.setContent(html_d6e3d42333e87afbe4fd5c035dbde125);
+            
+        
+
+        circle_marker_03f86c88c2a17c48427508d032dfd3d3.bindPopup(popup_78258c93c6b75dce020d70eda5b8717a)
+        ;
+
+        
+    
+    
+            circle_marker_03f86c88c2a17c48427508d032dfd3d3.bindTooltip(
+                `<div>
+                     Coral Sea Road · ~15
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_78fc363d652135e55c4a7f4a81908f19 = L.circleMarker(
+                [21.3352, -158.0798],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_54e2f9d89bf21519d31ccf7a8370887f = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_aeb0c1e17b34aedf59bfb994d62f0508 = $(`<div id="html_aeb0c1e17b34aedf59bfb994d62f0508" style="width: 100.0%; height: 100.0%;"><b>724 Kakala St</b><br>Reported people: 0<br>Combined numeric estimate: 0<br>Spreadsheet records: 1</div>`)[0];
+                popup_54e2f9d89bf21519d31ccf7a8370887f.setContent(html_aeb0c1e17b34aedf59bfb994d62f0508);
+            
+        
+
+        circle_marker_78fc363d652135e55c4a7f4a81908f19.bindPopup(popup_54e2f9d89bf21519d31ccf7a8370887f)
+        ;
+
+        
+    
+    
+            circle_marker_78fc363d652135e55c4a7f4a81908f19.bindTooltip(
+                `<div>
+                     724 Kakala St · 0
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0156cfd2b357f9b522f663acd14fab6b = L.circleMarker(
+                [21.5795, -158.181],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.692099788303082, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_0d44adb9ab884294b11c81c612ba8957 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_85dfeeebaa31ec6df4f03298874b293b = $(`<div id="html_85dfeeebaa31ec6df4f03298874b293b" style="width: 100.0%; height: 100.0%;"><b>Mokuleia Beach</b><br>Reported people: 10<br>Combined numeric estimate: 10<br>Spreadsheet records: 1</div>`)[0];
+                popup_0d44adb9ab884294b11c81c612ba8957.setContent(html_85dfeeebaa31ec6df4f03298874b293b);
+            
+        
+
+        circle_marker_0156cfd2b357f9b522f663acd14fab6b.bindPopup(popup_0d44adb9ab884294b11c81c612ba8957)
+        ;
+
+        
+    
+    
+            circle_marker_0156cfd2b357f9b522f663acd14fab6b.bindTooltip(
+                `<div>
+                     Mokuleia Beach · 10
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_60b522c4df2192dc9d430a36d7e95c0a = L.circleMarker(
+                [21.42, -158.005],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_6eac8aafab07ce700c54d98eb3322c5b = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_fc4d62ec989d0013f39ee7995a51462f = $(`<div id="html_fc4d62ec989d0013f39ee7995a51462f" style="width: 100.0%; height: 100.0%;"><b>Lihiwai Road</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                popup_6eac8aafab07ce700c54d98eb3322c5b.setContent(html_fc4d62ec989d0013f39ee7995a51462f);
+            
+        
+
+        circle_marker_60b522c4df2192dc9d430a36d7e95c0a.bindPopup(popup_6eac8aafab07ce700c54d98eb3322c5b)
+        ;
+
+        
+    
+    
+            circle_marker_60b522c4df2192dc9d430a36d7e95c0a.bindTooltip(
+                `<div>
+                     Lihiwai Road · 2
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a2eac02cffdddf43cfe4bd60412ce24d = L.circleMarker(
+                [21.3972, -157.7272],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.024922359499623, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_7ac99ee04143a47f0b378bdf01bccd80 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_d8e075074691946cb5381a628db24125 = $(`<div id="html_d8e075074691946cb5381a628db24125" style="width: 100.0%; height: 100.0%;"><b>Kailua Beach Park</b><br>Reported people: 3, 2<br>Combined numeric estimate: 5<br>Spreadsheet records: 2</div>`)[0];
+                popup_7ac99ee04143a47f0b378bdf01bccd80.setContent(html_d8e075074691946cb5381a628db24125);
+            
+        
+
+        circle_marker_a2eac02cffdddf43cfe4bd60412ce24d.bindPopup(popup_7ac99ee04143a47f0b378bdf01bccd80)
+        ;
+
+        
+    
+    
+            circle_marker_a2eac02cffdddf43cfe4bd60412ce24d.bindTooltip(
+                `<div>
+                     Kailua Beach Park · 3, 2
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_71ed3ef1cb2c8780298d25078b28a4fb = L.circleMarker(
+                [21.3978, -157.9873],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.97137002317335, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_e825820df4c4d47b3f65b95ff8a22177 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_e6f8c8f8300b24a14fc71cc76b69a6bd = $(`<div id="html_e6f8c8f8300b24a14fc71cc76b69a6bd" style="width: 100.0%; height: 100.0%;"><b>Waiawa Station - H1/H2 On Ramp</b><br>Reported people: 15+<br>Combined numeric estimate: 15<br>Spreadsheet records: 1</div>`)[0];
+                popup_e825820df4c4d47b3f65b95ff8a22177.setContent(html_e6f8c8f8300b24a14fc71cc76b69a6bd);
+            
+        
+
+        circle_marker_71ed3ef1cb2c8780298d25078b28a4fb.bindPopup(popup_e825820df4c4d47b3f65b95ff8a22177)
+        ;
+
+        
+    
+    
+            circle_marker_71ed3ef1cb2c8780298d25078b28a4fb.bindTooltip(
+                `<div>
+                     Waiawa Station - H1/H2 On Ramp · 15+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_25716a248d9b402acd217c84bd368770 = L.circleMarker(
+                [21.2582, -157.802],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.024922359499623, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_3a276185f76adc2a5712dfab6f2b8d0e = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_8550b3cad20fb06cf8354223cbd15eda = $(`<div id="html_8550b3cad20fb06cf8354223cbd15eda" style="width: 100.0%; height: 100.0%;"><b>3399 Diamond Head Rd</b><br>Reported people: 5<br>Combined numeric estimate: 5<br>Spreadsheet records: 1</div>`)[0];
+                popup_3a276185f76adc2a5712dfab6f2b8d0e.setContent(html_8550b3cad20fb06cf8354223cbd15eda);
+            
+        
+
+        circle_marker_25716a248d9b402acd217c84bd368770.bindPopup(popup_3a276185f76adc2a5712dfab6f2b8d0e)
+        ;
+
+        
+    
+    
+            circle_marker_25716a248d9b402acd217c84bd368770.bindTooltip(
+                `<div>
+                     3399 Diamond Head Rd · 5
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cd1b0f36720f8d757bf2d41822c982ec = L.circleMarker(
+                [21.2827, -157.8143],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.091168824543143, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_a7ecd6c726f815bbb83277947e0356fe = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_1a27fee555d6067eee42617e8f032cfa = $(`<div id="html_1a27fee555d6067eee42617e8f032cfa" style="width: 100.0%; height: 100.0%;"><b>402 Kapahulu Ave</b><br>Reported people: 4, 4<br>Combined numeric estimate: 8<br>Spreadsheet records: 2</div>`)[0];
+                popup_a7ecd6c726f815bbb83277947e0356fe.setContent(html_1a27fee555d6067eee42617e8f032cfa);
+            
+        
+
+        circle_marker_cd1b0f36720f8d757bf2d41822c982ec.bindPopup(popup_a7ecd6c726f815bbb83277947e0356fe)
+        ;
+
+        
+    
+    
+            circle_marker_cd1b0f36720f8d757bf2d41822c982ec.bindTooltip(
+                `<div>
+                     402 Kapahulu Ave · 4, 4
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_aee680e2104da882f6e89481f0536fcb = L.circleMarker(
+                [21.281, -157.7131],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_ce1ba1ba14db8554af5fb0b73d620ad7 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_6838fbe204c2d871c7f5685af566323c = $(`<div id="html_6838fbe204c2d871c7f5685af566323c" style="width: 100.0%; height: 100.0%;"><b>Maunalua Bay Beach Park</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                popup_ce1ba1ba14db8554af5fb0b73d620ad7.setContent(html_6838fbe204c2d871c7f5685af566323c);
+            
+        
+
+        circle_marker_aee680e2104da882f6e89481f0536fcb.bindPopup(popup_ce1ba1ba14db8554af5fb0b73d620ad7)
+        ;
+
+        
+    
+    
+            circle_marker_aee680e2104da882f6e89481f0536fcb.bindTooltip(
+                `<div>
+                     Maunalua Bay Beach Park · 2
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7e696759ad309261470b1d95962af5e2 = L.circleMarker(
+                [21.2766, -157.7792],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.091168824543143, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_05bc16485cff8cb7e54dafaedf123136 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_1884f854306380116ac8eb9adf270b25 = $(`<div id="html_1884f854306380116ac8eb9adf270b25" style="width: 100.0%; height: 100.0%;"><b>4400 Kalanianaole</b><br>Reported people: 8<br>Combined numeric estimate: 8<br>Spreadsheet records: 1</div>`)[0];
+                popup_05bc16485cff8cb7e54dafaedf123136.setContent(html_1884f854306380116ac8eb9adf270b25);
+            
+        
+
+        circle_marker_7e696759ad309261470b1d95962af5e2.bindPopup(popup_05bc16485cff8cb7e54dafaedf123136)
+        ;
+
+        
+    
+    
+            circle_marker_7e696759ad309261470b1d95962af5e2.bindTooltip(
+                `<div>
+                     4400 Kalanianaole · 8
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9a1fa6ec55d9537868ee814dba47907c = L.circleMarker(
+                [21.2578, -157.8052],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.091168824543143, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_83a5d1f2eccd6d40db7a6252392c92ec = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_8505be259356983244d7463e1f52d8f5 = $(`<div id="html_8505be259356983244d7463e1f52d8f5" style="width: 100.0%; height: 100.0%;"><b>Diamond head Beach Rd</b><br>Reported people: 8+<br>Combined numeric estimate: 8<br>Spreadsheet records: 1</div>`)[0];
+                popup_83a5d1f2eccd6d40db7a6252392c92ec.setContent(html_8505be259356983244d7463e1f52d8f5);
+            
+        
+
+        circle_marker_9a1fa6ec55d9537868ee814dba47907c.bindPopup(popup_83a5d1f2eccd6d40db7a6252392c92ec)
+        ;
+
+        
+    
+    
+            circle_marker_9a1fa6ec55d9537868ee814dba47907c.bindTooltip(
+                `<div>
+                     Diamond head Beach Rd · 8+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0c06e7c78232fffa97c0fe09e94971e7 = L.circleMarker(
+                [21.2855, -157.8418],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_04224316c1a850197c5833e4c6e8cc5d = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_a35a3aeaa36b259cdd48795edd6e9df5 = $(`<div id="html_a35a3aeaa36b259cdd48795edd6e9df5" style="width: 100.0%; height: 100.0%;"><b>Illikai Marina</b><br>Reported people: 1<br>Combined numeric estimate: 1<br>Spreadsheet records: 1</div>`)[0];
+                popup_04224316c1a850197c5833e4c6e8cc5d.setContent(html_a35a3aeaa36b259cdd48795edd6e9df5);
+            
+        
+
+        circle_marker_0c06e7c78232fffa97c0fe09e94971e7.bindPopup(popup_04224316c1a850197c5833e4c6e8cc5d)
+        ;
+
+        
+    
+    
+            circle_marker_0c06e7c78232fffa97c0fe09e94971e7.bindTooltip(
+                `<div>
+                     Illikai Marina · 1
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fe1fdaa519647c77199f05fbbcc2a2da = L.circleMarker(
+                [21.2865, -157.8128],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_23badc9fe95435b9a218820c6087ae0e = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_6e7127bb1c8a30fe16c1a44e65bbb75b = $(`<div id="html_6e7127bb1c8a30fe16c1a44e65bbb75b" style="width: 100.0%; height: 100.0%;"><b>3040 Waialae Ave</b><br>Reported people: 1+<br>Combined numeric estimate: 1<br>Spreadsheet records: 1</div>`)[0];
+                popup_23badc9fe95435b9a218820c6087ae0e.setContent(html_6e7127bb1c8a30fe16c1a44e65bbb75b);
+            
+        
+
+        circle_marker_fe1fdaa519647c77199f05fbbcc2a2da.bindPopup(popup_23badc9fe95435b9a218820c6087ae0e)
+        ;
+
+        
+    
+    
+            circle_marker_fe1fdaa519647c77199f05fbbcc2a2da.bindTooltip(
+                `<div>
+                     3040 Waialae Ave · 1+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_95d7f16eb749f9195d10b23b7e7a1aaa = L.circleMarker(
+                [21.2915, -157.8245],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_4dea8af27721735cad5e4f401ba4dcfe = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_71d3857c05f67b0a3180f45bdf4d0c9d = $(`<div id="html_71d3857c05f67b0a3180f45bdf4d0c9d" style="width: 100.0%; height: 100.0%;"><b>1855 Kapiolani Blvd, Honolulu</b><br>Reported people: 1+<br>Combined numeric estimate: 1<br>Spreadsheet records: 1</div>`)[0];
+                popup_4dea8af27721735cad5e4f401ba4dcfe.setContent(html_71d3857c05f67b0a3180f45bdf4d0c9d);
+            
+        
+
+        circle_marker_95d7f16eb749f9195d10b23b7e7a1aaa.bindPopup(popup_4dea8af27721735cad5e4f401ba4dcfe)
+        ;
+
+        
+    
+    
+            circle_marker_95d7f16eb749f9195d10b23b7e7a1aaa.bindTooltip(
+                `<div>
+                     1855 Kapiolani Blvd, Honolulu · 1+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_28b0e77b3642af5605cb267057577c29 = L.circleMarker(
+                [21.2823, -157.8149],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_f92a1eed568474c189789df51ee9cb86 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_34df8a8d7b9a7952b4c50874e02d4e3a = $(`<div id="html_34df8a8d7b9a7952b4c50874e02d4e3a" style="width: 100.0%; height: 100.0%;"><b>540 Kapahulu Ave</b><br>Reported people: 4+<br>Combined numeric estimate: 4<br>Spreadsheet records: 1</div>`)[0];
+                popup_f92a1eed568474c189789df51ee9cb86.setContent(html_34df8a8d7b9a7952b4c50874e02d4e3a);
+            
+        
+
+        circle_marker_28b0e77b3642af5605cb267057577c29.bindPopup(popup_f92a1eed568474c189789df51ee9cb86)
+        ;
+
+        
+    
+    
+            circle_marker_28b0e77b3642af5605cb267057577c29.bindTooltip(
+                `<div>
+                     540 Kapahulu Ave · 4+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d2183033ff11711c565a392022780f05 = L.circleMarker(
+                [21.289, -157.71],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_0bdf358d889b88f5ad7a2c2d3ac70f61 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_87f9e1137d25ce04efd1ee9dc834240a = $(`<div id="html_87f9e1137d25ce04efd1ee9dc834240a" style="width: 100.0%; height: 100.0%;"><b>Keahole HK Park & Ride</b><br>Reported people: 3<br>Combined numeric estimate: 3<br>Spreadsheet records: 1</div>`)[0];
+                popup_0bdf358d889b88f5ad7a2c2d3ac70f61.setContent(html_87f9e1137d25ce04efd1ee9dc834240a);
+            
+        
+
+        circle_marker_d2183033ff11711c565a392022780f05.bindPopup(popup_0bdf358d889b88f5ad7a2c2d3ac70f61)
+        ;
+
+        
+    
+    
+            circle_marker_d2183033ff11711c565a392022780f05.bindTooltip(
+                `<div>
+                     Keahole HK Park & Ride · 3
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_136664479aafafb9165bbb2e00b82dcc = L.circleMarker(
+                [21.2718, -157.7788],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_92a0576a4ac552eb2a3294476def0e55 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_dddd00aff38fda46467365d9a24ecf69 = $(`<div id="html_dddd00aff38fda46467365d9a24ecf69" style="width: 100.0%; height: 100.0%;"><b>Kahala Beach park</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                popup_92a0576a4ac552eb2a3294476def0e55.setContent(html_dddd00aff38fda46467365d9a24ecf69);
+            
+        
+
+        circle_marker_136664479aafafb9165bbb2e00b82dcc.bindPopup(popup_92a0576a4ac552eb2a3294476def0e55)
+        ;
+
+        
+    
+    
+            circle_marker_136664479aafafb9165bbb2e00b82dcc.bindTooltip(
+                `<div>
+                     Kahala Beach park · 2
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_975604678ce74c6e4645d3f9c09e0ee7 = L.circleMarker(
+                [21.2785, -157.7885],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_2f665ba3535f615c406323083d7625af = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_07f143b83fd95bfae03662299d0381ff = $(`<div id="html_07f143b83fd95bfae03662299d0381ff" style="width: 100.0%; height: 100.0%;"><b>4339 Waialae Ave</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                popup_2f665ba3535f615c406323083d7625af.setContent(html_07f143b83fd95bfae03662299d0381ff);
+            
+        
+
+        circle_marker_975604678ce74c6e4645d3f9c09e0ee7.bindPopup(popup_2f665ba3535f615c406323083d7625af)
+        ;
+
+        
+    
+    
+            circle_marker_975604678ce74c6e4645d3f9c09e0ee7.bindTooltip(
+                `<div>
+                     4339 Waialae Ave · 2
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9c1f8de2a60906a7ba360b3b84937f8c = L.circleMarker(
+                [21.2766, -157.7792],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.762352359916264, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_a46a9a1511433f17e685b254f7235661 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_201977fa6b1ba50eea382f231c445a45 = $(`<div id="html_201977fa6b1ba50eea382f231c445a45" style="width: 100.0%; height: 100.0%;"><b>4400 Kalanianaole Hwy</b><br>Reported people: 7<br>Combined numeric estimate: 7<br>Spreadsheet records: 1</div>`)[0];
+                popup_a46a9a1511433f17e685b254f7235661.setContent(html_201977fa6b1ba50eea382f231c445a45);
+            
+        
+
+        circle_marker_9c1f8de2a60906a7ba360b3b84937f8c.bindPopup(popup_a46a9a1511433f17e685b254f7235661)
+        ;
+
+        
+    
+    
+            circle_marker_9c1f8de2a60906a7ba360b3b84937f8c.bindTooltip(
+                `<div>
+                     4400 Kalanianaole Hwy · 7
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7b9f9986f8d9207c6a106b40f213eb87 = L.circleMarker(
+                [21.2792, -157.79],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_53479eb3aa539f78c4a057c9c12e8c7d = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_fc80c81782d9781d63ae3b471029bbd1 = $(`<div id="html_fc80c81782d9781d63ae3b471029bbd1" style="width: 100.0%; height: 100.0%;"><b>4300 Waialae Ave</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                popup_53479eb3aa539f78c4a057c9c12e8c7d.setContent(html_fc80c81782d9781d63ae3b471029bbd1);
+            
+        
+
+        circle_marker_7b9f9986f8d9207c6a106b40f213eb87.bindPopup(popup_53479eb3aa539f78c4a057c9c12e8c7d)
+        ;
+
+        
+    
+    
+            circle_marker_7b9f9986f8d9207c6a106b40f213eb87.bindTooltip(
+                `<div>
+                     4300 Waialae Ave · 2
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4e1fdee0361ab35b98998187960813e6 = L.circleMarker(
+                [21.2774, -157.786],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_a4bfc909a25d5ba320b3447ae58f7567 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_aaaa5f2708e33154310307baf6c87d6e = $(`<div id="html_aaaa5f2708e33154310307baf6c87d6e" style="width: 100.0%; height: 100.0%;"><b>4916 Kilauea Ave</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                popup_a4bfc909a25d5ba320b3447ae58f7567.setContent(html_aaaa5f2708e33154310307baf6c87d6e);
+            
+        
+
+        circle_marker_4e1fdee0361ab35b98998187960813e6.bindPopup(popup_a4bfc909a25d5ba320b3447ae58f7567)
+        ;
+
+        
+    
+    
+            circle_marker_4e1fdee0361ab35b98998187960813e6.bindTooltip(
+                `<div>
+                     4916 Kilauea Ave · 2
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_933eb59657c8ecf42518fc3c8d45f181 = L.circleMarker(
+                [21.2782, -157.7301],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_4a64bdf1c29cfdc60bc1a12923bce8c0 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_35d70853c2c75b989eda7be4716620f4 = $(`<div id="html_35d70853c2c75b989eda7be4716620f4" style="width: 100.0%; height: 100.0%;"><b>5475 Kalanianaole Hwy</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                popup_4a64bdf1c29cfdc60bc1a12923bce8c0.setContent(html_35d70853c2c75b989eda7be4716620f4);
+            
+        
+
+        circle_marker_933eb59657c8ecf42518fc3c8d45f181.bindPopup(popup_4a64bdf1c29cfdc60bc1a12923bce8c0)
+        ;
+
+        
+    
+    
+            circle_marker_933eb59657c8ecf42518fc3c8d45f181.bindTooltip(
+                `<div>
+                     5475 Kalanianaole Hwy · 2
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_23289fd8ae76c26f36876b14e56762d1 = L.circleMarker(
+                [21.281, -157.7131],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_3530418dca076ad72f96252c12040ef5 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_5823b1b32a06d66161a73495086778a8 = $(`<div id="html_5823b1b32a06d66161a73495086778a8" style="width: 100.0%; height: 100.0%;"><b>Maunalua Beach Park</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                popup_3530418dca076ad72f96252c12040ef5.setContent(html_5823b1b32a06d66161a73495086778a8);
+            
+        
+
+        circle_marker_23289fd8ae76c26f36876b14e56762d1.bindPopup(popup_3530418dca076ad72f96252c12040ef5)
+        ;
+
+        
+    
+    
+            circle_marker_23289fd8ae76c26f36876b14e56762d1.bindTooltip(
+                `<div>
+                     Maunalua Beach Park · 2
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5dcc0c2f033720ce52e2aa0d86787302 = L.circleMarker(
+                [21.294, -157.6595],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_1b1a95e6751f781784a8ef99220e30d3 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_5dc2e4348e580bbc257e11ae2b9fe673 = $(`<div id="html_5dc2e4348e580bbc257e11ae2b9fe673" style="width: 100.0%; height: 100.0%;"><b>Queens Gate 2(Hawaii Kai)</b><br>Reported people: UNK<br>Combined numeric estimate: 0<br>Spreadsheet records: 1</div>`)[0];
+                popup_1b1a95e6751f781784a8ef99220e30d3.setContent(html_5dc2e4348e580bbc257e11ae2b9fe673);
+            
+        
+
+        circle_marker_5dcc0c2f033720ce52e2aa0d86787302.bindPopup(popup_1b1a95e6751f781784a8ef99220e30d3)
+        ;
+
+        
+    
+    
+            circle_marker_5dcc0c2f033720ce52e2aa0d86787302.bindTooltip(
+                `<div>
+                     Queens Gate 2(Hawaii Kai) · UNK
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c8b641f5971598a91d4d250345fef53c = L.circleMarker(
+                [21.26, -157.806],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_8a301acbab34a517777cd71b1c267809 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_3cd7827844190e7790f70195381c6981 = $(`<div id="html_3cd7827844190e7790f70195381c6981" style="width: 100.0%; height: 100.0%;"><b>Diamond Head Road</b><br>Reported people: 0<br>Combined numeric estimate: 0<br>Spreadsheet records: 1</div>`)[0];
+                popup_8a301acbab34a517777cd71b1c267809.setContent(html_3cd7827844190e7790f70195381c6981);
+            
+        
+
+        circle_marker_c8b641f5971598a91d4d250345fef53c.bindPopup(popup_8a301acbab34a517777cd71b1c267809)
+        ;
+
+        
+    
+    
+            circle_marker_c8b641f5971598a91d4d250345fef53c.bindTooltip(
+                `<div>
+                     Diamond Head Road · 0
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_10275f1304373022c321d8b36053fbc9 = L.circleMarker(
+                [21.3008, -157.842],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.40908153700972, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_c99db985a74af1ae2faf6858d49ebfb5 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_0d86f7c69c3221af8cec82fcd796f335 = $(`<div id="html_0d86f7c69c3221af8cec82fcd796f335" style="width: 100.0%; height: 100.0%;"><b>Thomas Square Pk, Makiki</b><br>Reported people: 6<br>Combined numeric estimate: 6<br>Spreadsheet records: 1</div>`)[0];
+                popup_c99db985a74af1ae2faf6858d49ebfb5.setContent(html_0d86f7c69c3221af8cec82fcd796f335);
+            
+        
+
+        circle_marker_10275f1304373022c321d8b36053fbc9.bindPopup(popup_c99db985a74af1ae2faf6858d49ebfb5)
+        ;
+
+        
+    
+    
+            circle_marker_10275f1304373022c321d8b36053fbc9.bindTooltip(
+                `<div>
+                     Thomas Square Pk, Makiki · 6
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2ab231f7cca2beda6c2d20ccedcbd762 = L.circleMarker(
+                [21.3028, -157.837],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.762352359916264, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_31d462ea02920e7aa99f7e47571462b7 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_dea1590287f85d450c976e2e3c6075fc = $(`<div id="html_dea1590287f85d450c976e2e3c6075fc" style="width: 100.0%; height: 100.0%;"><b>1414 Young Street</b><br>Reported people: 7<br>Combined numeric estimate: 7<br>Spreadsheet records: 1</div>`)[0];
+                popup_31d462ea02920e7aa99f7e47571462b7.setContent(html_dea1590287f85d450c976e2e3c6075fc);
+            
+        
+
+        circle_marker_2ab231f7cca2beda6c2d20ccedcbd762.bindPopup(popup_31d462ea02920e7aa99f7e47571462b7)
+        ;
+
+        
+    
+    
+            circle_marker_2ab231f7cca2beda6c2d20ccedcbd762.bindTooltip(
+                `<div>
+                     1414 Young Street · 7
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_08950ee7d98cb1989e06b42a4c7fcb38 = L.circleMarker(
+                [21.2915, -157.8475],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.049844718999244, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_c4878c40911dfce10667797745285bbd = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_508ae3c64a3d3a31ffda5f45c7e74dc0 = $(`<div id="html_508ae3c64a3d3a31ffda5f45c7e74dc0" style="width: 100.0%; height: 100.0%;"><b>1201 Ala Moana Blvd</b><br>Reported people: 20<br>Combined numeric estimate: 20<br>Spreadsheet records: 1</div>`)[0];
+                popup_c4878c40911dfce10667797745285bbd.setContent(html_508ae3c64a3d3a31ffda5f45c7e74dc0);
+            
+        
+
+        circle_marker_08950ee7d98cb1989e06b42a4c7fcb38.bindPopup(popup_c4878c40911dfce10667797745285bbd)
+        ;
+
+        
+    
+    
+            circle_marker_08950ee7d98cb1989e06b42a4c7fcb38.bindTooltip(
+                `<div>
+                     1201 Ala Moana Blvd · 20
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cbf92e9ee162edfc51541a367170cf22 = L.circleMarker(
+                [21.2898, -157.8217],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_b5b04cf8f12623ff69797e991ee27af8 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_d0e3afcded772ba4b628a85600c21cbc = $(`<div id="html_d0e3afcded772ba4b628a85600c21cbc" style="width: 100.0%; height: 100.0%;"><b>Moilili Ball Park</b><br>Reported people: 3<br>Combined numeric estimate: 3<br>Spreadsheet records: 1</div>`)[0];
+                popup_b5b04cf8f12623ff69797e991ee27af8.setContent(html_d0e3afcded772ba4b628a85600c21cbc);
+            
+        
+
+        circle_marker_cbf92e9ee162edfc51541a367170cf22.bindPopup(popup_b5b04cf8f12623ff69797e991ee27af8)
+        ;
+
+        
+    
+    
+            circle_marker_cbf92e9ee162edfc51541a367170cf22.bindTooltip(
+                `<div>
+                     Moilili Ball Park · 3
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a65942159c107cae35cd3b165ea2181f = L.circleMarker(
+                [21.2894, -157.8268],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.235382907247958, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_eeb4667bbc5acf31df0c70c7403e96fb = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_a793e6c83c0c9ef3c45f08bcb429c638 = $(`<div id="html_a793e6c83c0c9ef3c45f08bcb429c638" style="width: 100.0%; height: 100.0%;"><b>Old Stadium Park</b><br>Reported people: 12<br>Combined numeric estimate: 12<br>Spreadsheet records: 1</div>`)[0];
+                popup_eeb4667bbc5acf31df0c70c7403e96fb.setContent(html_a793e6c83c0c9ef3c45f08bcb429c638);
+            
+        
+
+        circle_marker_a65942159c107cae35cd3b165ea2181f.bindPopup(popup_eeb4667bbc5acf31df0c70c7403e96fb)
+        ;
+
+        
+    
+    
+            circle_marker_a65942159c107cae35cd3b165ea2181f.bindTooltip(
+                `<div>
+                     Old Stadium Park · 12
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b910323f05137bcd65058f273e9815ad = L.circleMarker(
+                [21.2855, -157.8418],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_b0fcba787814de24f0c746571385cae2 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_276f33b9ee9552234bc9787889f7bdb6 = $(`<div id="html_276f33b9ee9552234bc9787889f7bdb6" style="width: 100.0%; height: 100.0%;"><b>Illikai Parking Lot</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                popup_b0fcba787814de24f0c746571385cae2.setContent(html_276f33b9ee9552234bc9787889f7bdb6);
+            
+        
+
+        circle_marker_b910323f05137bcd65058f273e9815ad.bindPopup(popup_b0fcba787814de24f0c746571385cae2)
+        ;
+
+        
+    
+    
+            circle_marker_b910323f05137bcd65058f273e9815ad.bindTooltip(
+                `<div>
+                     Illikai Parking Lot · 2
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c4340f49e5e8ae0cd8f2b108cdc24624 = L.circleMarker(
+                [21.3032, -157.8415],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_131545c47ebd04c93040e76f59fdc79d = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_7cc1feb74ffc3545fbbf2c19b44ebcfb = $(`<div id="html_7cc1feb74ffc3545fbbf2c19b44ebcfb" style="width: 100.0%; height: 100.0%;"><b>1290 S. Beretania St</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                popup_131545c47ebd04c93040e76f59fdc79d.setContent(html_7cc1feb74ffc3545fbbf2c19b44ebcfb);
+            
+        
+
+        circle_marker_c4340f49e5e8ae0cd8f2b108cdc24624.bindPopup(popup_131545c47ebd04c93040e76f59fdc79d)
+        ;
+
+        
+    
+    
+            circle_marker_c4340f49e5e8ae0cd8f2b108cdc24624.bindTooltip(
+                `<div>
+                     1290 S. Beretania St · 2
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5eae6158c15c7e5b143890ff58f2b22f = L.circleMarker(
+                [21.365, -157.924],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_158aa6d868fae74dc17b4fb28d5c6f60 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_0920face4236e293fc3308aa14756aa3 = $(`<div id="html_0920face4236e293fc3308aa14756aa3" style="width: 100.0%; height: 100.0%;"><b>2900 Moanalua Rd</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                popup_158aa6d868fae74dc17b4fb28d5c6f60.setContent(html_0920face4236e293fc3308aa14756aa3);
+            
+        
+
+        circle_marker_5eae6158c15c7e5b143890ff58f2b22f.bindPopup(popup_158aa6d868fae74dc17b4fb28d5c6f60)
+        ;
+
+        
+    
+    
+            circle_marker_5eae6158c15c7e5b143890ff58f2b22f.bindTooltip(
+                `<div>
+                     2900 Moanalua Rd · 2
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d442e5b9190ae18adbaeb396239c78da = L.circleMarker(
+                [21.2909, -157.8225],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_696123a2a07e4875fc8999952c7b1889 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_7fbe099dffe75bc5cff30037069e44fc = $(`<div id="html_7fbe099dffe75bc5cff30037069e44fc" style="width: 100.0%; height: 100.0%;"><b>2015 Kapiolani Blvd</b><br>Reported people: 4+<br>Combined numeric estimate: 4<br>Spreadsheet records: 1</div>`)[0];
+                popup_696123a2a07e4875fc8999952c7b1889.setContent(html_7fbe099dffe75bc5cff30037069e44fc);
+            
+        
+
+        circle_marker_d442e5b9190ae18adbaeb396239c78da.bindPopup(popup_696123a2a07e4875fc8999952c7b1889)
+        ;
+
+        
+    
+    
+            circle_marker_d442e5b9190ae18adbaeb396239c78da.bindTooltip(
+                `<div>
+                     2015 Kapiolani Blvd · 4+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ae41b53ae6d65954b3c5d09180a24678 = L.circleMarker(
+                [21.2891, -157.821],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_ad8af69c3e1ce71f309ff8cab505d0cb = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_931f08f39dbdb28c07281c39da309686 = $(`<div id="html_931f08f39dbdb28c07281c39da309686" style="width: 100.0%; height: 100.0%;"><b>1026 Kalo Pl</b><br>Reported people: 1<br>Combined numeric estimate: 1<br>Spreadsheet records: 1</div>`)[0];
+                popup_ad8af69c3e1ce71f309ff8cab505d0cb.setContent(html_931f08f39dbdb28c07281c39da309686);
+            
+        
+
+        circle_marker_ae41b53ae6d65954b3c5d09180a24678.bindPopup(popup_ad8af69c3e1ce71f309ff8cab505d0cb)
+        ;
+
+        
+    
+    
+            circle_marker_ae41b53ae6d65954b3c5d09180a24678.bindTooltip(
+                `<div>
+                     1026 Kalo Pl · 1
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6eada123d24d056a8b3e05119c6ad1c8 = L.circleMarker(
+                [21.2938, -157.8158],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_2f529be21e00bedb5d48fb5874e6cf5a = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_b60bb3ff2225c17afd08cb2951b1cf36 = $(`<div id="html_b60bb3ff2225c17afd08cb2951b1cf36" style="width: 100.0%; height: 100.0%;"><b>103 Varsity Pl</b><br>Reported people: 3+<br>Combined numeric estimate: 3<br>Spreadsheet records: 1</div>`)[0];
+                popup_2f529be21e00bedb5d48fb5874e6cf5a.setContent(html_b60bb3ff2225c17afd08cb2951b1cf36);
+            
+        
+
+        circle_marker_6eada123d24d056a8b3e05119c6ad1c8.bindPopup(popup_2f529be21e00bedb5d48fb5874e6cf5a)
+        ;
+
+        
+    
+    
+            circle_marker_6eada123d24d056a8b3e05119c6ad1c8.bindTooltip(
+                `<div>
+                     103 Varsity Pl · 3+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_dfdf2e27dc5fcd91741b6e5ad89b6b0f = L.circleMarker(
+                [21.2898, -157.8355],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.40908153700972, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_1258161a8565c82b69493a79a9126d82 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_bc62cbd11f8e3679d5d72f7e6bb84975 = $(`<div id="html_bc62cbd11f8e3679d5d72f7e6bb84975" style="width: 100.0%; height: 100.0%;"><b>1670 Kalakaua Ave</b><br>Reported people: 3+, 3<br>Combined numeric estimate: 6<br>Spreadsheet records: 2</div>`)[0];
+                popup_1258161a8565c82b69493a79a9126d82.setContent(html_bc62cbd11f8e3679d5d72f7e6bb84975);
+            
+        
+
+        circle_marker_dfdf2e27dc5fcd91741b6e5ad89b6b0f.bindPopup(popup_1258161a8565c82b69493a79a9126d82)
+        ;
+
+        
+    
+    
+            circle_marker_dfdf2e27dc5fcd91741b6e5ad89b6b0f.bindTooltip(
+                `<div>
+                     1670 Kalakaua Ave · 3+, 3
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b7e43ea8bef68749f86dc8be400b1f68 = L.circleMarker(
+                [21.3064, -157.8298],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_eeff4d3de55b723c5031c397e9e60274 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_eb649a760a1de04196c9cf9d2372c51c = $(`<div id="html_eb649a760a1de04196c9cf9d2372c51c" style="width: 100.0%; height: 100.0%;"><b>1516 Nehoa St</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                popup_eeff4d3de55b723c5031c397e9e60274.setContent(html_eb649a760a1de04196c9cf9d2372c51c);
+            
+        
+
+        circle_marker_b7e43ea8bef68749f86dc8be400b1f68.bindPopup(popup_eeff4d3de55b723c5031c397e9e60274)
+        ;
+
+        
+    
+    
+            circle_marker_b7e43ea8bef68749f86dc8be400b1f68.bindTooltip(
+                `<div>
+                     1516 Nehoa St · 2
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8b00e730abe4dc41b925bcc26dc2d22b = L.circleMarker(
+                [21.2927, -157.85],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_58cbe74581e6662b5a18cf31e360a3ba = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_7275d114a29169342979b12438463829 = $(`<div id="html_7275d114a29169342979b12438463829" style="width: 100.0%; height: 100.0%;"><b>1125F Ala Moana Blvd</b><br>Reported people: 3+<br>Combined numeric estimate: 3<br>Spreadsheet records: 1</div>`)[0];
+                popup_58cbe74581e6662b5a18cf31e360a3ba.setContent(html_7275d114a29169342979b12438463829);
+            
+        
+
+        circle_marker_8b00e730abe4dc41b925bcc26dc2d22b.bindPopup(popup_58cbe74581e6662b5a18cf31e360a3ba)
+        ;
+
+        
+    
+    
+            circle_marker_8b00e730abe4dc41b925bcc26dc2d22b.bindTooltip(
+                `<div>
+                     1125F Ala Moana Blvd · 3+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7fd8c593cb7084f31f16b3ed7265ef59 = L.circleMarker(
+                [21.292, -157.8365],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.762352359916264, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_98beffd3a78366b5a32795b2f333ded5 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_c63b6bd338bc70c191c926e29f08add3 = $(`<div id="html_c63b6bd338bc70c191c926e29f08add3" style="width: 100.0%; height: 100.0%;"><b>1515 Kapiolani Blvd</b><br>Reported people: 7+<br>Combined numeric estimate: 7<br>Spreadsheet records: 1</div>`)[0];
+                popup_98beffd3a78366b5a32795b2f333ded5.setContent(html_c63b6bd338bc70c191c926e29f08add3);
+            
+        
+
+        circle_marker_7fd8c593cb7084f31f16b3ed7265ef59.bindPopup(popup_98beffd3a78366b5a32795b2f333ded5)
+        ;
+
+        
+    
+    
+            circle_marker_7fd8c593cb7084f31f16b3ed7265ef59.bindTooltip(
+                `<div>
+                     1515 Kapiolani Blvd · 7+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_3645e7ac723e9fe2ac0d7cb448d106e4 = L.circleMarker(
+                [21.2949, -157.824],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.091168824543143, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_501ef96c6092bc2adbf9730fb6c1d384 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_451436434d1a6300d795f300d56efffb = $(`<div id="html_451436434d1a6300d795f300d56efffb" style="width: 100.0%; height: 100.0%;"><b>2357 S. Beretania St</b><br>Reported people: 8+<br>Combined numeric estimate: 8<br>Spreadsheet records: 1</div>`)[0];
+                popup_501ef96c6092bc2adbf9730fb6c1d384.setContent(html_451436434d1a6300d795f300d56efffb);
+            
+        
+
+        circle_marker_3645e7ac723e9fe2ac0d7cb448d106e4.bindPopup(popup_501ef96c6092bc2adbf9730fb6c1d384)
+        ;
+
+        
+    
+    
+            circle_marker_3645e7ac723e9fe2ac0d7cb448d106e4.bindTooltip(
+                `<div>
+                     2357 S. Beretania St · 8+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6a1c84dd8f7290637b795a8683202c3b = L.circleMarker(
+                [21.302, -157.843],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.96992462263972, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_8e98acc3f0a645f94126d9646c942496 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_4470833ed014e72f84f4784e78a61e4d = $(`<div id="html_4470833ed014e72f84f4784e78a61e4d" style="width: 100.0%; height: 100.0%;"><b>Victoria Street and Young st</b><br>Reported people: 5, 3, 3<br>Combined numeric estimate: 11<br>Spreadsheet records: 3</div>`)[0];
+                popup_8e98acc3f0a645f94126d9646c942496.setContent(html_4470833ed014e72f84f4784e78a61e4d);
+            
+        
+
+        circle_marker_6a1c84dd8f7290637b795a8683202c3b.bindPopup(popup_8e98acc3f0a645f94126d9646c942496)
+        ;
+
+        
+    
+    
+            circle_marker_6a1c84dd8f7290637b795a8683202c3b.bindTooltip(
+                `<div>
+                     Victoria Street and Young st · 5, 3, 3
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_47ebe60bb1a44a1abc5af4379cfade37 = L.circleMarker(
+                [21.3023, -157.8375],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.024922359499623, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_c35488c4a7aa1a4ee98f88a838c62fd7 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_4339674d7a65ef81ade82171baeb4fc6 = $(`<div id="html_4339674d7a65ef81ade82171baeb4fc6" style="width: 100.0%; height: 100.0%;"><b>Makiki Street / Beretania st</b><br>Reported people: 5<br>Combined numeric estimate: 5<br>Spreadsheet records: 1</div>`)[0];
+                popup_c35488c4a7aa1a4ee98f88a838c62fd7.setContent(html_4339674d7a65ef81ade82171baeb4fc6);
+            
+        
+
+        circle_marker_47ebe60bb1a44a1abc5af4379cfade37.bindPopup(popup_c35488c4a7aa1a4ee98f88a838c62fd7)
+        ;
+
+        
+    
+    
+            circle_marker_47ebe60bb1a44a1abc5af4379cfade37.bindTooltip(
+                `<div>
+                     Makiki Street / Beretania st · 5
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b2ce237e6e1a9005b26f7ba01a3d8375 = L.circleMarker(
+                [21.3027, -157.836],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.024922359499623, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_bea7436527d094f9b0bc7dff4ee2f194 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_f6145bee289eb23b907fd84d00056689 = $(`<div id="html_f6145bee289eb23b907fd84d00056689" style="width: 100.0%; height: 100.0%;"><b>1460 Beretania st</b><br>Reported people: 5<br>Combined numeric estimate: 5<br>Spreadsheet records: 1</div>`)[0];
+                popup_bea7436527d094f9b0bc7dff4ee2f194.setContent(html_f6145bee289eb23b907fd84d00056689);
+            
+        
+
+        circle_marker_b2ce237e6e1a9005b26f7ba01a3d8375.bindPopup(popup_bea7436527d094f9b0bc7dff4ee2f194)
+        ;
+
+        
+    
+    
+            circle_marker_b2ce237e6e1a9005b26f7ba01a3d8375.bindTooltip(
+                `<div>
+                     1460 Beretania st · 5
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9fa6dbfb97dfeb4b742dbd229653589d = L.circleMarker(
+                [21.3025, -157.835],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_714289fea0258c8f8558b9f06f8b1dd2 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_c219832f8dd0cc29a1bb1638c523d2d2 = $(`<div id="html_c219832f8dd0cc29a1bb1638c523d2d2" style="width: 100.0%; height: 100.0%;"><b>1500 S Beretania St</b><br>Reported people: 3<br>Combined numeric estimate: 3<br>Spreadsheet records: 1</div>`)[0];
+                popup_714289fea0258c8f8558b9f06f8b1dd2.setContent(html_c219832f8dd0cc29a1bb1638c523d2d2);
+            
+        
+
+        circle_marker_9fa6dbfb97dfeb4b742dbd229653589d.bindPopup(popup_714289fea0258c8f8558b9f06f8b1dd2)
+        ;
+
+        
+    
+    
+            circle_marker_9fa6dbfb97dfeb4b742dbd229653589d.bindTooltip(
+                `<div>
+                     1500 S Beretania St · 3
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a4ae204bb1c5d8299e347ba5678c58eb = L.circleMarker(
+                [21.2922, -157.838],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_d1464d0abde4d4fdccfaa1218fae763f = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_a0b9c6a131a23049d15accf503ed394d = $(`<div id="html_a0b9c6a131a23049d15accf503ed394d" style="width: 100.0%; height: 100.0%;"><b>1500 Kapiolani Ave</b><br>Reported people: 3<br>Combined numeric estimate: 3<br>Spreadsheet records: 1</div>`)[0];
+                popup_d1464d0abde4d4fdccfaa1218fae763f.setContent(html_a0b9c6a131a23049d15accf503ed394d);
+            
+        
+
+        circle_marker_a4ae204bb1c5d8299e347ba5678c58eb.bindPopup(popup_d1464d0abde4d4fdccfaa1218fae763f)
+        ;
+
+        
+    
+    
+            circle_marker_a4ae204bb1c5d8299e347ba5678c58eb.bindTooltip(
+                `<div>
+                     1500 Kapiolani Ave · 3
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f3ef379c3461390ad620c79214641f26 = L.circleMarker(
+                [21.2819, -157.8029],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.40908153700972, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_01303c35fa32d76d5394b57fb60eef19 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_e987def2f826987f9fbdcee6b2e08dd3 = $(`<div id="html_e987def2f826987f9fbdcee6b2e08dd3" style="width: 100.0%; height: 100.0%;"><b>Harding and 1st Ave</b><br>Reported people: 6<br>Combined numeric estimate: 6<br>Spreadsheet records: 1</div>`)[0];
+                popup_01303c35fa32d76d5394b57fb60eef19.setContent(html_e987def2f826987f9fbdcee6b2e08dd3);
+            
+        
+
+        circle_marker_f3ef379c3461390ad620c79214641f26.bindPopup(popup_01303c35fa32d76d5394b57fb60eef19)
+        ;
+
+        
+    
+    
+            circle_marker_f3ef379c3461390ad620c79214641f26.bindTooltip(
+                `<div>
+                     Harding and 1st Ave · 6
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b1ff3f08a333bb62ffbc3ac87600bd00 = L.circleMarker(
+                [21.3038, -157.8378],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_57b227447fbfe2f85f70c5e5e9c693e8 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_8f42d145c156905b11327224cfdabe0d = $(`<div id="html_8f42d145c156905b11327224cfdabe0d" style="width: 100.0%; height: 100.0%;"><b>1314 Makiki Street</b><br>Reported people: 3<br>Combined numeric estimate: 3<br>Spreadsheet records: 1</div>`)[0];
+                popup_57b227447fbfe2f85f70c5e5e9c693e8.setContent(html_8f42d145c156905b11327224cfdabe0d);
+            
+        
+
+        circle_marker_b1ff3f08a333bb62ffbc3ac87600bd00.bindPopup(popup_57b227447fbfe2f85f70c5e5e9c693e8)
+        ;
+
+        
+    
+    
+            circle_marker_b1ff3f08a333bb62ffbc3ac87600bd00.bindTooltip(
+                `<div>
+                     1314 Makiki Street · 3
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_609a09f72994dbddfe6ad0ef7f0e6f9e = L.circleMarker(
+                [21.293, -157.819],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_c6ae3c0701828fcb7dd878bbc75cf25e = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_5364956a751f0961f65d58b80a004d8e = $(`<div id="html_5364956a751f0961f65d58b80a004d8e" style="width: 100.0%; height: 100.0%;"><b>Lokahi St</b><br>Reported people: 1, 1<br>Combined numeric estimate: 2<br>Spreadsheet records: 2</div>`)[0];
+                popup_c6ae3c0701828fcb7dd878bbc75cf25e.setContent(html_5364956a751f0961f65d58b80a004d8e);
+            
+        
+
+        circle_marker_609a09f72994dbddfe6ad0ef7f0e6f9e.bindPopup(popup_c6ae3c0701828fcb7dd878bbc75cf25e)
+        ;
+
+        
+    
+    
+            circle_marker_609a09f72994dbddfe6ad0ef7f0e6f9e.bindTooltip(
+                `<div>
+                     Lokahi St · 1, 1
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1bd7d314da810ed6043f2b74cb3916b8 = L.circleMarker(
+                [21.2915, -157.818],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_e1e654b7bde9e65d527eab4cfed005a7 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_3c88a6886c7f74adcf7fa879c02dfac1 = $(`<div id="html_3c88a6886c7f74adcf7fa879c02dfac1" style="width: 100.0%; height: 100.0%;"><b>2646 S. King St</b><br>Reported people: 1<br>Combined numeric estimate: 1<br>Spreadsheet records: 1</div>`)[0];
+                popup_e1e654b7bde9e65d527eab4cfed005a7.setContent(html_3c88a6886c7f74adcf7fa879c02dfac1);
+            
+        
+
+        circle_marker_1bd7d314da810ed6043f2b74cb3916b8.bindPopup(popup_e1e654b7bde9e65d527eab4cfed005a7)
+        ;
+
+        
+    
+    
+            circle_marker_1bd7d314da810ed6043f2b74cb3916b8.bindTooltip(
+                `<div>
+                     2646 S. King St · 1
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_05c8439eb88bab5b73b615f9c4139ef6 = L.circleMarker(
+                [21.3015, -157.84],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_dc05703f6e34cfaa272658c5129be45a = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_26c96775ee20357e6e0af8a79b6d69fd = $(`<div id="html_26c96775ee20357e6e0af8a79b6d69fd" style="width: 100.0%; height: 100.0%;"><b>920 Cedar</b><br>Reported people: 0<br>Combined numeric estimate: 0<br>Spreadsheet records: 1</div>`)[0];
+                popup_dc05703f6e34cfaa272658c5129be45a.setContent(html_26c96775ee20357e6e0af8a79b6d69fd);
+            
+        
+
+        circle_marker_05c8439eb88bab5b73b615f9c4139ef6.bindPopup(popup_dc05703f6e34cfaa272658c5129be45a)
+        ;
+
+        
+    
+    
+            circle_marker_05c8439eb88bab5b73b615f9c4139ef6.bindTooltip(
+                `<div>
+                     920 Cedar · 0
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b63ece6a4b1652fa4f81565601597938 = L.circleMarker(
+                [21.305, -157.849],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_2bcdbb4e9ebd483df7fd1479bb3d6b31 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_10b70a02b59d6beac8633db911dd6db2 = $(`<div id="html_10b70a02b59d6beac8633db911dd6db2" style="width: 100.0%; height: 100.0%;"><b>1039 S. King Street</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                popup_2bcdbb4e9ebd483df7fd1479bb3d6b31.setContent(html_10b70a02b59d6beac8633db911dd6db2);
+            
+        
+
+        circle_marker_b63ece6a4b1652fa4f81565601597938.bindPopup(popup_2bcdbb4e9ebd483df7fd1479bb3d6b31)
+        ;
+
+        
+    
+    
+            circle_marker_b63ece6a4b1652fa4f81565601597938.bindTooltip(
+                `<div>
+                     1039 S. King Street · 2
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c0400cf4e99b16b01f7d1ba1e0403120 = L.circleMarker(
+                [21.3229, -157.8804],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_194620e6b89cab491a50c99ede16076b = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_0d083dfa979b12a1deb3b0d4ee9319df = $(`<div id="html_0d083dfa979b12a1deb3b0d4ee9319df" style="width: 100.0%; height: 100.0%;"><b>Akepo Lane & N. King street</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                popup_194620e6b89cab491a50c99ede16076b.setContent(html_0d083dfa979b12a1deb3b0d4ee9319df);
+            
+        
+
+        circle_marker_c0400cf4e99b16b01f7d1ba1e0403120.bindPopup(popup_194620e6b89cab491a50c99ede16076b)
+        ;
+
+        
+    
+    
+            circle_marker_c0400cf4e99b16b01f7d1ba1e0403120.bindTooltip(
+                `<div>
+                     Akepo Lane & N. King street · 2
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_691a8ce6f6859d03396e0fed898a484c = L.circleMarker(
+                [21.3034, -157.843],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_22e392559d2d3f59dfa95a8c769ef156 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_791217dcfb3d48a4ea0b72b5b9584312 = $(`<div id="html_791217dcfb3d48a4ea0b72b5b9584312" style="width: 100.0%; height: 100.0%;"><b>1234 S Beretania street</b><br>Reported people: 3<br>Combined numeric estimate: 3<br>Spreadsheet records: 1</div>`)[0];
+                popup_22e392559d2d3f59dfa95a8c769ef156.setContent(html_791217dcfb3d48a4ea0b72b5b9584312);
+            
+        
+
+        circle_marker_691a8ce6f6859d03396e0fed898a484c.bindPopup(popup_22e392559d2d3f59dfa95a8c769ef156)
+        ;
+
+        
+    
+    
+            circle_marker_691a8ce6f6859d03396e0fed898a484c.bindTooltip(
+                `<div>
+                     1234 S Beretania street · 3
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_29ddd1f8005b1753246dbd51b7bd7886 = L.circleMarker(
+                [21.3035, -157.844],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_787fad8b744fba682ed82dd922c4faaa = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_c32772c09a3be232e48027e8794929c8 = $(`<div id="html_c32772c09a3be232e48027e8794929c8" style="width: 100.0%; height: 100.0%;"><b>1215 S Beretania street</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                popup_787fad8b744fba682ed82dd922c4faaa.setContent(html_c32772c09a3be232e48027e8794929c8);
+            
+        
+
+        circle_marker_29ddd1f8005b1753246dbd51b7bd7886.bindPopup(popup_787fad8b744fba682ed82dd922c4faaa)
+        ;
+
+        
+    
+    
+            circle_marker_29ddd1f8005b1753246dbd51b7bd7886.bindTooltip(
+                `<div>
+                     1215 S Beretania street · 2
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e89ac1571f744a9549bb02fe33039f8d = L.circleMarker(
+                [21.299, -157.8374],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_de2d669369cd1de5c707d80a334f9f76 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_bf11c6fff67b4d3e4dd20fc78f1b6155 = $(`<div id="html_bf11c6fff67b4d3e4dd20fc78f1b6155" style="width: 100.0%; height: 100.0%;"><b>1727 Makiki Street</b><br>Reported people: 4<br>Combined numeric estimate: 4<br>Spreadsheet records: 1</div>`)[0];
+                popup_de2d669369cd1de5c707d80a334f9f76.setContent(html_bf11c6fff67b4d3e4dd20fc78f1b6155);
+            
+        
+
+        circle_marker_e89ac1571f744a9549bb02fe33039f8d.bindPopup(popup_de2d669369cd1de5c707d80a334f9f76)
+        ;
+
+        
+    
+    
+            circle_marker_e89ac1571f744a9549bb02fe33039f8d.bindTooltip(
+                `<div>
+                     1727 Makiki Street · 4
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5bf37266c799488eba6f45119c6f794c = L.circleMarker(
+                [21.297, -157.8606],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_9b1d3dd61020d2ae5c529e110f4785cd = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_534202dad0998c59dc0be59fa76ca758 = $(`<div id="html_534202dad0998c59dc0be59fa76ca758" style="width: 100.0%; height: 100.0%;"><b>531 Cooke St</b><br>Reported people: 4+<br>Combined numeric estimate: 4<br>Spreadsheet records: 1</div>`)[0];
+                popup_9b1d3dd61020d2ae5c529e110f4785cd.setContent(html_534202dad0998c59dc0be59fa76ca758);
+            
+        
+
+        circle_marker_5bf37266c799488eba6f45119c6f794c.bindPopup(popup_9b1d3dd61020d2ae5c529e110f4785cd)
+        ;
+
+        
+    
+    
+            circle_marker_5bf37266c799488eba6f45119c6f794c.bindTooltip(
+                `<div>
+                     531 Cooke St · 4+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7afc2f8a71adccfc78d7c92e8ef84d54 = L.circleMarker(
+                [21.297, -157.846],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_05f8d8e213f03ad86b379266382a2eba = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_af2c8a9eb601516566a83f89bb3e2abb = $(`<div id="html_af2c8a9eb601516566a83f89bb3e2abb" style="width: 100.0%; height: 100.0%;"><b>610 Ward Ave</b><br>Reported people: 4+<br>Combined numeric estimate: 4<br>Spreadsheet records: 1</div>`)[0];
+                popup_05f8d8e213f03ad86b379266382a2eba.setContent(html_af2c8a9eb601516566a83f89bb3e2abb);
+            
+        
+
+        circle_marker_7afc2f8a71adccfc78d7c92e8ef84d54.bindPopup(popup_05f8d8e213f03ad86b379266382a2eba)
+        ;
+
+        
+    
+    
+            circle_marker_7afc2f8a71adccfc78d7c92e8ef84d54.bindTooltip(
+                `<div>
+                     610 Ward Ave · 4+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_29f22e4b72c0e9d060fe41dff7085e36 = L.circleMarker(
+                [21.2955, -157.858],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_22cd6368d31a105c62aceda2ac0eb0d7 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_ba29224f84421502d067ba25eaeb3c74 = $(`<div id="html_ba29224f84421502d067ba25eaeb3c74" style="width: 100.0%; height: 100.0%;"><b>537 Coral St</b><br>Reported people: 1+<br>Combined numeric estimate: 1<br>Spreadsheet records: 1</div>`)[0];
+                popup_22cd6368d31a105c62aceda2ac0eb0d7.setContent(html_ba29224f84421502d067ba25eaeb3c74);
+            
+        
+
+        circle_marker_29f22e4b72c0e9d060fe41dff7085e36.bindPopup(popup_22cd6368d31a105c62aceda2ac0eb0d7)
+        ;
+
+        
+    
+    
+            circle_marker_29f22e4b72c0e9d060fe41dff7085e36.bindTooltip(
+                `<div>
+                     537 Coral St · 1+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_801bdd305e06244467d29b051a31fd2a = L.circleMarker(
+                [21.312, -157.8608],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_e459eaf2b404e7b8dbeef7294a4b17ce = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_74ce7c3311a8f0b9af381360ad7e32aa = $(`<div id="html_74ce7c3311a8f0b9af381360ad7e32aa" style="width: 100.0%; height: 100.0%;"><b>1055 River Street</b><br>Reported people: 4<br>Combined numeric estimate: 4<br>Spreadsheet records: 1</div>`)[0];
+                popup_e459eaf2b404e7b8dbeef7294a4b17ce.setContent(html_74ce7c3311a8f0b9af381360ad7e32aa);
+            
+        
+
+        circle_marker_801bdd305e06244467d29b051a31fd2a.bindPopup(popup_e459eaf2b404e7b8dbeef7294a4b17ce)
+        ;
+
+        
+    
+    
+            circle_marker_801bdd305e06244467d29b051a31fd2a.bindTooltip(
+                `<div>
+                     1055 River Street · 4
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_bc21f427025489521fb832141837d035 = L.circleMarker(
+                [21.299, -157.858],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_a6930ab1512370a39f580aef5fab377e = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_2808d4dee7556b56a5e90994633f3df4 = $(`<div id="html_2808d4dee7556b56a5e90994633f3df4" style="width: 100.0%; height: 100.0%;"><b>Halekawila and Keawe Construction</b><br>Reported people: 2+<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                popup_a6930ab1512370a39f580aef5fab377e.setContent(html_2808d4dee7556b56a5e90994633f3df4);
+            
+        
+
+        circle_marker_bc21f427025489521fb832141837d035.bindPopup(popup_a6930ab1512370a39f580aef5fab377e)
+        ;
+
+        
+    
+    
+            circle_marker_bc21f427025489521fb832141837d035.bindTooltip(
+                `<div>
+                     Halekawila and Keawe Construction · 2+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7745daaf88266e301bbee1720efbbceb = L.circleMarker(
+                [21.3143, -157.869],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_eba359b053e4aad3a0cbd3a165534726 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_ec11366871ddfc6763476405ec66dc9a = $(`<div id="html_ec11366871ddfc6763476405ec66dc9a" style="width: 100.0%; height: 100.0%;"><b>N Nimitz and Kekaulike Street</b><br>Reported people: 4+<br>Combined numeric estimate: 4<br>Spreadsheet records: 1</div>`)[0];
+                popup_eba359b053e4aad3a0cbd3a165534726.setContent(html_ec11366871ddfc6763476405ec66dc9a);
+            
+        
+
+        circle_marker_7745daaf88266e301bbee1720efbbceb.bindPopup(popup_eba359b053e4aad3a0cbd3a165534726)
+        ;
+
+        
+    
+    
+            circle_marker_7745daaf88266e301bbee1720efbbceb.bindTooltip(
+                `<div>
+                     N Nimitz and Kekaulike Street · 4+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b85a5b5766c00359e53d391c0a605a1b = L.circleMarker(
+                [21.3078, -157.8587],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.235382907247958, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_c7a126e150d2f1454db23ecf5c87307f = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_9965a4fac0ad5483b54f6597de6e8bf9 = $(`<div id="html_9965a4fac0ad5483b54f6597de6e8bf9" style="width: 100.0%; height: 100.0%;"><b>478 S King Street (HI State Library)</b><br>Reported people: 12<br>Combined numeric estimate: 12<br>Spreadsheet records: 1</div>`)[0];
+                popup_c7a126e150d2f1454db23ecf5c87307f.setContent(html_9965a4fac0ad5483b54f6597de6e8bf9);
+            
+        
+
+        circle_marker_b85a5b5766c00359e53d391c0a605a1b.bindPopup(popup_c7a126e150d2f1454db23ecf5c87307f)
+        ;
+
+        
+    
+    
+            circle_marker_b85a5b5766c00359e53d391c0a605a1b.bindTooltip(
+                `<div>
+                     478 S King Street (HI State Library) · 12
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c828af360271d0c2408f9bbda6d09f41 = L.circleMarker(
+                [21.321, -157.858],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_6e9a3e33a51e87bd2e8821d25fba1df3 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_d57e6266c9cf176d9396de90e3588ea3 = $(`<div id="html_d57e6266c9cf176d9396de90e3588ea3" style="width: 100.0%; height: 100.0%;"><b>64 N Kuakini St, Honolulu</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                popup_6e9a3e33a51e87bd2e8821d25fba1df3.setContent(html_d57e6266c9cf176d9396de90e3588ea3);
+            
+        
+
+        circle_marker_c828af360271d0c2408f9bbda6d09f41.bindPopup(popup_6e9a3e33a51e87bd2e8821d25fba1df3)
+        ;
+
+        
+    
+    
+            circle_marker_c828af360271d0c2408f9bbda6d09f41.bindTooltip(
+                `<div>
+                     64 N Kuakini St, Honolulu · 2
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_3c545125386bb9d0784c4a014f7a5684 = L.circleMarker(
+                [21.3004, -157.8528],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_4b0beeeaa2970e509bbada34142c6a3e = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_e3aef18500e7f9f8d744ef5179bda41b = $(`<div id="html_e3aef18500e7f9f8d744ef5179bda41b" style="width: 100.0%; height: 100.0%;"><b>609 South St</b><br>Reported people: 1<br>Combined numeric estimate: 1<br>Spreadsheet records: 1</div>`)[0];
+                popup_4b0beeeaa2970e509bbada34142c6a3e.setContent(html_e3aef18500e7f9f8d744ef5179bda41b);
+            
+        
+
+        circle_marker_3c545125386bb9d0784c4a014f7a5684.bindPopup(popup_4b0beeeaa2970e509bbada34142c6a3e)
+        ;
+
+        
+    
+    
+            circle_marker_3c545125386bb9d0784c4a014f7a5684.bindTooltip(
+                `<div>
+                     609 South St · 1
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2e6475deed3c3def2f2e5250fbdeef67 = L.circleMarker(
+                [21.33, -157.872],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_8344706d45f2d7c4547c18981ca2d19a = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_319e74de05ed5a5b70819c0f6a96c1a4 = $(`<div id="html_319e74de05ed5a5b70819c0f6a96c1a4" style="width: 100.0%; height: 100.0%;"><b>1527 Kapalama Ave</b><br>Reported people: 2+<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                popup_8344706d45f2d7c4547c18981ca2d19a.setContent(html_319e74de05ed5a5b70819c0f6a96c1a4);
+            
+        
+
+        circle_marker_2e6475deed3c3def2f2e5250fbdeef67.bindPopup(popup_8344706d45f2d7c4547c18981ca2d19a)
+        ;
+
+        
+    
+    
+            circle_marker_2e6475deed3c3def2f2e5250fbdeef67.bindTooltip(
+                `<div>
+                     1527 Kapalama Ave · 2+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7ec4a5f883de9d6478b8725aa4719342 = L.circleMarker(
+                [21.2948, -157.858],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.024922359499623, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_7b6e4d7c4d0f70546e668709cd5b35f3 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_61d16c1bf6583c369273e932d1f9d5d5 = $(`<div id="html_61d16c1bf6583c369273e932d1f9d5d5" style="width: 100.0%; height: 100.0%;"><b>Mother Waldron Park</b><br>Reported people: 5<br>Combined numeric estimate: 5<br>Spreadsheet records: 1</div>`)[0];
+                popup_7b6e4d7c4d0f70546e668709cd5b35f3.setContent(html_61d16c1bf6583c369273e932d1f9d5d5);
+            
+        
+
+        circle_marker_7ec4a5f883de9d6478b8725aa4719342.bindPopup(popup_7b6e4d7c4d0f70546e668709cd5b35f3)
+        ;
+
+        
+    
+    
+            circle_marker_7ec4a5f883de9d6478b8725aa4719342.bindTooltip(
+                `<div>
+                     Mother Waldron Park · 5
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5fdeb9165ffbc199c2a0e3ed5ccc0af4 = L.circleMarker(
+                [21.3333, -157.905],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.85900603509299, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_14116f79966114d93a3f45ecd62c7172 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_c8d848471cf9ab812d589e5cd45a08d8 = $(`<div id="html_c8d848471cf9ab812d589e5cd45a08d8" style="width: 100.0%; height: 100.0%;"><b>2475 N Nimitz Hwy</b><br>Reported people: 30<br>Combined numeric estimate: 30<br>Spreadsheet records: 1</div>`)[0];
+                popup_14116f79966114d93a3f45ecd62c7172.setContent(html_c8d848471cf9ab812d589e5cd45a08d8);
+            
+        
+
+        circle_marker_5fdeb9165ffbc199c2a0e3ed5ccc0af4.bindPopup(popup_14116f79966114d93a3f45ecd62c7172)
+        ;
+
+        
+    
+    
+            circle_marker_5fdeb9165ffbc199c2a0e3ed5ccc0af4.bindTooltip(
+                `<div>
+                     2475 N Nimitz Hwy · 30
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0a6620083510226413cb0bf294f76b27 = L.circleMarker(
+                [21.3262, -157.8882],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.40908153700972, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_8c4fe060978f96b080dd991dabdee298 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_84481ecf14e49a2e5ac8e64493e62d1c = $(`<div id="html_84481ecf14e49a2e5ac8e64493e62d1c" style="width: 100.0%; height: 100.0%;"><b>2611 Kilihau Street</b><br>Reported people: 6+<br>Combined numeric estimate: 6<br>Spreadsheet records: 1</div>`)[0];
+                popup_8c4fe060978f96b080dd991dabdee298.setContent(html_84481ecf14e49a2e5ac8e64493e62d1c);
+            
+        
+
+        circle_marker_0a6620083510226413cb0bf294f76b27.bindPopup(popup_8c4fe060978f96b080dd991dabdee298)
+        ;
+
+        
+    
+    
+            circle_marker_0a6620083510226413cb0bf294f76b27.bindTooltip(
+                `<div>
+                     2611 Kilihau Street · 6+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e249a0fa4c2a1d473c018cdd3aa88667 = L.circleMarker(
+                [21.3985, -157.956],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.6, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_dad76473d39ac65ef14469a7a3c27e0f = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_12805555f9af854ce15fe793308202e4 = $(`<div id="html_12805555f9af854ce15fe793308202e4" style="width: 100.0%; height: 100.0%;"><b>99-740 Apela St</b><br>Reported people: 4+<br>Combined numeric estimate: 4<br>Spreadsheet records: 1</div>`)[0];
+                popup_dad76473d39ac65ef14469a7a3c27e0f.setContent(html_12805555f9af854ce15fe793308202e4);
+            
+        
+
+        circle_marker_e249a0fa4c2a1d473c018cdd3aa88667.bindPopup(popup_dad76473d39ac65ef14469a7a3c27e0f)
+        ;
+
+        
+    
+    
+            circle_marker_e249a0fa4c2a1d473c018cdd3aa88667.bindTooltip(
+                `<div>
+                     99-740 Apela St · 4+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_757faed7dc6c9e4cf7bace0c4c75026e = L.circleMarker(
+                [21.3229, -157.8804],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_c63eceaa005bf0e1186e89a0587b3d42 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_b646adb66018b9c039c3b9c475fccf3f = $(`<div id="html_b646adb66018b9c039c3b9c475fccf3f" style="width: 100.0%; height: 100.0%;"><b>954A Akepo Ln</b><br>Reported people: 2+<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                popup_c63eceaa005bf0e1186e89a0587b3d42.setContent(html_b646adb66018b9c039c3b9c475fccf3f);
+            
+        
+
+        circle_marker_757faed7dc6c9e4cf7bace0c4c75026e.bindPopup(popup_c63eceaa005bf0e1186e89a0587b3d42)
+        ;
+
+        
+    
+    
+            circle_marker_757faed7dc6c9e4cf7bace0c4c75026e.bindTooltip(
+                `<div>
+                     954A Akepo Ln · 2+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b358c3087b65718cd51567cf930180a7 = L.circleMarker(
+                [21.386, -157.93],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_a8a95df64942673804e4ff0f3434f79e = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_c6a4a108dfbfa6d515bd3840f4e4e24a = $(`<div id="html_c6a4a108dfbfa6d515bd3840f4e4e24a" style="width: 100.0%; height: 100.0%;"><b>98 1059 Moanalua Rd, Aiea</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                popup_a8a95df64942673804e4ff0f3434f79e.setContent(html_c6a4a108dfbfa6d515bd3840f4e4e24a);
+            
+        
+
+        circle_marker_b358c3087b65718cd51567cf930180a7.bindPopup(popup_a8a95df64942673804e4ff0f3434f79e)
+        ;
+
+        
+    
+    
+            circle_marker_b358c3087b65718cd51567cf930180a7.bindTooltip(
+                `<div>
+                     98 1059 Moanalua Rd, Aiea · 2
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_da104cedad885baae05aee4ca33d602b = L.circleMarker(
+                [21.3229, -157.8804],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_db19fa1e625df370bf81b2b3f021e5dd = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_7487b8201e465a282bde7a0153d76555 = $(`<div id="html_7487b8201e465a282bde7a0153d76555" style="width: 100.0%; height: 100.0%;"><b>954a Akepo Ln, Honolulu</b><br>Reported people: 1<br>Combined numeric estimate: 1<br>Spreadsheet records: 1</div>`)[0];
+                popup_db19fa1e625df370bf81b2b3f021e5dd.setContent(html_7487b8201e465a282bde7a0153d76555);
+            
+        
+
+        circle_marker_da104cedad885baae05aee4ca33d602b.bindPopup(popup_db19fa1e625df370bf81b2b3f021e5dd)
+        ;
+
+        
+    
+    
+            circle_marker_da104cedad885baae05aee4ca33d602b.bindTooltip(
+                `<div>
+                     954a Akepo Ln, Honolulu · 1
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_199f3dedc7492bd28d995ca438bc1555 = L.circleMarker(
+                [21.3064, -157.8918],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.40908153700972, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_4deceea41bd9a527a22946436e90a061 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_83d2f6663077d4168bbb3e73ce8a35e7 = $(`<div id="html_83d2f6663077d4168bbb3e73ce8a35e7" style="width: 100.0%; height: 100.0%;"><b>Sand Island SRA park</b><br>Reported people: 6+<br>Combined numeric estimate: 6<br>Spreadsheet records: 1</div>`)[0];
+                popup_4deceea41bd9a527a22946436e90a061.setContent(html_83d2f6663077d4168bbb3e73ce8a35e7);
+            
+        
+
+        circle_marker_199f3dedc7492bd28d995ca438bc1555.bindPopup(popup_4deceea41bd9a527a22946436e90a061)
+        ;
+
+        
+    
+    
+            circle_marker_199f3dedc7492bd28d995ca438bc1555.bindTooltip(
+                `<div>
+                     Sand Island SRA park · 6+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_74f1dfcea24d64033af41d2915117bb5 = L.circleMarker(
+                [21.2914, -157.847],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_ab43fa57977de363d3eb28231c8f20c2 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_bd5d93cd0dc255cb3c0209f3725f65e8 = $(`<div id="html_bd5d93cd0dc255cb3c0209f3725f65e8" style="width: 100.0%; height: 100.0%;"><b>Ala Moana Beach Park</b><br>Reported people: 46315<br>Combined numeric estimate: 0<br>Spreadsheet records: 1</div>`)[0];
+                popup_ab43fa57977de363d3eb28231c8f20c2.setContent(html_bd5d93cd0dc255cb3c0209f3725f65e8);
+            
+        
+
+        circle_marker_74f1dfcea24d64033af41d2915117bb5.bindPopup(popup_ab43fa57977de363d3eb28231c8f20c2)
+        ;
+
+        
+    
+    
+            circle_marker_74f1dfcea24d64033af41d2915117bb5.bindTooltip(
+                `<div>
+                     Ala Moana Beach Park · 46315
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_eed01aeee6887a6a7c407caea79e572d = L.circleMarker(
+                [21.3187, -157.8886],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.11769145362398, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_e31528f4c1625f043d51e465eb1747e2 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_9827998e4ed42f47b40381dc01eb1965 = $(`<div id="html_9827998e4ed42f47b40381dc01eb1965" style="width: 100.0%; height: 100.0%;"><b>Auiki St</b><br>Reported people: 3+<br>Combined numeric estimate: 3<br>Spreadsheet records: 1</div>`)[0];
+                popup_e31528f4c1625f043d51e465eb1747e2.setContent(html_9827998e4ed42f47b40381dc01eb1965);
+            
+        
+
+        circle_marker_eed01aeee6887a6a7c407caea79e572d.bindPopup(popup_e31528f4c1625f043d51e465eb1747e2)
+        ;
+
+        
+    
+    
+            circle_marker_eed01aeee6887a6a7c407caea79e572d.bindTooltip(
+                `<div>
+                     Auiki St · 3+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ce160665b622634b91ae2b0fd2184581 = L.circleMarker(
+                [21.3875, -157.945],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_f4b3bf8c703f9c39bda6de0d36e51dab = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_84b039cbf2928f30453128682fd26412 = $(`<div id="html_84b039cbf2928f30453128682fd26412" style="width: 100.0%; height: 100.0%;"><b>98-201 Kamehameha Hwy</b><br>Reported people: 1<br>Combined numeric estimate: 1<br>Spreadsheet records: 1</div>`)[0];
+                popup_f4b3bf8c703f9c39bda6de0d36e51dab.setContent(html_84b039cbf2928f30453128682fd26412);
+            
+        
+
+        circle_marker_ce160665b622634b91ae2b0fd2184581.bindPopup(popup_f4b3bf8c703f9c39bda6de0d36e51dab)
+        ;
+
+        
+    
+    
+            circle_marker_ce160665b622634b91ae2b0fd2184581.bindTooltip(
+                `<div>
+                     98-201 Kamehameha Hwy · 1
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a481bd17b0a5406230a7eb6462cfdc31 = L.circleMarker(
+                [21.3875, -157.93],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.545584412271571, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_573d12b93567a501beca71c8c4b8028f = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_9bac1fef8ec314d9d1173542661a6029 = $(`<div id="html_9bac1fef8ec314d9d1173542661a6029" style="width: 100.0%; height: 100.0%;"><b>Aiea Heights Drive</b><br>Reported people: 2<br>Combined numeric estimate: 2<br>Spreadsheet records: 1</div>`)[0];
+                popup_573d12b93567a501beca71c8c4b8028f.setContent(html_9bac1fef8ec314d9d1173542661a6029);
+            
+        
+
+        circle_marker_a481bd17b0a5406230a7eb6462cfdc31.bindPopup(popup_573d12b93567a501beca71c8c4b8028f)
+        ;
+
+        
+    
+    
+            circle_marker_a481bd17b0a5406230a7eb6462cfdc31.bindTooltip(
+                `<div>
+                     Aiea Heights Drive · 2
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_51d0e2cc5dfc9f21189620a931b17e77 = L.circleMarker(
+                [21.3355, -157.889],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_a3594b704b8d1b0bb97bca5d36ef5e37 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_47cec122ae57fca718d73eed044362d5 = $(`<div id="html_47cec122ae57fca718d73eed044362d5" style="width: 100.0%; height: 100.0%;"><b>2312 Kam Hwy</b><br>Reported people: UNK<br>Combined numeric estimate: 0<br>Spreadsheet records: 1</div>`)[0];
+                popup_a3594b704b8d1b0bb97bca5d36ef5e37.setContent(html_47cec122ae57fca718d73eed044362d5);
+            
+        
+
+        circle_marker_51d0e2cc5dfc9f21189620a931b17e77.bindPopup(popup_a3594b704b8d1b0bb97bca5d36ef5e37)
+        ;
+
+        
+    
+    
+            circle_marker_51d0e2cc5dfc9f21189620a931b17e77.bindTooltip(
+                `<div>
+                     2312 Kam Hwy · UNK
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a14a4b2113933f8cbacfea8b09697247 = L.circleMarker(
+                [21.449, -157.997],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.8, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_766a1a368fb2c3f8f93c70d1f331f6cb = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_c174e7b9488a1a19a9cf54a70fb20874 = $(`<div id="html_c174e7b9488a1a19a9cf54a70fb20874" style="width: 100.0%; height: 100.0%;"><b>10 Acres Park</b><br>Reported people: 0<br>Combined numeric estimate: 0<br>Spreadsheet records: 1</div>`)[0];
+                popup_766a1a368fb2c3f8f93c70d1f331f6cb.setContent(html_c174e7b9488a1a19a9cf54a70fb20874);
+            
+        
+
+        circle_marker_a14a4b2113933f8cbacfea8b09697247.bindPopup(popup_766a1a368fb2c3f8f93c70d1f331f6cb)
+        ;
+
+        
+    
+    
+            circle_marker_a14a4b2113933f8cbacfea8b09697247.bindTooltip(
+                `<div>
+                     10 Acres Park · 0
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4f76b427a8f149debdbb056c645a021b = L.circleMarker(
+                [21.3865, -158.0095],
+                {"bubblingMouseEvents": true, "color": "#2de2e6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff4ecd", "fillOpacity": 0.62, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 18, "stroke": true, "weight": 1.5}
+            ).addTo(map_39991549346a6512b235b4521c852eec);
+        
+    
+        var popup_56fb6d5a889290ce41b5c0dfa69eceb6 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_4d45ba7c2091d6675034eebc5767ea3c = $(`<div id="html_4d45ba7c2091d6675034eebc5767ea3c" style="width: 100.0%; height: 100.0%;"><b>94-695 Waipahu St</b><br>Reported people: 55+<br>Combined numeric estimate: 55<br>Spreadsheet records: 1</div>`)[0];
+                popup_56fb6d5a889290ce41b5c0dfa69eceb6.setContent(html_4d45ba7c2091d6675034eebc5767ea3c);
+            
+        
+
+        circle_marker_4f76b427a8f149debdbb056c645a021b.bindPopup(popup_56fb6d5a889290ce41b5c0dfa69eceb6)
+        ;
+
+        
+    
+    
+            circle_marker_4f76b427a8f149debdbb056c645a021b.bindTooltip(
+                `<div>
+                     94-695 Waipahu St · 55+
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+</script>
+</html>
