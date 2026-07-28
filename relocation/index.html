@@ -1,1 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Relocation Destinations Map — Dark</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+<style>
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #05070d;
+  color: #e5eefc;
+}
+.page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  background: linear-gradient(180deg, #0c1220 0%, #0a0f1a 100%);
+  color: #eef6ff;
+  padding: 14px 18px 12px;
+  box-shadow: 0 2px 18px rgba(0,0,0,.45);
+  border-bottom: 1px solid rgba(130,160,255,.15);
+  z-index: 1000;
+}
+.header h1 {
+  margin: 0 0 4px;
+  font-size: 22px;
+  letter-spacing: .2px;
+}
+.header p {
+  margin: 0;
+  font-size: 13px;
+  opacity: .85;
+}
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  align-items: center;
+  background: rgba(10, 15, 26, .96);
+  color: #d9e6fb;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(130,160,255,.15);
+  z-index: 900;
+}
+.group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+select {
+  padding: 6px 9px;
+  border: 1px solid #2b385a;
+  border-radius: 6px;
+  background: #0f1729;
+  color: #eaf2ff;
+}
+input[type="checkbox"] {
+  accent-color: #6ee7ff;
+}
+.summary {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.pill {
+  border-radius: 999px;
+  padding: 6px 11px;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid rgba(255,255,255,.1);
+  box-shadow: inset 0 0 12px rgba(255,255,255,.04), 0 0 14px rgba(0,0,0,.25);
+}
+.total {
+  background: rgba(148,163,184,.12);
+  color: #f1f5f9;
+  border-color: rgba(148,163,184,.25);
+}
+.ihs {
+  background: rgba(56,189,248,.12);
+  color: #93f5ff;
+  border-color: rgba(56,189,248,.32);
+  box-shadow: inset 0 0 12px rgba(56,189,248,.08), 0 0 12px rgba(56,189,248,.18);
+}
+.wbid {
+  background: rgba(250,204,21,.12);
+  color: #fde68a;
+  border-color: rgba(250,204,21,.32);
+  box-shadow: inset 0 0 12px rgba(250,204,21,.08), 0 0 12px rgba(250,204,21,.18);
+}
+.status {
+  padding: 8px 14px;
+  background: rgba(6,10,18,.95);
+  border-bottom: 1px solid rgba(130,160,255,.15);
+  font-size: 13px;
+  color: #b9c9e8;
+}
+.status.zero {
+  color: #ffd4a8;
+  background: rgba(61, 32, 6, .42);
+}
+#map {
+  flex: 1;
+  min-height: 480px;
+  background: #04070d;
+}
+.note {
+  font-size: 12px;
+  color: #9fb2d1;
+  padding: 8px 14px;
+  background: rgba(10,15,26,.96);
+  border-top: 1px solid rgba(130,160,255,.15);
+}
+.legend {
+  background: rgba(8,12,20,.92);
+  color: #e8f2ff;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(130,160,255,.18);
+  box-shadow: 0 0 18px rgba(0,0,0,.38);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 7px;
+  vertical-align: middle;
+}
+.dot.ihs {
+  background: #6ee7ff;
+  box-shadow: 0 0 10px #6ee7ff, 0 0 18px rgba(110,231,255,.55);
+}
+.dot.wbid {
+  background: #ffe66d;
+  box-shadow: 0 0 10px #ffe66d, 0 0 18px rgba(255,230,109,.55);
+}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: #0b1323;
+  color: #ecf5ff;
+  box-shadow: 0 0 24px rgba(0,0,0,.45);
+}
+.leaflet-popup-content {
+  margin: 12px 14px;
+  line-height: 1.45;
+  min-width: 235px;
+}
+.leaflet-container a.leaflet-popup-close-button {
+  color: #d9e6fb;
+}
+.popup-title {
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 6px;
+  color: #ffffff;
+}
+.popup-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 8px;
+  font-size: 13px;
+}
+.popup-grid b {
+  color: #8eb1ff;
+}
+.breakdown {
+  margin-top: 8px;
+  padding-top: 7px;
+  border-top: 1px solid rgba(255,255,255,.12);
+  font-size: 12px;
+}
+.breakdown b {
+  color: #bfeaff;
+}
+.leaflet-control-zoom a {
+  background: rgba(8,12,20,.92);
+  color: #eef6ff;
+  border-bottom-color: rgba(255,255,255,.12);
+}
+.leaflet-control-zoom a:hover {
+  background: #101a2f;
+}
+@media (max-width: 700px) {
+  .summary {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <h1>Relocation Destinations Map</h1>
+    <p>Dark view with glowing destination points. IHS and WBID relocation destinations, headcounts, and available dates.</p>
+  </div>
 
+  <div class="controls">
+    <div class="group">
+      <strong>Program:</strong>
+      <label><input id="ihsToggle" type="checkbox" checked> IHS</label>
+      <label><input id="wbidToggle" type="checkbox" checked> WBID</label>
+    </div>
+
+    <div class="group">
+      <strong>IHS reporting week:</strong>
+      <select id="weekFilter">
+        <option value="all">All periods / destination totals</option>
+      </select>
+    </div>
+
+    <div class="summary">
+      <span id="totalPill" class="pill total">Total: 149</span>
+      <span id="ihsPill" class="pill ihs">IHS: 135</span>
+      <span id="wbidPill" class="pill wbid">WBID: 14</span>
+    </div>
+  </div>
+
+  <div id="status" class="status">Showing all IHS and WBID destination totals.</div>
+  <div id="map"></div>
+  <div class="note">
+    IHS dates are organized by reporting week from May 20 through July 25, 2026. June 27–July 3 had zero IHS activity.
+    WBID provides exact dates for Arizona on May 23 and Portland on June 18. The remaining WBID relocations are assigned to the first reporting period, May 20–June 5, 2026.
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const events = [{"destination": "Arkansas", "source": "IHS", "total": 2, "weekly": [2, 0, 0, 0, 0, 0, 0, 0], "lat": 34.8938, "lon": -92.4426}, {"destination": "Alaska", "source": "IHS", "total": 1, "weekly": [1, 0, 0, 0, 0, 0, 0, 0], "lat": 64.2008, "lon": -152.4937}, {"destination": "Arizona", "source": "IHS", "total": 1, "weekly": [1, 0, 0, 0, 0, 0, 0, 0], "lat": 34.2744, "lon": -111.6602}, {"destination": "California", "source": "IHS", "total": 10, "weekly": [4, 1, 3, 1, 0, 1, 0, 0], "lat": 37.1841, "lon": -119.4696}, {"destination": "Colorado", "source": "IHS", "total": 3, "weekly": [0, 0, 2, 1, 0, 0, 0, 0], "lat": 38.9972, "lon": -105.5478}, {"destination": "Florida", "source": "IHS", "total": 9, "weekly": [4, 0, 2, 0, 0, 0, 1, 2], "lat": 28.6305, "lon": -82.4497}, {"destination": "Georgia", "source": "IHS", "total": 2, "weekly": [2, 0, 0, 0, 0, 0, 0, 0], "lat": 32.6415, "lon": -83.4426}, {"destination": "Illinois", "source": "IHS", "total": 1, "weekly": [0, 0, 0, 1, 0, 0, 0, 0], "lat": 40.0417, "lon": -89.1965}, {"destination": "Kansas", "source": "IHS", "total": 1, "weekly": [1, 0, 0, 0, 0, 0, 0, 0], "lat": 38.4937, "lon": -98.3804}, {"destination": "Kentucky", "source": "IHS", "total": 1, "weekly": [0, 0, 1, 0, 0, 0, 0, 0], "lat": 37.5347, "lon": -85.3021}, {"destination": "Maine", "source": "IHS", "total": 1, "weekly": [1, 0, 0, 0, 0, 0, 0, 0], "lat": 45.3695, "lon": -69.2428}, {"destination": "Michigan", "source": "IHS", "total": 1, "weekly": [0, 0, 1, 0, 0, 0, 0, 0], "lat": 44.3467, "lon": -85.4102}, {"destination": "Minnesota", "source": "IHS", "total": 10, "weekly": [7, 0, 0, 3, 0, 0, 0, 0], "lat": 46.2807, "lon": -94.3053}, {"destination": "Missouri", "source": "IHS", "total": 2, "weekly": [2, 0, 0, 0, 0, 0, 0, 0], "lat": 38.3566, "lon": -92.458}, {"destination": "Nevada", "source": "IHS", "total": 5, "weekly": [2, 0, 0, 0, 0, 3, 0, 0], "lat": 39.3289, "lon": -116.6312}, {"destination": "New Jersey", "source": "IHS", "total": 2, "weekly": [2, 0, 0, 0, 0, 0, 0, 0], "lat": 40.143, "lon": -74.7311}, {"destination": "New York", "source": "IHS", "total": 5, "weekly": [5, 0, 0, 0, 0, 0, 0, 0], "lat": 42.9538, "lon": -75.5268}, {"destination": "North Carolina", "source": "IHS", "total": 8, "weekly": [8, 0, 0, 0, 0, 0, 0, 0], "lat": 35.5557, "lon": -79.3877}, {"destination": "Louisiana", "source": "IHS", "total": 1, "weekly": [0, 0, 0, 1, 0, 0, 0, 0], "lat": 31.0689, "lon": -91.9968}, {"destination": "Ohio", "source": "IHS", "total": 3, "weekly": [2, 0, 0, 0, 0, 0, 1, 0], "lat": 40.2862, "lon": -82.7937}, {"destination": "Oklahoma", "source": "IHS", "total": 2, "weekly": [2, 0, 0, 0, 0, 0, 0, 0], "lat": 35.5889, "lon": -97.4943}, {"destination": "Oregon", "source": "IHS", "total": 3, "weekly": [3, 0, 0, 0, 0, 0, 0, 0], "lat": 43.9336, "lon": -120.5583}, {"destination": "South Carolina", "source": "IHS", "total": 1, "weekly": [1, 0, 0, 0, 0, 0, 0, 0], "lat": 33.9169, "lon": -80.8964}, {"destination": "Tennessee", "source": "IHS", "total": 1, "weekly": [1, 0, 0, 0, 0, 0, 0, 0], "lat": 35.858, "lon": -86.3505}, {"destination": "Texas", "source": "IHS", "total": 3, "weekly": [3, 0, 0, 0, 0, 0, 0, 0], "lat": 31.4757, "lon": -99.3312}, {"destination": "Utah", "source": "IHS", "total": 17, "weekly": [17, 0, 0, 0, 0, 0, 0, 0], "lat": 39.3055, "lon": -111.6703}, {"destination": "Virginia", "source": "IHS", "total": 2, "weekly": [2, 0, 0, 0, 0, 0, 0, 0], "lat": 37.5215, "lon": -78.8537}, {"destination": "Washington", "source": "IHS", "total": 7, "weekly": [6, 1, 0, 0, 0, 0, 0, 0], "lat": 47.3826, "lon": -120.4472}, {"destination": "Wisconsin", "source": "IHS", "total": 3, "weekly": [3, 0, 0, 0, 0, 0, 0, 0], "lat": 44.6243, "lon": -89.9941}, {"destination": "Wyoming", "source": "IHS", "total": 5, "weekly": [2, 0, 0, 0, 0, 0, 3, 0], "lat": 42.9957, "lon": -107.5512}, {"destination": "Hawaii Island", "source": "IHS", "total": 6, "weekly": [6, 0, 0, 0, 0, 0, 0, 0], "lat": 19.5429, "lon": -155.6659}, {"destination": "Maui", "source": "IHS", "total": 7, "weekly": [7, 0, 0, 0, 0, 0, 0, 0], "lat": 20.7984, "lon": -156.3319}, {"destination": "American Samoa", "source": "IHS", "total": 1, "weekly": [0, 0, 0, 0, 0, 0, 0, 1], "lat": -14.271, "lon": -170.1322}, {"destination": "Canada", "source": "IHS", "total": 1, "weekly": [1, 0, 0, 0, 0, 0, 0, 0], "lat": 56.1304, "lon": -106.3468}, {"destination": "Chuuk", "source": "IHS", "total": 2, "weekly": [2, 0, 0, 0, 0, 0, 0, 0], "lat": 7.4458, "lon": 151.85}, {"destination": "Egypt", "source": "IHS", "total": 1, "weekly": [1, 0, 0, 0, 0, 0, 0, 0], "lat": 26.8206, "lon": 30.8025}, {"destination": "Guam", "source": "IHS", "total": 1, "weekly": [1, 0, 0, 0, 0, 0, 0, 0], "lat": 13.4443, "lon": 144.7937}, {"destination": "Mexico", "source": "IHS", "total": 1, "weekly": [1, 0, 0, 0, 0, 0, 0, 0], "lat": 23.6345, "lon": -102.5528}, {"destination": "Micronesia", "source": "IHS", "total": 2, "weekly": [2, 0, 0, 0, 0, 0, 0, 0], "lat": 7.4256, "lon": 150.5508}, {"destination": "Arizona", "source": "WBID", "total": 1, "exactDate": "May 23, 2026", "weekIndex": 0, "lat": 34.2744, "lon": -111.6602}, {"destination": "Colorado", "source": "WBID", "total": 1, "exactDate": null, "weekIndex": 0, "lat": 38.9972, "lon": -105.5478}, {"destination": "Corpus Christi, Texas", "source": "WBID", "total": 1, "exactDate": null, "weekIndex": 0, "lat": 27.8006, "lon": -97.3964}, {"destination": "Detroit, Michigan", "source": "WBID", "total": 1, "exactDate": null, "weekIndex": 0, "lat": 42.3314, "lon": -83.0458}, {"destination": "Illinois", "source": "WBID", "total": 1, "exactDate": null, "weekIndex": 0, "lat": 40.0417, "lon": -89.1965}, {"destination": "Portland, Oregon", "source": "WBID", "total": 1, "exactDate": "June 18, 2026", "weekIndex": 2, "lat": 45.5152, "lon": -122.6784}, {"destination": "Los Angeles, California", "source": "WBID", "total": 3, "exactDate": null, "weekIndex": 0, "lat": 34.0522, "lon": -118.2437}, {"destination": "Salt Lake City, Utah", "source": "WBID", "total": 1, "exactDate": null, "weekIndex": 0, "lat": 40.7608, "lon": -111.891}, {"destination": "San Francisco, California", "source": "WBID", "total": 1, "exactDate": null, "weekIndex": 0, "lat": 37.7749, "lon": -122.4194}, {"destination": "Seattle, Washington", "source": "WBID", "total": 1, "exactDate": null, "weekIndex": 0, "lat": 47.6062, "lon": -122.3321}, {"destination": "Philippines", "source": "WBID", "total": 1, "exactDate": null, "weekIndex": 0, "lat": 12.8797, "lon": 121.774}, {"destination": "Paris, France", "source": "WBID", "total": 1, "exactDate": null, "weekIndex": 0, "lat": 48.8566, "lon": 2.3522}];
+const weeks = ["May 20–Jun 5, 2026", "Jun 5–12, 2026", "Jun 13–19, 2026", "Jun 20–26, 2026", "Jun 27–Jul 3, 2026", "Jul 4–10, 2026", "Jul 11–17, 2026", "Jul 18–25, 2026"];
+const ihsWeeklyTotals = [105, 2, 9, 7, 0, 4, 5, 3];
+
+const weekFilter = document.getElementById('weekFilter');
+weeks.forEach((w, i) => {
+  const o = document.createElement('option');
+  o.value = String(i);
+  o.textContent = `${w} — IHS: ${ihsWeeklyTotals[i]}`;
+  weekFilter.appendChild(o);
+});
+
+const map = L.map('map', {
+  worldCopyJump: true,
+  minZoom: 2
+}).setView([25, -110], 3);
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  maxZoom: 19,
+  attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+}).addTo(map);
+
+const layer = L.layerGroup().addTo(map);
+const glowLayer = L.layerGroup().addTo(map);
+
+const colors = {
+  IHS: '#6ee7ff',
+  WBID: '#ffe66d'
+};
+
+const radius = n => Math.max(5, Math.min(19, 4 + Math.sqrt(n) * 2.15));
+const glowRadius = n => Math.max(10, Math.min(36, radius(n) * 1.9));
+
+function popup(e, count, selectedWeek) {
+  let dateText = '';
+  if (e.source === 'IHS') {
+    dateText = selectedWeek === 'all' ? 'May 20–July 25, 2026' : weeks[Number(selectedWeek)];
+  } else {
+    dateText = e.exactDate || weeks[e.weekIndex];
+  }
+
+  let extra = '';
+  if (e.source === 'IHS' && selectedWeek === 'all') {
+    const rows = e.weekly
+      .map((n, i) => n ? `<div>${weeks[i]}: <b>${n}</b></div>` : '')
+      .join('');
+    extra = `<div class="breakdown"><b>Weekly breakdown</b>${rows}</div>`;
+  }
+
+  return `<div class="popup-title">${e.destination}</div>
+    <div class="popup-grid">
+      <b>Program</b><span>${e.source}</span>
+      <b>Date</b><span>${dateText}</span>
+      <b>People</b><span>${count}</span>
+    </div>${extra}`;
+}
+
+function addGlowingMarker(lat, lon, count, source, popupHtml, tooltipText) {
+  const color = colors[source];
+
+  // Outer glow
+  L.circleMarker([lat, lon], {
+    radius: glowRadius(count),
+    stroke: false,
+    fillColor: color,
+    fillOpacity: 0.10,
+    interactive: false
+  }).addTo(glowLayer);
+
+  // Mid glow halo
+  L.circleMarker([lat, lon], {
+    radius: Math.max(8, glowRadius(count) * 0.62),
+    stroke: false,
+    fillColor: color,
+    fillOpacity: 0.18,
+    interactive: false
+  }).addTo(glowLayer);
+
+  // Bright core
+  const marker = L.circleMarker([lat, lon], {
+    radius: radius(count),
+    color: '#ffffff',
+    weight: 1.4,
+    fillColor: color,
+    fillOpacity: 0.97
+  });
+
+  marker.bindPopup(popupHtml);
+  marker.bindTooltip(tooltipText, {direction:'top'});
+  marker.addTo(layer);
+}
+
+function render() {
+  layer.clearLayers();
+  glowLayer.clearLayers();
+
+  const selected = weekFilter.value;
+  const showIHS = document.getElementById('ihsToggle').checked;
+  const showWBID = document.getElementById('wbidToggle').checked;
+
+  let ihsTotal = 0;
+  let wbidTotal = 0;
+
+  events.forEach(e => {
+    if (e.source === 'IHS' && showIHS) {
+      const count = selected === 'all' ? e.total : e.weekly[Number(selected)];
+      if (count > 0) {
+        ihsTotal += count;
+        addGlowingMarker(
+          e.lat, e.lon, count, 'IHS',
+          popup(e, count, selected),
+          `${e.destination}: ${count} (IHS)`
+        );
+      }
+    }
+
+    if (e.source === 'WBID' && showWBID) {
+      let include = false;
+      if (selected === 'all') include = true;
+      else include = e.weekIndex === Number(selected);
+
+      if (include) {
+        wbidTotal += e.total;
+        addGlowingMarker(
+          e.lat, e.lon, e.total, 'WBID',
+          popup(e, e.total, selected),
+          `${e.destination}: ${e.total} (WBID)`
+        );
+      }
+    }
+  });
+
+  document.getElementById('ihsPill').textContent = `IHS: ${ihsTotal}`;
+  document.getElementById('wbidPill').textContent = `WBID: ${wbidTotal}`;
+  document.getElementById('totalPill').textContent = `Total: ${ihsTotal + wbidTotal}`;
+
+  const status = document.getElementById('status');
+  status.classList.remove('zero');
+
+  if (selected === 'all') {
+    status.textContent = 'Showing all IHS and WBID destination totals.';
+  } else {
+    const i = Number(selected);
+    const weekWBID = events.filter(e => e.source === 'WBID' && e.weekIndex === i).reduce((s, e) => s + e.total, 0);
+
+    if (ihsWeeklyTotals[i] === 0 && weekWBID === 0) {
+      status.textContent = `${weeks[i]}: no recorded IHS activity and no assigned WBID relocation.`;
+      status.classList.add('zero');
+    } else {
+      status.textContent = `${weeks[i]}: IHS ${ihsWeeklyTotals[i]}${weekWBID ? `, WBID ${weekWBID}` : ''}.`;
+    }
+  }
+}
+
+['ihsToggle', 'wbidToggle', 'weekFilter'].forEach(id => {
+  document.getElementById(id).addEventListener('change', render);
+});
+
+const legend = L.control({position:'bottomright'});
+legend.onAdd = () => {
+  const d = L.DomUtil.create('div', 'legend');
+  d.innerHTML = `
+    <b>Program</b><br>
+    <span class="dot ihs"></span>IHS<br>
+    <span class="dot wbid"></span>WBID<br>
+    <span style="font-size:12px;color:#b8c8e6;">Brighter/larger light = more people</span>
+  `;
+  return d;
+};
+legend.addTo(map);
+
+render();
+</script>
+</body>
+</html>
