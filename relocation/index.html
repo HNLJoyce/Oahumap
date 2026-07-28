@@ -218,6 +218,13 @@ input[type="checkbox"] {
       </select>
     </div>
 
+    <div class="group">
+      <strong>Location:</strong>
+      <select id="locationFilter">
+        <option value="all">All locations</option>
+      </select>
+    </div>
+
     <div class="summary">
       <span id="totalPill" class="pill total">Total: 149</span>
       <span id="ihsPill" class="pill ihs">IHS: 135</span>
@@ -245,6 +252,61 @@ weeks.forEach((w, i) => {
   o.value = String(i);
   o.textContent = `${w} — IHS: ${ihsWeeklyTotals[i]}`;
   weekFilter.appendChild(o);
+});
+
+const interIslandLocations = new Set(['Hawaii Island', 'Maui']);
+const internationalLocations = new Set([
+  'American Samoa', 'Canada', 'Chuuk', 'Egypt', 'France', 'Guam', 'Mexico',
+  'Micronesia', 'Philippines'
+]);
+
+const locationGroupMap = {
+  'Salt Lake City, Utah': 'Utah',
+  'Los Angeles, California': 'California',
+  'San Francisco, California': 'California',
+  'Corpus Christi, Texas': 'Texas',
+  'Detroit, Michigan': 'Michigan',
+  'Portland, Oregon': 'Oregon',
+  'Seattle, Washington': 'Washington',
+  'Paris, France': 'France'
+};
+
+function parentLocation(destination) {
+  return locationGroupMap[destination] || destination;
+}
+
+function locationCategory(locationName) {
+  if (interIslandLocations.has(locationName)) return 'Inter-Island';
+  if (internationalLocations.has(locationName)) return 'International';
+  return 'Mainland U.S.';
+}
+
+events.forEach(e => {
+  e.parentLocation = parentLocation(e.destination);
+  e.category = locationCategory(e.parentLocation);
+});
+
+const locationFilter = document.getElementById('locationFilter');
+const categoryOrder = ['Mainland U.S.', 'Inter-Island', 'International'];
+
+categoryOrder.forEach(category => {
+  const group = document.createElement('optgroup');
+  group.label = category;
+
+  [...new Set(
+    events
+      .filter(e => e.category === category)
+      .map(e => e.parentLocation)
+  )]
+    .sort((a, b) => a.localeCompare(b))
+    .forEach(locationName => {
+      const option = document.createElement('option');
+      option.value = locationName;
+      option.textContent = locationName;
+      group.appendChild(option);
+    });
+
+  locationFilter.appendChild(group);
 });
 
 const map = L.map('map', {
@@ -284,9 +346,13 @@ function popup(e, count, selectedWeek) {
     extra = `<div class="breakdown"><b>Weekly breakdown</b>${rows}</div>`;
   }
 
+  const groupedLabel = e.parentLocation !== e.destination
+    ? `<b>Grouped under</b><span>${e.parentLocation}</span>`
+    : '';
   return `<div class="popup-title">${e.destination}</div>
     <div class="popup-grid">
       <b>Program</b><span>${e.source}</span>
+      ${groupedLabel}
       <b>Date</b><span>${dateText}</span>
       <b>People</b><span>${count}</span>
     </div>${extra}`;
@@ -332,6 +398,7 @@ function render() {
   glowLayer.clearLayers();
 
   const selected = weekFilter.value;
+  const selectedLocation = document.getElementById('locationFilter').value;
   const showIHS = document.getElementById('ihsToggle').checked;
   const showWBID = document.getElementById('wbidToggle').checked;
 
@@ -339,6 +406,9 @@ function render() {
   let wbidTotal = 0;
 
   events.forEach(e => {
+    const locationMatches = selectedLocation === 'all' || e.parentLocation === selectedLocation;
+    if (!locationMatches) return;
+
     if (e.source === 'IHS' && showIHS) {
       const count = selected === 'all' ? e.total : e.weekly[Number(selected)];
       if (count > 0) {
@@ -374,8 +444,10 @@ function render() {
   const status = document.getElementById('status');
   status.classList.remove('zero');
 
+  const locationLabel = selectedLocation === 'all' ? 'all locations' : `${selectedLocation}`;
+
   if (selected === 'all') {
-    status.textContent = 'Showing all IHS and WBID destination totals.';
+    status.textContent = `Showing IHS and WBID destination totals for ${locationLabel}.`;
   } else {
     const i = Number(selected);
     const weekWBID = events.filter(e => e.source === 'WBID' && e.weekIndex === i).reduce((s, e) => s + e.total, 0);
@@ -389,7 +461,7 @@ function render() {
   }
 }
 
-['ihsToggle', 'wbidToggle', 'weekFilter'].forEach(id => {
+['ihsToggle', 'wbidToggle', 'weekFilter', 'locationFilter'].forEach(id => {
   document.getElementById(id).addEventListener('change', render);
 });
 
