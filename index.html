@@ -216,8 +216,7 @@ function render() {
   });
 
   document.getElementById('count').textContent =
-    `${filtered.length} resource${filtered.length === 1 ? '' : 's'} shown` +
-    (unmapped.length ? ` · ${unmapped.length} without a mappable location` : '');
+    `${filtered.length} resource${filtered.length === 1 ? '' : 's'} shown`;
   document.getElementById('status').textContent =
     mapped.length ? 'Filters applied successfully.' : 'No mapped facilities match these filters.';
 }
