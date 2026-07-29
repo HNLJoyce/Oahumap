@@ -55,25 +55,250 @@
     <script src="https://cdn.jsdelivr.net/gh/python-visualization/folium@main/folium/templates/leaflet_heat.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-groupedlayercontrol/0.6.1/leaflet.groupedlayercontrol.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-groupedlayercontrol/0.6.1/leaflet.groupedlayercontrol.min.css"/>
+
+<style>
+.enforcement-filter-control {
+    width: 190px;
+    background: rgba(255,255,255,0.96);
+    padding: 10px 11px;
+    border: 1px solid #4cc9f0;
+    border-radius: 8px;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.22);
+    font-family: Arial, sans-serif; color: #eef4ff;
+    font-size: 13px;
+}
+.enforcement-filter-control .filter-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 7px;
+}
+.enforcement-filter-control label {
+    display: block;
+    font-weight: 700;
+    margin: 7px 0 3px;
+}
+.enforcement-filter-control .agency-label {
+    font-weight: 700;
+    margin: 7px 0 4px;
+}
+.enforcement-filter-control .agency-options {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 4px;
+}
+.enforcement-filter-control .agency-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0;
+    font-weight: 600;
+    cursor: pointer;
+}
+.enforcement-filter-control .agency-check input {
+    margin: 0;
+}
+.enforcement-filter-control .agency-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.enforcement-filter-control .dfm-dot {
+    background: #1f77b4;
+    border: 1px solid #0f4f7d;
+}
+.enforcement-filter-control .dlnr-dot {
+    background: #d62728;
+    border: 1px solid #8d1a1b;
+}
+.enforcement-filter-control select {
+    width: 100%;
+    padding: 4px 5px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    background: #fff;
+    font-size: 13px;
+}
+@media (max-width: 700px) {
+    .enforcement-filter-control {
+        width: 165px;
+        font-size: 12px;
+    }
+}
+</style>
+
+
+<style>
+/* 80s-inspired style: cooler neon-accent UI, readable map, stronger labels */
+html, body {
+    background: #bfc7d9;
+}
+
+.leaflet-container {
+    background: #bfc7d9 !important;
+}
+
+/* Keep the basemap readable; just add a subtle cool 80s tint */
+.leaflet-tile-pane {
+    filter: saturate(1.15) contrast(1.10) brightness(1.04) hue-rotate(10deg);
+}
+
+/* Give controls a cleaner 80s UI feel */
+.leaflet-control-zoom a,
+.leaflet-control-fullscreen a {
+    background: #16213e !important;
+    color: #f3f7ff !important;
+    border-bottom: 1px solid #4cc9f0 !important;
+}
+
+.leaflet-control-zoom a:hover,
+.leaflet-control-fullscreen a:hover {
+    background: #21325b !important;
+    color: #ffffff !important;
+}
+
+/* Custom filter panel */
+.enforcement-filter-control {
+    background: rgba(17, 24, 39, 0.94) !important;
+    border: 1px solid #4cc9f0 !important;
+    box-shadow: 0 0 0 1px rgba(247, 37, 133, 0.25), 0 3px 12px rgba(0, 0, 0, 0.28) !important;
+    color: #eef4ff !important;
+}
+.enforcement-filter-control .filter-title,
+.enforcement-filter-control label,
+.enforcement-filter-control .agency-label {
+    color: #eef4ff !important;
+}
+.enforcement-filter-control select {
+    background: #f5f8ff !important;
+    border: 1px solid #7bdff2 !important;
+    color: #16213e !important;
+}
+.enforcement-filter-control .dfm-dot {
+    background: #1f77b4 !important;
+    border: 1px solid #a6d7ff !important;
+}
+.enforcement-filter-control .dlnr-dot {
+    background: #d62728 !important;
+    border: 1px solid #ffb0b3 !important;
+}
+
+/* Scale and attribution */
+.leaflet-control-scale-line {
+    background: rgba(17, 24, 39, 0.9) !important;
+    border-color: #4cc9f0 !important;
+    color: #eef4ff !important;
+}
+.leaflet-control-attribution {
+    background: rgba(17, 24, 39, 0.82) !important;
+    color: #dce8ff !important;
+}
+.leaflet-control-attribution a {
+    color: #7bdff2 !important;
+}
+
+/* Slight styling boost for popups */
+.leaflet-popup-content-wrapper {
+    background: #f8fbff !important;
+    color: #16213e !important;
+    border: 1px solid #7bdff2 !important;
+}
+.leaflet-popup-tip {
+    background: #f8fbff !important;
+}
+
+/* Keep the map clean: no heavy vignette or sepia */
+</style>
+
+
+<style>
+/* Stronger 1980s visual treatment without sacrificing map readability */
+.leaflet-tile-pane {
+    filter: saturate(1.32) contrast(1.13) brightness(1.05) hue-rotate(16deg) !important;
+}
+
+/* Subtle synthwave wash that lifts the ocean while preserving labels */
+#map_1f0ae06b46087573862219cf9164dff4::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 350;
+    background: linear-gradient(180deg, rgba(0, 234, 255, 0.035), rgba(118, 72, 255, 0.018) 55%, rgba(255, 45, 149, 0.028));
+    mix-blend-mode: screen;
+}
+
+/* Decorative retro-wave band along the bottom edge */
+#map_1f0ae06b46087573862219cf9164dff4::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 34px;
+    pointer-events: none;
+    z-index: 401;
+    opacity: 0.34;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='34' viewBox='0 0 120 34'%3E%3Cpath d='M0 18 C15 5 30 31 45 18 S75 5 90 18 S120 31 135 18' fill='none' stroke='%234cc9f0' stroke-width='3'/%3E%3Cpath d='M0 26 C15 13 30 39 45 26 S75 13 90 26 S120 39 135 26' fill='none' stroke='%23f72585' stroke-width='2'/%3E%3C/svg%3E");
+    background-repeat: repeat-x;
+    background-position: left bottom;
+}
+
+/* More unmistakably 80s panel accents */
+.enforcement-filter-control,
+body > div[style*="Oʻahu Enforcement Heat Map"],
+body > div[style*="Agency Legend"],
+body > div[style*="How it works:"] {
+    border-top: 3px solid #4cc9f0 !important;
+    border-right: 3px solid #f72585 !important;
+}
+
+.enforcement-filter-control .filter-title,
+body > div[style*="Oʻahu Enforcement Heat Map"] > div:first-child,
+body > div[style*="Agency Legend"] > div:first-child {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Light scanline texture, intentionally faint */
+.leaflet-container .leaflet-map-pane::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 349;
+    opacity: 0.06;
+    background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.22) 0,
+        rgba(255,255,255,0.22) 1px,
+        transparent 1px,
+        transparent 4px
+    );
+}
+</style>
+
 </head>
 <body>
     
     
-<div style="position: fixed; z-index: 9999; top: 10px; left: 55px; width: 520px; background: rgba(255,255,255,0.94); padding: 12px 14px; border: 1px solid #999; border-radius: 8px; box-shadow: 0 1px 8px rgba(0,0,0,0.2); font-family: Arial, sans-serif; font-size: 13px; line-height: 1.35;">
-  <div style="font-size:18px; font-weight:700; margin-bottom:8px;">Oʻahu Enforcement Heat Map</div>
-  
+<div style="position: fixed; z-index: 9999; top: 10px; left: 55px; background: rgba(17,24,39,0.92); padding: 8px 12px; border: 1px solid #4cc9f0; border-radius: 8px; box-shadow: 0 0 0 1px rgba(247,37,133,0.25), 0 3px 12px rgba(0,0,0,0.28); font-family: Arial, sans-serif; color: #eef4ff;">
+  <div style="font-size:18px; font-weight:700; color:#7bdff2;">Oʻahu Enforcement Heat Map</div>
+</div>
+
+<div style="position: fixed; z-index: 9999; bottom: 8px; left: 12px; width: min(400px, calc(100vw - 24px)); max-height: 18vh; overflow-y: auto; background: rgba(17,24,39,0.92); padding: 10px 12px; border: 1px solid #4cc9f0; border-radius: 8px; box-shadow: 0 0 0 1px rgba(247,37,133,0.25), 0 3px 12px rgba(0,0,0,0.28); font-family: Arial, sans-serif; color: #eef4ff; font-size: 13px; line-height: 1.35;">
   <ul style="margin:0 0 8px 18px; padding:0; line-height:1.4;">
     <li style="margin-bottom:6px;"><b>DFM:</b> Department of Facility Maintenance. Maintains City roads, bridges, streams, public facilities, and other infrastructure, and conducts daily Stored Property Ordinance (SPO) and related public-space operations.</li>
     <li style="margin-bottom:6px;"><b>DLNR:</b> Department of Land and Natural Resources. Conducts enforcement, postings, and cleanups on state lands and natural resource areas, often in coordination with partner agencies.</li>
     <li style="margin-bottom:6px;"><b>DCS:</b> Department of Community Services. Designs and coordinates large-scale encampment-reduction strategies with multiple interdepartmental partners, including federal, state, City and County of Honolulu, and nonprofit agencies.</li>
   </ul>
-
   <div style="margin-bottom:6px;"><b>How it works:</b> Use the layer control at top right to toggle by <b>agency</b> and <b>month</b>. Hotter areas and larger circles show places that appear more often in that selected layer.</div>
-  <div style="font-size:12px; color:#444;">Location points are based on named sites, street midpoints, intersections, or area centroids, depending on the schedule detail provided.</div>
+  <div style="font-size:12px; color:#ffffff;">Location points are based on named sites, street midpoints, intersections, or area centroids, depending on the schedule detail provided.</div>
 </div>
 
-<div style="position: fixed; z-index: 9999; top: 340px; right: 12px; width: 205px; background: rgba(255,255,255,0.94); padding: 10px 12px; border: 1px solid #999; border-radius: 8px; box-shadow: 0 1px 8px rgba(0,0,0,0.2); font-family: Arial, sans-serif; font-size: 13px;">
-  <div style="font-size:15px; font-weight:700; margin-bottom:8px;">Agency Legend</div>
+<div style="position: fixed; z-index: 9999; bottom: 42px; right: 12px; width: 205px; background: rgba(17,24,39,0.92); padding: 10px 12px; border: 1px solid #4cc9f0; border-radius: 8px; box-shadow: 0 0 0 1px rgba(247,37,133,0.25), 0 3px 12px rgba(0,0,0,0.28); font-family: Arial, sans-serif; color: #eef4ff; font-size: 13px;">
+  <div style="font-size:15px; font-weight:700; margin-bottom:8px; color:#7bdff2;">Agency Legend</div>
   <div style="display:flex; align-items:center; margin-bottom:6px;">
     <span style="display:inline-block; width:14px; height:14px; border-radius:50%; background:#1f77b4; margin-right:8px; border:1px solid #0f4f7d;"></span>
     <span><b>DFM</b> = Blue</span>
@@ -18644,53 +18869,305 @@
         
     
 
-            L.control.groupedLayers(
-                null,
-                {
-                    "DFM" : {
-                        "DFM \u00b7 May" : feature_group_fd387ed30d35242d5dce1e6008838f79,
-                        "DFM \u00b7 June" : feature_group_0a56212de73b5af43a611e93ee0e925e,
-                        "DFM \u00b7 July" : feature_group_928de24725f97aefb385fadd10ed2cfe,
-                    },
-                    "DLNR" : {
-                        "DLNR \u00b7 May" : feature_group_f361ee1ed3f4c9cb1cea36743be13335,
-                        "DLNR \u00b7 June" : feature_group_21708dbe0643d6c416185e9fe83e6685,
-                        "DLNR \u00b7 July" : feature_group_39fdfe5485e638f23ee630ba2e004c7f,
-                    },
-                },
-                {
-  "collapsed": false,
-  "exclusiveGroups": [
-"DFM",
-"DLNR",
-],
-},
-            ).addTo(map_1f0ae06b46087573862219cf9164dff4);
-            feature_group_39fdfe5485e638f23ee630ba2e004c7f.remove();
-            feature_group_0a56212de73b5af43a611e93ee0e925e.remove();
-            feature_group_f361ee1ed3f4c9cb1cea36743be13335.remove();
-            feature_group_21708dbe0643d6c416185e9fe83e6685.remove();
-            feature_group_fd387ed30d35242d5dce1e6008838f79.remove();
-            feature_group_928de24725f97aefb385fadd10ed2cfe.remove();
+            // DFM update: July 27–31, 2026
+            L.heatLayer([[21.2793, -157.8294, 2.0], [21.2926, -157.8279, 4.0], [21.3045, -157.7905, 4.0], [21.319, -157.8831, 1.0], [21.315, -158.008, 1.0], [21.3142, -158.0163, 1.0], [21.314, -158.024, 1.0], [21.3336, -158.0858, 1.0], [21.3318, -158.079, 1.0], [21.2905, -157.8544, 1.0], [21.2889, -157.8577, 1.0], [21.2888, -157.8661, 1.0], [21.2953, -157.856, 1.0], [21.2948, -157.858, 1.0], [21.3052, -157.8553, 1.0], [21.2894, -157.8268, 1.0], [21.2895, -157.821, 1.0], [21.2894, -157.8234, 1.0], [21.2904, -157.8239, 1.0], [21.296, -157.829, 1.0], [21.292, -157.827, 1.0], [21.2898, -157.8217, 1.0], [21.2965, -157.8258, 1.0], [21.319, -157.8831, 1.0], [21.3212, -157.8841, 1.0], [21.3224, -157.886, 1.0], [21.3218, -157.8852, 1.0], [21.323, -157.887, 1.0], [21.3262, -157.8882, 1.0], [21.3269, -157.8897, 1.0], [21.3275, -157.8914, 1.0], [21.3332, -157.8995, 1.0], [21.3388, -157.9008, 1.0]], {"minOpacity":0.28,"maxZoom":13,"radius":22,"blur":18}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            var dfm_update_marker_0 = L.circleMarker([21.2793, -157.8294], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.95,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_0.bindPopup("<b>Waikiki</b><br>Agency: DFM<br>Month: July<br>Occurrences: 2<br>Crews: Night<br>Dates: 2026-07-27, 2026-07-31<br>Geocode: named site", {"maxWidth":360});
+            dfm_update_marker_0.bindTooltip("Waikiki (2)", {"sticky":true});
+            var dfm_update_marker_1 = L.circleMarker([21.2926, -157.8279], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":8.45,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_1.bindPopup("<b>Kapiolani Blvd. Bridge</b><br>Agency: DFM<br>Month: July<br>Occurrences: 4<br>Crews: Day<br>Dates: 2026-07-27, 2026-07-28, 2026-07-29, 2026-07-30<br>Geocode: area estimate", {"maxWidth":360});
+            dfm_update_marker_1.bindTooltip("Kapiolani Blvd. Bridge (4)", {"sticky":true});
+            var dfm_update_marker_2 = L.circleMarker([21.3045, -157.7905], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":8.45,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_2.bindPopup("<b>Manoa-Palolo Drainage Canal</b><br>Agency: DFM<br>Month: July<br>Occurrences: 4<br>Crews: Day<br>Dates: 2026-07-27, 2026-07-28, 2026-07-29, 2026-07-30<br>Geocode: area estimate", {"maxWidth":360});
+            dfm_update_marker_2.bindTooltip("Manoa-Palolo Drainage Canal (4)", {"sticky":true});
+            var dfm_update_marker_3 = L.circleMarker([21.319, -157.8831], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_3.bindPopup("<b>HPD District 5 Special Operations \u2013 Iwilei</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Night<br>Dates: 2026-07-28<br>Geocode: named area", {"maxWidth":360});
+            dfm_update_marker_3.bindTooltip("HPD District 5 Special Operations \u2013 Iwilei (1)", {"sticky":true});
+            var dfm_update_marker_4 = L.circleMarker([21.315, -158.008], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_4.bindPopup("<b>Ewa Beach CP</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Night<br>Dates: 2026-07-29<br>Geocode: named site", {"maxWidth":360});
+            dfm_update_marker_4.bindTooltip("Ewa Beach CP (1)", {"sticky":true});
+            var dfm_update_marker_5 = L.circleMarker([21.3142, -158.0163], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_5.bindPopup("<b>Puuloa BP</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Night<br>Dates: 2026-07-29<br>Geocode: named site", {"maxWidth":360});
+            dfm_update_marker_5.bindTooltip("Puuloa BP (1)", {"sticky":true});
+            var dfm_update_marker_6 = L.circleMarker([21.314, -158.024], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_6.bindPopup("<b>Oneula BP</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Night<br>Dates: 2026-07-29<br>Geocode: named site", {"maxWidth":360});
+            dfm_update_marker_6.bindTooltip("Oneula BP (1)", {"sticky":true});
+            var dfm_update_marker_7 = L.circleMarker([21.3336, -158.0858], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_7.bindPopup("<b>Kapolei RP</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Night<br>Dates: 2026-07-29<br>Geocode: named site", {"maxWidth":360});
+            dfm_update_marker_7.bindTooltip("Kapolei RP (1)", {"sticky":true});
+            var dfm_update_marker_8 = L.circleMarker([21.3318, -158.079], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_8.bindPopup("<b>Kapolei Pkwy Inlets</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Night<br>Dates: 2026-07-29<br>Geocode: area estimate", {"maxWidth":360});
+            dfm_update_marker_8.bindTooltip("Kapolei Pkwy Inlets (1)", {"sticky":true});
+            var dfm_update_marker_9 = L.circleMarker([21.2905, -157.8544], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_9.bindPopup("<b>Kewalo Basin</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Night<br>Dates: 2026-07-30<br>Geocode: named site", {"maxWidth":360});
+            dfm_update_marker_9.bindTooltip("Kewalo Basin (1)", {"sticky":true});
+            var dfm_update_marker_10 = L.circleMarker([21.2889, -157.8577], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_10.bindPopup("<b>Point Panic</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Night<br>Dates: 2026-07-30<br>Geocode: named site", {"maxWidth":360});
+            dfm_update_marker_10.bindTooltip("Point Panic (1)", {"sticky":true});
+            var dfm_update_marker_11 = L.circleMarker([21.2888, -157.8661], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_11.bindPopup("<b>Kakaako Waterfront</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Night<br>Dates: 2026-07-30<br>Geocode: named site", {"maxWidth":360});
+            dfm_update_marker_11.bindTooltip("Kakaako Waterfront (1)", {"sticky":true});
+            var dfm_update_marker_12 = L.circleMarker([21.2953, -157.856], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_12.bindPopup("<b>Kakaako Gateways (Mauka &amp; Makai)</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Night<br>Dates: 2026-07-30<br>Geocode: named area", {"maxWidth":360});
+            dfm_update_marker_12.bindTooltip("Kakaako Gateways (Mauka &amp; Makai) (1)", {"sticky":true});
+            var dfm_update_marker_13 = L.circleMarker([21.2948, -157.858], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_13.bindPopup("<b>Mother Waldron</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Night<br>Dates: 2026-07-30<br>Geocode: named site", {"maxWidth":360});
+            dfm_update_marker_13.bindTooltip("Mother Waldron (1)", {"sticky":true});
+            var dfm_update_marker_14 = L.circleMarker([21.3052, -157.8553], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_14.bindPopup("<b>Kawaiahao Mini</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Night<br>Dates: 2026-07-30<br>Geocode: named site", {"maxWidth":360});
+            dfm_update_marker_14.bindTooltip("Kawaiahao Mini (1)", {"sticky":true});
+            var dfm_update_marker_15 = L.circleMarker([21.2894, -157.8268], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_15.bindPopup("<b>Old Stadium</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Night<br>Dates: 2026-07-31<br>Geocode: named area", {"maxWidth":360});
+            dfm_update_marker_15.bindTooltip("Old Stadium (1)", {"sticky":true});
+            var dfm_update_marker_16 = L.circleMarker([21.2895, -157.821], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_16.bindPopup("<b>Isenberg St.</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Night<br>Dates: 2026-07-31<br>Geocode: corridor", {"maxWidth":360});
+            dfm_update_marker_16.bindTooltip("Isenberg St. (1)", {"sticky":true});
+            var dfm_update_marker_17 = L.circleMarker([21.2894, -157.8234], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_17.bindPopup("<b>Makahiki Way</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Night<br>Dates: 2026-07-31<br>Geocode: corridor", {"maxWidth":360});
+            dfm_update_marker_17.bindTooltip("Makahiki Way (1)", {"sticky":true});
+            var dfm_update_marker_18 = L.circleMarker([21.2904, -157.8239], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_18.bindPopup("<b>Algaroba St.</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Night<br>Dates: 2026-07-31<br>Geocode: corridor", {"maxWidth":360});
+            dfm_update_marker_18.bindTooltip("Algaroba St. (1)", {"sticky":true});
+            var dfm_update_marker_19 = L.circleMarker([21.296, -157.829], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_19.bindPopup("<b>Young St. (Punahou to Isenberg)</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Night<br>Dates: 2026-07-31<br>Geocode: segment midpoint", {"maxWidth":360});
+            dfm_update_marker_19.bindTooltip("Young St. (Punahou to Isenberg) (1)", {"sticky":true});
+            var dfm_update_marker_20 = L.circleMarker([21.292, -157.827], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_20.bindPopup("<b>S King St. (Punahou to Kapiolani)</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Night<br>Dates: 2026-07-31<br>Geocode: segment midpoint", {"maxWidth":360});
+            dfm_update_marker_20.bindTooltip("S King St. (Punahou to Kapiolani) (1)", {"sticky":true});
+            var dfm_update_marker_21 = L.circleMarker([21.2898, -157.8217], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_21.bindPopup("<b>Moiliili Field</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Night<br>Dates: 2026-07-31<br>Geocode: named site", {"maxWidth":360});
+            dfm_update_marker_21.bindTooltip("Moiliili Field (1)", {"sticky":true});
+            var dfm_update_marker_22 = L.circleMarker([21.2965, -157.8258], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_22.bindPopup("<b>S Beretania St. (University to Punahou)</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Night<br>Dates: 2026-07-31<br>Geocode: segment midpoint", {"maxWidth":360});
+            dfm_update_marker_22.bindTooltip("S Beretania St. (University to Punahou) (1)", {"sticky":true});
+            var dfm_update_marker_23 = L.circleMarker([21.319, -157.8831], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_23.bindPopup("<b>Iwilei Rd.</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Day<br>Dates: 2026-07-31<br>Geocode: corridor", {"maxWidth":360});
+            dfm_update_marker_23.bindTooltip("Iwilei Rd. (1)", {"sticky":true});
+            var dfm_update_marker_24 = L.circleMarker([21.3212, -157.8841], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_24.bindPopup("<b>Kuwili St.</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Day<br>Dates: 2026-07-31<br>Geocode: corridor", {"maxWidth":360});
+            dfm_update_marker_24.bindTooltip("Kuwili St. (1)", {"sticky":true});
+            var dfm_update_marker_25 = L.circleMarker([21.3224, -157.886], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_25.bindPopup("<b>Pine St.</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Day<br>Dates: 2026-07-31<br>Geocode: corridor", {"maxWidth":360});
+            dfm_update_marker_25.bindTooltip("Pine St. (1)", {"sticky":true});
+            var dfm_update_marker_26 = L.circleMarker([21.3218, -157.8852], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_26.bindPopup("<b>Sumner St.</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Day<br>Dates: 2026-07-31<br>Geocode: corridor", {"maxWidth":360});
+            dfm_update_marker_26.bindTooltip("Sumner St. (1)", {"sticky":true});
+            var dfm_update_marker_27 = L.circleMarker([21.323, -157.887], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_27.bindPopup("<b>N King/Akepo Ln.</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Day<br>Dates: 2026-07-31<br>Geocode: intersection", {"maxWidth":360});
+            dfm_update_marker_27.bindTooltip("N King/Akepo Ln. (1)", {"sticky":true});
+            var dfm_update_marker_28 = L.circleMarker([21.3262, -157.8882], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_28.bindPopup("<b>Dillingham/Kaaahi St.</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Day<br>Dates: 2026-07-31<br>Geocode: intersection", {"maxWidth":360});
+            dfm_update_marker_28.bindTooltip("Dillingham/Kaaahi St. (1)", {"sticky":true});
+            var dfm_update_marker_29 = L.circleMarker([21.3269, -157.8897], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_29.bindPopup("<b>720 McNeil St.</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Day<br>Dates: 2026-07-31<br>Geocode: area estimate", {"maxWidth":360});
+            dfm_update_marker_29.bindTooltip("720 McNeil St. (1)", {"sticky":true});
+            var dfm_update_marker_30 = L.circleMarker([21.3275, -157.8914], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_30.bindPopup("<b>Mokauea/Silva St.</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Day<br>Dates: 2026-07-31<br>Geocode: intersection estimate", {"maxWidth":360});
+            dfm_update_marker_30.bindTooltip("Mokauea/Silva St. (1)", {"sticky":true});
+            var dfm_update_marker_31 = L.circleMarker([21.3332, -157.8995], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_31.bindPopup("<b>1409 Kuipaakea Ln.</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Day<br>Dates: 2026-07-31<br>Geocode: area estimate", {"maxWidth":360});
+            dfm_update_marker_31.bindTooltip("1409 Kuipaakea Ln. (1)", {"sticky":true});
+            var dfm_update_marker_32 = L.circleMarker([21.3388, -157.9008], {"bubblingMouseEvents":true,"color":"#1f77b4","dashArray":null,"dashOffset":null,"fill":true,"fillColor":"#1f77b4","fillOpacity":0.55,"fillRule":"evenodd","lineCap":"round","lineJoin":"round","opacity":1.0,"radius":6.2,"stroke":true,"weight":1.2}).addTo(feature_group_928de24725f97aefb385fadd10ed2cfe);
+            dfm_update_marker_32.bindPopup("<b>Kilihau St.</b><br>Agency: DFM<br>Month: July<br>Occurrences: 1<br>Crews: Day<br>Dates: 2026-07-31<br>Geocode: corridor", {"maxWidth":360});
+            dfm_update_marker_32.bindTooltip("Kilihau St. (1)", {"sticky":true});
 
-        
-    
-            var layer_control_11c80a5035c4e40117d44b59be674e5d_layers = {
-                base_layers : {
-                    "cartodbpositron" : tile_layer_e9ccd2abb918a607a25477846a400779,
+
+            // Streamlined agency + time filter.
+            var enforcementGroups = {
+                DFM: {
+                    May: feature_group_fd387ed30d35242d5dce1e6008838f79,
+                    June: feature_group_0a56212de73b5af43a611e93ee0e925e,
+                    July: feature_group_928de24725f97aefb385fadd10ed2cfe
                 },
-                overlays :  {
-                },
+                DLNR: {
+                    May: feature_group_f361ee1ed3f4c9cb1cea36743be13335,
+                    June: feature_group_21708dbe0643d6c416185e9fe83e6685,
+                    July: feature_group_39fdfe5485e638f23ee630ba2e004c7f
+                }
             };
-            let layer_control_11c80a5035c4e40117d44b59be674e5d = L.control.layers(
-                layer_control_11c80a5035c4e40117d44b59be674e5d_layers.base_layers,
-                layer_control_11c80a5035c4e40117d44b59be674e5d_layers.overlays,
-                {
-  "position": "topright",
-  "collapsed": true,
-  "autoZIndex": true,
-}
-            ).addTo(map_1f0ae06b46087573862219cf9164dff4);
+
+            Object.values(enforcementGroups).forEach(function(months) {
+                Object.values(months).forEach(function(group) {
+                    if (map_1f0ae06b46087573862219cf9164dff4.hasLayer(group)) {
+                        map_1f0ae06b46087573862219cf9164dff4.removeLayer(group);
+                    }
+                });
+            });
+
+            var scheduleWeeks = {
+                May: [
+                    ["2026-05-04", "2026-05-08", "May 4–8"],
+                    ["2026-05-11", "2026-05-15", "May 11–15"],
+                    ["2026-05-18", "2026-05-22", "May 18–22"],
+                    ["2026-05-25", "2026-05-29", "May 25–29"]
+                ],
+                June: [
+                    ["2026-06-01", "2026-06-05", "June 1–5"],
+                    ["2026-06-08", "2026-06-12", "June 8–12"],
+                    ["2026-06-15", "2026-06-19", "June 15–19"],
+                    ["2026-06-22", "2026-06-26", "June 22–26"],
+                    ["2026-06-29", "2026-07-02", "June 29–July 2"]
+                ],
+                July: [
+                    ["2026-07-06", "2026-07-10", "July 6–10"],
+                    ["2026-07-13", "2026-07-17", "July 13–17"],
+                    ["2026-07-20", "2026-07-24", "July 20–24"],
+                    ["2026-07-27", "2026-07-31", "July 27–31"]
+                ]
+            };
+
+            var visibleIndividualLayers = [];
+
+            function clearEnforcementLayers() {
+                visibleIndividualLayers.forEach(function(layer) {
+                    if (map_1f0ae06b46087573862219cf9164dff4.hasLayer(layer)) {
+                        map_1f0ae06b46087573862219cf9164dff4.removeLayer(layer);
+                    }
+                });
+                visibleIndividualLayers = [];
+
+                Object.values(enforcementGroups).forEach(function(months) {
+                    Object.values(months).forEach(function(group) {
+                        if (map_1f0ae06b46087573862219cf9164dff4.hasLayer(group)) {
+                            map_1f0ae06b46087573862219cf9164dff4.removeLayer(group);
+                        }
+                    });
+                });
+            }
+
+            function popupText(layer) {
+                if (!layer.getPopup || !layer.getPopup()) return "";
+                var content = layer.getPopup().getContent();
+                if (typeof content === "string") return content;
+                if (content && content.textContent) return content.textContent;
+                return "";
+            }
+
+            function dateMatches(text, startDate, endDate) {
+                var matches = text.match(/2026-\d{2}-\d{2}/g) || [];
+                return matches.some(function(date) {
+                    return date >= startDate && date <= endDate;
+                });
+            }
+
+            function refreshWeekOptions() {
+                var month = document.getElementById("filter-month").value;
+                var weekSelect = document.getElementById("filter-week");
+                weekSelect.innerHTML = "";
+                scheduleWeeks[month].forEach(function(week, index) {
+                    var option = document.createElement("option");
+                    option.value = index;
+                    option.textContent = week[2];
+                    weekSelect.appendChild(option);
+                });
+                weekSelect.value = String(scheduleWeeks[month].length - 1);
+            }
+
+            function applyEnforcementFilter() {
+                clearEnforcementLayers();
+
+                var periodValue = document.getElementById("filter-period").value;
+                var monthValue = document.getElementById("filter-month").value;
+                var weekRow = document.getElementById("week-row");
+                weekRow.style.display = periodValue === "week" ? "block" : "none";
+
+                var agencies = [];
+                if (document.getElementById("filter-dfm").checked) agencies.push("DFM");
+                if (document.getElementById("filter-dlnr").checked) agencies.push("DLNR");
+
+                // Both boxes may be cleared intentionally, leaving the basemap visible.
+                if (agencies.length === 0) return;
+
+                if (periodValue === "month") {
+                    agencies.forEach(function(agency) {
+                        enforcementGroups[agency][monthValue].addTo(map_1f0ae06b46087573862219cf9164dff4);
+                    });
+                    return;
+                }
+
+                var weekIndex = Number(document.getElementById("filter-week").value);
+                var selectedWeek = scheduleWeeks[monthValue][weekIndex];
+                var startDate = selectedWeek[0];
+                var endDate = selectedWeek[1];
+
+                agencies.forEach(function(agency) {
+                    var candidateMonths = [monthValue];
+                    if (monthValue === "June" && endDate.startsWith("2026-07")) {
+                        candidateMonths.push("July");
+                    }
+
+                    candidateMonths.forEach(function(candidateMonth) {
+                        enforcementGroups[agency][candidateMonth].eachLayer(function(layer) {
+                            var text = popupText(layer);
+                            if (text && dateMatches(text, startDate, endDate)) {
+                                layer.addTo(map_1f0ae06b46087573862219cf9164dff4);
+                                visibleIndividualLayers.push(layer);
+                            }
+                        });
+                    });
+                });
+            }
+
+            var EnforcementFilterControl = L.Control.extend({
+                options: { position: "topright" },
+                onAdd: function() {
+                    var container = L.DomUtil.create("div", "enforcement-filter-control");
+                    container.innerHTML = `
+                        <div class="filter-title">View enforcement</div>
+                        <div class="agency-label">Agencies</div>
+                        <div class="agency-options">
+                            <label class="agency-check">
+                                <input type="checkbox" id="filter-dfm" checked>
+                                <span class="agency-dot dfm-dot"></span>
+                                <span>DFM</span>
+                            </label>
+                            <label class="agency-check">
+                                <input type="checkbox" id="filter-dlnr" checked>
+                                <span class="agency-dot dlnr-dot"></span>
+                                <span>DLNR</span>
+                            </label>
+                        </div>
+
+                        <label for="filter-period">Time period</label>
+                        <select id="filter-period">
+                            <option value="month">By month</option>
+                            <option value="week">By week</option>
+                        </select>
+
+                        <label for="filter-month">Month</label>
+                        <select id="filter-month">
+                            <option value="May">May 2026</option>
+                            <option value="June">June 2026</option>
+                            <option value="July" selected>July 2026</option>
+                        </select>
+
+                        <div id="week-row" style="display:none;">
+                            <label for="filter-week">Week</label>
+                            <select id="filter-week"></select>
+                        </div>
+                    `;
+
+                    L.DomEvent.disableClickPropagation(container);
+                    L.DomEvent.disableScrollPropagation(container);
+
+                    setTimeout(function() {
+                        refreshWeekOptions();
+                        document.getElementById("filter-dfm").addEventListener("change", applyEnforcementFilter);
+                        document.getElementById("filter-dlnr").addEventListener("change", applyEnforcementFilter);
+                        document.getElementById("filter-period").addEventListener("change", applyEnforcementFilter);
+                        document.getElementById("filter-month").addEventListener("change", function() {
+                            refreshWeekOptions();
+                            applyEnforcementFilter();
+                        });
+                        document.getElementById("filter-week").addEventListener("change", applyEnforcementFilter);
+                        applyEnforcementFilter();
+                    }, 0);
+
+                    return container;
+                }
+            });
+
+            map_1f0ae06b46087573862219cf9164dff4.addControl(new EnforcementFilterControl());
 
         
 </script>
