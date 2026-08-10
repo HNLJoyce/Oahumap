@@ -31,7 +31,7 @@
 <body>
   <div class="map-description">
     <h1>Encampment IDs</h1>
-    <p>This map reflects field observations conducted by the Department of Community Services’ Homeless Solutions team.</p>
+    <p>This map reflects field observations conducted by the Department of Community Services’ Homeless Solutions team. Click a circle to see the address and number of people observed.</p>
   </div>
   <div id="map"></div>
   <script>
@@ -91,8 +91,8 @@
       }).addTo(map);
 
       const address = escapeText(item.address).replace(/\n/g, '<br>');
-      marker.bindPopup(`<b>${address}</b><br>People observed: ${escapeText(item.count)}<br><span style="color:#666">Spreadsheet row ${item.row}</span>`, {maxWidth:360});
-      marker.bindTooltip(`${escapeText(item.address.replace(/\n/g,' '))} · ${escapeText(item.count)} · row ${item.row}`, {sticky:true});
+      marker.bindPopup(`<b>${address}</b><br>People observed: ${escapeText(item.count)}`, {maxWidth:360});
+      marker.bindTooltip(`${escapeText(item.address.replace(/\n/g,' '))} · ${escapeText(item.count)}`, {sticky:true});
     });
   </script>
 </body>
