@@ -3,7 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Relocation Destinations Map — Dark</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Relocation Destinations Map — Updated 9/11/2026</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
 <style>
 html, body {
@@ -108,14 +111,10 @@ input[type="checkbox"] {
 #map {
   flex: 1;
   min-height: 480px;
-  background: #04070d;
+  background: #070b12;
 }
 
-/* OpenStreetMap standard tiles do not require an API key.
-   A simple inversion keeps the basemap dark while preserving sharp road and label contrast. */
-#map .leaflet-tile-pane {
-  filter: invert(1) hue-rotate(180deg) contrast(1.08);
-}
+
 .note {
   font-size: 12px;
   color: #9fb2d1;
@@ -195,6 +194,16 @@ input[type="checkbox"] {
 .leaflet-control-zoom a:hover {
   background: #101a2f;
 }
+
+/* Dark basemap treatment using standard OpenStreetMap raster tiles.
+   No API key or alternate tile provider required. */
+.leaflet-tile-pane {
+  background: #070b12;
+}
+.leaflet-tile-pane .leaflet-tile {
+  filter: grayscale(1) invert(.88) hue-rotate(180deg) brightness(.86) contrast(1.18);
+}
+
 @media (max-width: 700px) {
   .summary {
     width: 100%;
@@ -207,6 +216,7 @@ input[type="checkbox"] {
 <div class="page">
   <div class="header">
     <h1>Relocation Destinations Map (2026)</h1>
+    <!-- Data version: 2026-09-11 | IHS 190 | WBID 19 | Total 209 -->
     <p>This map shows where individuals safely returned home through voluntary relocation assistance provided by The Institute for Human Services (IHS) and the Waikīkī Business Improvement District (WBID).</p>
   </div>
 
