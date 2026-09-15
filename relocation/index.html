@@ -227,6 +227,18 @@ input[type="checkbox"] {
     </div>
 
     <div class="group">
+      <strong>Month:</strong>
+      <select id="monthFilter">
+        <option value="all">All months</option>
+        <option value="baseline">Jan–May baseline</option>
+        <option value="june">June 2026</option>
+        <option value="july">July 2026</option>
+        <option value="august">August 2026</option>
+        <option value="september">September 2026</option>
+      </select>
+    </div>
+
+    <div class="group">
       <strong>Reporting week:</strong>
       <select id="weekFilter">
         <option value="all">All periods / destination totals</option>
@@ -250,7 +262,7 @@ input[type="checkbox"] {
   <div id="status" class="status">Showing IHS and WBID destination totals for all locations.</div>
   <div id="map"></div>
   <div class="note">
-    The first reporting period of May 20–June 5, 2026 includes all relocation activities for both organizations from January through then. Thereafter, IHS reports weekly. IHS reported zero activity for June 27–July 3 and August 28–September 4. Beginning August 14, 2026, WBID also sends updates weekly. The August 4 WBID relocation to Atlanta was recorded as a party of three: two men and their dog. WBID reported an additional Philadelphia relocation on September 12, 2026; for consistent weekly filtering, it is grouped with the September 11 reporting update (September 4–11). IHS destinations listed as “Undisclosed” are included in totals but are not plotted on the map.
+    The first reporting period of May 20–June 5, 2026 includes all relocation activities for both organizations from January through then. For the month filter, that initial cumulative period is shown separately as “Jan–May baseline”; later months aggregate the weekly reporting periods by their report end month. Thereafter, IHS reports weekly. IHS reported zero activity for June 27–July 3 and August 28–September 4. Beginning August 14, 2026, WBID also sends updates weekly. The August 4 WBID relocation to Atlanta was recorded as a party of three: two men and their dog. WBID reported an additional Philadelphia relocation on September 12, 2026; for consistent weekly filtering, it is grouped with the September 11 reporting update (September 4–11). IHS destinations listed as “Undisclosed” are included in totals but are not plotted on the map.
   </div>
 </div>
 
@@ -259,6 +271,16 @@ input[type="checkbox"] {
 const events = [{"destination":"Arkansas","source":"IHS","total":2,"weekly":[2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"lat":34.8938,"lon":-92.4426,"section":"U.S. Mainland"},{"destination":"Alaska","source":"IHS","total":1,"weekly":[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"lat":64.2008,"lon":-152.4937,"section":"U.S. Mainland"},{"destination":"Arizona","source":"IHS","total":1,"weekly":[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"lat":34.2744,"lon":-111.6602,"section":"U.S. Mainland"},{"destination":"California","source":"IHS","total":16,"weekly":[4,1,3,1,0,1,0,0,1,1,2,0,1,0,1,0],"lat":37.1841,"lon":-119.4696,"section":"U.S. Mainland"},{"destination":"Colorado","source":"IHS","total":3,"weekly":[0,0,2,1,0,0,0,0,0,0,0,0,0,0,0,0],"lat":38.9972,"lon":-105.5478,"section":"U.S. Mainland"},{"destination":"Connecticut","source":"IHS","total":1,"weekly":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],"lat":41.6032,"lon":-73.0877,"section":"U.S. Mainland"},{"destination":"Florida","source":"IHS","total":11,"weekly":[4,0,2,0,0,0,1,2,0,2,0,0,0,0,0,0],"lat":28.6305,"lon":-82.4497,"section":"U.S. Mainland"},{"destination":"Georgia","source":"IHS","total":3,"weekly":[2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],"lat":32.6415,"lon":-83.4426,"section":"U.S. Mainland"},{"destination":"Idaho","source":"IHS","total":1,"weekly":[0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0],"lat":44.2405,"lon":-114.4788,"section":"U.S. Mainland"},{"destination":"Illinois","source":"IHS","total":1,"weekly":[0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],"lat":40.0417,"lon":-89.1965,"section":"U.S. Mainland"},{"destination":"Kansas","source":"IHS","total":1,"weekly":[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"lat":38.4937,"lon":-98.3804,"section":"U.S. Mainland"},{"destination":"Kentucky","source":"IHS","total":1,"weekly":[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0],"lat":37.5347,"lon":-85.3021,"section":"U.S. Mainland"},{"destination":"Louisiana","source":"IHS","total":1,"weekly":[0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],"lat":31.0689,"lon":-91.9968,"section":"U.S. Mainland"},{"destination":"Maine","source":"IHS","total":1,"weekly":[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"lat":45.3695,"lon":-69.2428,"section":"U.S. Mainland"},{"destination":"Michigan","source":"IHS","total":1,"weekly":[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0],"lat":44.3467,"lon":-85.4102,"section":"U.S. Mainland"},{"destination":"Minnesota","source":"IHS","total":11,"weekly":[7,0,0,3,0,0,0,0,0,0,0,0,0,0,1,0],"lat":46.2807,"lon":-94.3053,"section":"U.S. Mainland"},{"destination":"Missouri","source":"IHS","total":3,"weekly":[2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0],"lat":38.3566,"lon":-92.458,"section":"U.S. Mainland"},{"destination":"Nevada","source":"IHS","total":8,"weekly":[2,0,0,0,0,3,0,0,0,0,0,0,0,0,3,0],"lat":39.3289,"lon":-116.6312,"section":"U.S. Mainland"},{"destination":"New Jersey","source":"IHS","total":2,"weekly":[2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"lat":40.143,"lon":-74.7311,"section":"U.S. Mainland"},{"destination":"New York","source":"IHS","total":13,"weekly":[5,0,0,0,0,0,0,0,7,1,0,0,0,0,0,0],"lat":42.9538,"lon":-75.5268,"section":"U.S. Mainland"},{"destination":"North Carolina","source":"IHS","total":8,"weekly":[8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"lat":35.5557,"lon":-79.3877,"section":"U.S. Mainland"},{"destination":"Ohio","source":"IHS","total":3,"weekly":[2,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],"lat":40.2862,"lon":-82.7937,"section":"U.S. Mainland"},{"destination":"Oklahoma","source":"IHS","total":2,"weekly":[2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"lat":35.5889,"lon":-97.4943,"section":"U.S. Mainland"},{"destination":"Oregon","source":"IHS","total":4,"weekly":[3,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0],"lat":43.9336,"lon":-120.5583,"section":"U.S. Mainland"},{"destination":"South Carolina","source":"IHS","total":1,"weekly":[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"lat":33.9169,"lon":-80.8964,"section":"U.S. Mainland"},{"destination":"Tennessee","source":"IHS","total":1,"weekly":[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"lat":35.858,"lon":-86.3505,"section":"U.S. Mainland"},{"destination":"Texas","source":"IHS","total":9,"weekly":[3,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0],"lat":31.4757,"lon":-99.3312,"section":"U.S. Mainland"},{"destination":"Utah","source":"IHS","total":18,"weekly":[17,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0],"lat":39.3055,"lon":-111.6703,"section":"U.S. Mainland"},{"destination":"Virginia","source":"IHS","total":2,"weekly":[2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"lat":37.5215,"lon":-78.8537,"section":"U.S. Mainland"},{"destination":"Washington","source":"IHS","total":10,"weekly":[6,1,0,0,0,0,0,0,0,3,0,0,0,0,0,0],"lat":47.3826,"lon":-120.4472,"section":"U.S. Mainland"},{"destination":"Wisconsin","source":"IHS","total":3,"weekly":[3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"lat":44.6243,"lon":-89.9941,"section":"U.S. Mainland"},{"destination":"Wyoming","source":"IHS","total":5,"weekly":[2,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0],"lat":42.9957,"lon":-107.5512,"section":"U.S. Mainland"},{"destination":"Undisclosed","source":"IHS","total":1,"weekly":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],"lat":null,"lon":null,"section":"U.S. Mainland"},{"destination":"Hawaii Island","source":"IHS","total":6,"weekly":[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"lat":19.5429,"lon":-155.6659,"section":"Inter-Island"},{"destination":"Kauai","source":"IHS","total":3,"weekly":[0,0,0,0,0,0,0,0,2,0,0,0,0,0,1,0],"lat":22.0964,"lon":-159.5261,"section":"Inter-Island"},{"destination":"Maui","source":"IHS","total":14,"weekly":[7,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0],"lat":20.7984,"lon":-156.3319,"section":"Inter-Island"},{"destination":"Molokai","source":"IHS","total":1,"weekly":[0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],"lat":21.1444,"lon":-157.0226,"section":"Inter-Island"},{"destination":"American Samoa","source":"IHS","total":1,"weekly":[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],"lat":-14.271,"lon":-170.1322,"section":"International"},{"destination":"Canada","source":"IHS","total":1,"weekly":[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"lat":56.1304,"lon":-106.3468,"section":"International"},{"destination":"Chuuk","source":"IHS","total":5,"weekly":[2,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0],"lat":7.4458,"lon":151.85,"section":"International"},{"destination":"Egypt","source":"IHS","total":1,"weekly":[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"lat":26.8206,"lon":30.8025,"section":"International"},{"destination":"Guam","source":"IHS","total":1,"weekly":[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"lat":13.4443,"lon":144.7937,"section":"International"},{"destination":"Mexico","source":"IHS","total":1,"weekly":[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"lat":23.6345,"lon":-102.5528,"section":"International"},{"destination":"Micronesia","source":"IHS","total":2,"weekly":[2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"lat":7.4256,"lon":150.5508,"section":"International"},{"destination":"Spain","source":"IHS","total":1,"weekly":[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0],"lat":40.4637,"lon":-3.7492,"section":"International"},{"destination":"Switzerland","source":"IHS","total":4,"weekly":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0],"lat":46.8182,"lon":8.2275,"section":"International"},{"destination":"Atlanta, Georgia","source":"WBID","total":3,"records":[{"date":"August 4, 2026","weekIndex":9,"total":3,"note":"Party of three: two men and their dog"}],"lat":33.749,"lon":-84.388},{"destination":"Arizona","source":"WBID","total":1,"records":[{"date":"May 23, 2026","weekIndex":0,"total":1}],"lat":34.2744,"lon":-111.6602},{"destination":"Colorado","source":"WBID","total":1,"records":[{"date":"January–April 2026","weekIndex":0,"total":1}],"lat":38.9972,"lon":-105.5478},{"destination":"Corpus Christi, Texas","source":"WBID","total":1,"records":[{"date":"January–April 2026","weekIndex":0,"total":1}],"lat":27.8006,"lon":-97.3964},{"destination":"Detroit, Michigan","source":"WBID","total":1,"records":[{"date":"January–April 2026","weekIndex":0,"total":1}],"lat":42.3314,"lon":-83.0458},{"destination":"Illinois","source":"WBID","total":1,"records":[{"date":"January–April 2026","weekIndex":0,"total":1}],"lat":40.0417,"lon":-89.1965},{"destination":"Philadelphia, Pennsylvania","source":"WBID","total":2,"records":[{"date":"August 14, 2026","weekIndex":10,"total":1},{"date":"September 12, 2026","weekIndex":14,"total":1}],"lat":39.9526,"lon":-75.1652},{"destination":"Portland, Oregon","source":"WBID","total":1,"records":[{"date":"June 18, 2026","weekIndex":2,"total":1}],"lat":45.5152,"lon":-122.6784},{"destination":"Los Angeles, California","source":"WBID","total":3,"records":[{"date":"January–April 2026","weekIndex":0,"total":3}],"lat":34.0522,"lon":-118.2437},{"destination":"Salt Lake City, Utah","source":"WBID","total":1,"records":[{"date":"January–April 2026","weekIndex":0,"total":1}],"lat":40.7608,"lon":-111.891},{"destination":"San Francisco, California","source":"WBID","total":1,"records":[{"date":"January–April 2026","weekIndex":0,"total":1}],"lat":37.7749,"lon":-122.4194},{"destination":"Seattle, Washington","source":"WBID","total":1,"records":[{"date":"January–April 2026","weekIndex":0,"total":1}],"lat":47.6062,"lon":-122.3321},{"destination":"Philippines","source":"WBID","total":1,"records":[{"date":"January–April 2026","weekIndex":0,"total":1}],"lat":12.8797,"lon":121.774},{"destination":"Paris, France","source":"WBID","total":1,"records":[{"date":"January–April 2026","weekIndex":0,"total":1}],"lat":48.8566,"lon":2.3522}];
 const weeks = ["May 20–Jun 5, 2026", "Jun 5–12, 2026", "Jun 13–19, 2026", "Jun 20–26, 2026", "Jun 27–Jul 3, 2026", "Jul 4–10, 2026", "Jul 11–17, 2026", "Jul 18–25, 2026", "Jul 24–31, 2026", "Jul 31–Aug 7, 2026", "Aug 7–14, 2026", "Aug 14–21, 2026", "Aug 21–28, 2026", "Aug 28–Sep 4, 2026", "Sep 4–11, 2026"];
 const ihsWeeklyTotals = [105, 2, 9, 7, 0, 4, 5, 3, 11, 9, 3, 1, 2, 0, 29];
+
+const monthGroups = {
+  baseline: {label: 'Jan–May baseline', weekIndexes: [0]},
+  june: {label: 'June 2026', weekIndexes: [1, 2, 3]},
+  july: {label: 'July 2026', weekIndexes: [4, 5, 6, 7, 8]},
+  august: {label: 'August 2026', weekIndexes: [9, 10, 11, 12]},
+  september: {label: 'September 2026', weekIndexes: [13, 14]}
+};
+
+const monthFilter = document.getElementById('monthFilter');
 
 const weekFilter = document.getElementById('weekFilter');
 function wbidCountForWeek(i) {
@@ -382,27 +404,45 @@ const colors = {
 const radius = n => Math.max(5, Math.min(19, 4 + Math.sqrt(n) * 2.15));
 const glowRadius = n => Math.max(10, Math.min(36, radius(n) * 1.9));
 
-function popup(e, count, selectedWeek) {
+function activeWeekIndexes(selectedWeek, selectedMonth) {
+  if (selectedWeek !== 'all') return [Number(selectedWeek)];
+  if (selectedMonth !== 'all') return monthGroups[selectedMonth].weekIndexes;
+  return null;
+}
+
+function popup(e, count, selectedWeek, selectedMonth) {
   let dateText = '';
   let selectedRecords = [];
+  const weekIndexes = activeWeekIndexes(selectedWeek, selectedMonth);
 
   if (e.source === 'IHS') {
-    dateText = selectedWeek === 'all' ? 'May 20–September 11, 2026' : weeks[Number(selectedWeek)];
+    if (selectedWeek !== 'all') {
+      dateText = weeks[Number(selectedWeek)];
+    } else if (selectedMonth !== 'all') {
+      dateText = monthGroups[selectedMonth].label;
+    } else {
+      dateText = 'May 20–September 11, 2026';
+    }
   } else {
-    selectedRecords = selectedWeek === 'all'
+    selectedRecords = weekIndexes === null
       ? (e.records || [])
-      : (e.records || []).filter(r => r.weekIndex === Number(selectedWeek));
+      : (e.records || []).filter(r => weekIndexes.includes(r.weekIndex));
     dateText = selectedRecords.map(r => r.date).join('<br>');
   }
 
   let extra = '';
-  if (e.source === 'IHS' && selectedWeek === 'all') {
+  if (e.source === 'IHS' && selectedWeek === 'all' && selectedMonth === 'all') {
     const rows = e.weekly
       .slice(0, 15)
       .map((n, i) => n ? `<div>${weeks[i]}: <b>${n}</b></div>` : '')
       .join('');
     extra = `<div class="breakdown"><b>Weekly breakdown</b>${rows}</div>`;
-  } else if (e.source === 'WBID' && selectedWeek === 'all' && selectedRecords.length > 1) {
+  } else if (e.source === 'IHS' && selectedMonth !== 'all') {
+    const rows = monthGroups[selectedMonth].weekIndexes
+      .map(i => e.weekly[i] ? `<div>${weeks[i]}: <b>${e.weekly[i]}</b></div>` : '')
+      .join('');
+    if (rows) extra = `<div class="breakdown"><b>Weekly breakdown</b>${rows}</div>`;
+  } else if (e.source === 'WBID' && selectedRecords.length > 1) {
     const rows = selectedRecords
       .map(r => `<div>${r.date}: <b>${r.total}</b>${r.note ? ` — ${r.note}` : ''}</div>`)
       .join('');
@@ -465,10 +505,12 @@ function render() {
   layer.clearLayers();
   glowLayer.clearLayers();
 
-  const selected = weekFilter.value;
+  const selectedWeek = weekFilter.value;
+  const selectedMonth = monthFilter.value;
   const selectedLocation = document.getElementById('locationFilter').value;
   const showIHS = document.getElementById('ihsToggle').checked;
   const showWBID = document.getElementById('wbidToggle').checked;
+  const weekIndexes = activeWeekIndexes(selectedWeek, selectedMonth);
 
   let ihsTotal = 0;
   let wbidTotal = 0;
@@ -478,13 +520,16 @@ function render() {
     if (!locationMatches) return;
 
     if (e.source === 'IHS' && showIHS) {
-      const count = selected === 'all' ? e.total : e.weekly[Number(selected)];
+      const count = weekIndexes === null
+        ? e.total
+        : weekIndexes.reduce((sum, i) => sum + (e.weekly[i] || 0), 0);
+
       if (count > 0) {
         ihsTotal += count;
         if (Number.isFinite(e.lat) && Number.isFinite(e.lon)) {
           addGlowingMarker(
             e.lat, e.lon, count, 'IHS',
-            popup(e, count, selected),
+            popup(e, count, selectedWeek, selectedMonth),
             `${e.destination}: ${count} (IHS)`
           );
         }
@@ -492,9 +537,9 @@ function render() {
     }
 
     if (e.source === 'WBID' && showWBID) {
-      const matchingRecords = selected === 'all'
+      const matchingRecords = weekIndexes === null
         ? (e.records || [])
-        : (e.records || []).filter(r => r.weekIndex === Number(selected));
+        : (e.records || []).filter(r => weekIndexes.includes(r.weekIndex));
       const count = matchingRecords.reduce((sum, r) => sum + r.total, 0);
 
       if (count > 0) {
@@ -502,7 +547,7 @@ function render() {
         if (Number.isFinite(e.lat) && Number.isFinite(e.lon)) {
           addGlowingMarker(
             e.lat, e.lon, count, 'WBID',
-            popup(e, count, selected),
+            popup(e, count, selectedWeek, selectedMonth),
             `${e.destination}: ${count} (WBID)`
           );
         }
@@ -520,27 +565,30 @@ function render() {
   const locationLabel = selectedLocation === 'all' ? 'all locations' : selectedLocation;
   const enabledPrograms = [showIHS ? 'IHS' : null, showWBID ? 'WBID' : null].filter(Boolean).join(' and ');
 
-  if (selected === 'all') {
-    if (!enabledPrograms) {
-      status.textContent = `No programs selected for ${locationLabel}.`;
-      status.classList.add('zero');
-    } else {
-      status.textContent = `Showing ${enabledPrograms} destination totals for ${locationLabel}.`;
-    }
-  } else {
-    const i = Number(selected);
-    const parts = [];
-    if (showIHS) parts.push(ihsWeeklyTotals[i] == null ? 'IHS: no reporting period' : `IHS ${ihsTotal}`);
-    if (showWBID) parts.push(`WBID ${wbidTotal}`);
+  let periodLabel = 'All periods';
+  if (selectedWeek !== 'all') periodLabel = weeks[Number(selectedWeek)];
+  else if (selectedMonth !== 'all') periodLabel = monthGroups[selectedMonth].label;
 
-    status.textContent = `${weeks[i]} — ${locationLabel}: ${parts.length ? parts.join(', ') : 'no programs selected'}.`;
-    if ((!showIHS || ihsTotal === 0 || ihsWeeklyTotals[i] == null) && (!showWBID || wbidTotal === 0)) {
-      status.classList.add('zero');
-    }
+  if (!enabledPrograms) {
+    status.textContent = `No programs selected for ${periodLabel}, ${locationLabel}.`;
+    status.classList.add('zero');
+  } else {
+    status.textContent = `${periodLabel} — ${locationLabel}: ${showIHS ? `IHS ${ihsTotal}` : ''}${showIHS && showWBID ? ', ' : ''}${showWBID ? `WBID ${wbidTotal}` : ''}.`;
+    if (ihsTotal + wbidTotal === 0) status.classList.add('zero');
   }
 }
 
-['ihsToggle' , 'wbidToggle', 'weekFilter', 'locationFilter'].forEach(id => {
+monthFilter.addEventListener('change', () => {
+  if (monthFilter.value !== 'all') weekFilter.value = 'all';
+  render();
+});
+
+weekFilter.addEventListener('change', () => {
+  if (weekFilter.value !== 'all') monthFilter.value = 'all';
+  render();
+});
+
+['ihsToggle', 'wbidToggle', 'locationFilter'].forEach(id => {
   document.getElementById(id).addEventListener('change', render);
 });
 
