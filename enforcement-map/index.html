@@ -17,7 +17,7 @@ html,body{height:100%;margin:0}
 body{background:#bfc7d9;font-family:var(--font);color:var(--ink)}
 #map{position:absolute;inset:0}
 .leaflet-container{background:#bfc7d9;font-family:var(--font)}
-.leaflet-tile-pane{filter:saturate(1.15) contrast(1.1) brightness(1.04) hue-rotate(10deg)}
+.leaflet-heatmap-layer{pointer-events:none}
 .leaflet-control-zoom a{background:#16213e!important;color:#f3f7ff!important;border-bottom:1px solid var(--line)!important}
 .leaflet-control-zoom a:hover{background:#21325b!important}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;
@@ -131,14 +131,14 @@ const DATA = {"d0":"2026-05-01","agencies":["DFM","DLNR","DOT"],"crews":["Day","
   document.getElementById("not-plotted").innerHTML = DATA.notPlotted.map(t => "<li>" + esc(t) + "</li>").join("");
 
   // map
-  const map = L.map("map", { zoomControl: true, center: [21.47, -157.96], zoom: 10, preferCanvas: true });
+  const map = L.map("map", { zoomControl: true, center: [21.47, -157.96], zoom: 10 });
   L.control.scale().addTo(map);
   // Basemaps, tried in order. If one fails to load, the next takes over, so the island always shows.
   const OSM = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
   const BASEMAPS = [
-    ["https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", { subdomains: "abc", maxZoom: 19, attribution: OSM + ", Tiles style by Humanitarian OpenStreetMap Team" }],
     ["https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", { subdomains: "abcd", maxZoom: 19, attribution: OSM + ' &copy; <a href="https://carto.com/attributions">CARTO</a>' }],
-    ["https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: OSM }]
+    ["https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: OSM }],
+    ["https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", { subdomains: "abc", maxZoom: 19, attribution: OSM + ", Tiles style by Humanitarian OpenStreetMap Team" }]
   ];
   let baseIdx = 0, baseLayer = null;
   function useBasemap(i) {
@@ -153,7 +153,7 @@ const DATA = {"d0":"2026-05-01","agencies":["DFM","DLNR","DOT"],"crews":["Day","
       if (loaded === 0 && failed >= 3 && baseIdx === i && i + 1 < BASEMAPS.length) useBasemap(i + 1);
     });
     // a server that never answers: move on if nothing has loaded after 6 seconds
-    setTimeout(() => { if (loaded === 0 && baseIdx === i && i + 1 < BASEMAPS.length) useBasemap(i + 1); }, 6000);
+    setTimeout(() => { if (loaded === 0 && baseIdx === i && i + 1 < BASEMAPS.length) useBasemap(i + 1); }, 4000);
   }
   useBasemap(0);
 
@@ -199,6 +199,9 @@ const DATA = {"d0":"2026-05-01","agencies":["DFM","DLNR","DOT"],"crews":["Day","
   setAbout(window.innerWidth > 700);
   tog.addEventListener("click", () => setAbout(body.hidden));
 
+  // Circles get their own pane above the heat layer so they stay clickable.
+  map.createPane("places"); map.getPane("places").style.zIndex = 450;
+  const placeRenderer = L.canvas({ pane: "places", padding: 0.3, tolerance: 4 });
   let heat = null; const markerLayer = L.layerGroup().addTo(map);
   const OFFSET = { DFM: [0, 0], DLNR: [0.0007, 0.0007], DOT: [-0.0007, -0.0007] };
 
@@ -236,7 +239,7 @@ const DATA = {"d0":"2026-05-01","agencies":["DFM","DLNR","DOT"],"crews":["Day","
         const [name, lat, lon, geo] = P[o.p], n = o.days.length, off = OFFSET[o.ag];
         const crews = CREW.filter((c, i) => o.crew & (1 << i));
         const m = L.circleMarker([lat + off[0], lon + off[1]], {
-          radius: 5.45 + Math.min(6, Math.sqrt(n) * 1.05), color: COLORS[o.ag], fillColor: COLORS[o.ag],
+          renderer: placeRenderer, pane: "places", radius: 5.45 + Math.min(6, Math.sqrt(n) * 1.05), color: COLORS[o.ag], fillColor: COLORS[o.ag],
           fillOpacity: 0.55, opacity: 1, weight: 1.2
         });
         m.bindPopup('<b class="pn">' + esc(name) + '</b><br>Agency: ' + o.ag +
