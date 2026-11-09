@@ -136,8 +136,8 @@ const DATA = {"d0":"2026-05-01","agencies":["DFM","DLNR","DOT"],"crews":["Day","
   // Basemaps, tried in order. If one fails to load, the next takes over, so the island always shows.
   const OSM = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
   const BASEMAPS = [
-    ["https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", { subdomains: "abcd", maxZoom: 19, attribution: OSM + ' &copy; <a href="https://carto.com/attributions">CARTO</a>' }],
     ["https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: OSM }],
+    ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", { maxZoom: 19, attribution: "Tiles &copy; Esri" }],
     ["https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", { subdomains: "abc", maxZoom: 19, attribution: OSM + ", Tiles style by Humanitarian OpenStreetMap Team" }]
   ];
   let baseIdx = 0, baseLayer = null;
