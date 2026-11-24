@@ -168,9 +168,12 @@ const DATA = {"d0":"2026-05-01","agencies":["DFM","DLNR","DOT"],"crews":["Day","
   useBasemap(0);
 
   const state = { agencies: new Set(AG), mode: "month", month: months[months.length - 1], week: weeks[weeks.length - 1], markers: true };
-  // default to the latest month that has DOT and a full DFM month: the latest month before the newest one
-  if (months.length > 1) state.month = months[months.length - 2];
-  state.week = weekOf(lastDayOf("DFM")); // default week: the latest week with a DFM schedule
+  // default to the current month and week (or the nearest earlier one that has data)
+  const now = new Date();
+  const todayIdx = Math.round((new Date(now.getFullYear(), now.getMonth(), now.getDate()) - D0) / 86400000);
+  const curMonth = monthKey(todayIdx), curWeek = weekOf(todayIdx);
+  state.month = months.filter(m => m <= curMonth).pop() ?? months[0];
+  state.week = weeks.filter(w => w <= curWeek).pop() ?? weeks[0];
 
   // control
   const Filters = L.Control.extend({
